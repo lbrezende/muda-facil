@@ -107,7 +107,7 @@ function MudancaCard({ mudanca }: { mudanca: Mudanca }) {
   const embedUrl = getGoogleMapsEmbedUrl(mudanca.enderecoOrigem, mudanca.enderecoDestino);
 
   return (
-    <Card className="group cursor-pointer border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md overflow-hidden">
+    <Card className="group cursor-pointer border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md overflow-hidden !py-0 !gap-0">
       {/* Map preview */}
       <a
         href={mapsUrl}
@@ -131,7 +131,7 @@ function MudancaCard({ mudanca }: { mudanca: Mudanca }) {
       </a>
 
       <Link href={`/dashboard/mudanca/${mudanca.id}`}>
-        <CardHeader className="flex flex-row items-start justify-between gap-4 pb-3 pt-4">
+        <CardHeader className="flex flex-row items-start justify-between gap-4 pb-3 pt-4 mt-4">
           <Badge
             variant="outline"
             className={`text-xs font-medium ${statusStyle.className}`}
@@ -144,7 +144,7 @@ function MudancaCard({ mudanca }: { mudanca: Mudanca }) {
           </span>
         </CardHeader>
 
-        <CardContent className="space-y-3">
+        <CardContent className="space-y-3 pb-6">
           {/* Origin → Destination */}
           <div className="flex flex-col gap-1.5">
             <div className="flex items-start gap-2 text-sm text-gray-700">

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { CheckCircle2, Mail, Loader2 } from "lucide-react";
+import { Truck, Mail, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -58,8 +58,8 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <Link href="/" className="mx-auto mb-4 flex items-center gap-2">
-            <CheckCircle2 className="h-8 w-8 text-blue-600" />
-            <span className="text-2xl font-bold">TaskFlow</span>
+            <Truck className="h-8 w-8 text-[#2563EB]" />
+            <span className="text-2xl font-bold">MudaFácil</span>
           </Link>
           <CardTitle>Entrar na sua conta</CardTitle>
           <CardDescription>

@@ -298,20 +298,36 @@ function DroppableRoomCard({
   onDropItem: (item: FurnitureItem) => void;
 }) {
   const [dragOver, setDragOver] = useState(false);
+  const dragCounter = useRef(0);
   const Icon = ROOM_ICONS[block.icon];
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    if (e.dataTransfer.types.includes("application/furniture")) {
+      e.preventDefault();
+      dragCounter.current++;
+      if (dragCounter.current === 1) {
+        setDragOver(true);
+      }
+    }
+  };
 
   const handleDragOver = (e: React.DragEvent) => {
     if (e.dataTransfer.types.includes("application/furniture")) {
       e.preventDefault();
       e.dataTransfer.dropEffect = "copy";
-      setDragOver(true);
     }
   };
 
-  const handleDragLeave = () => setDragOver(false);
+  const handleDragLeave = (e: React.DragEvent) => {
+    dragCounter.current--;
+    if (dragCounter.current === 0) {
+      setDragOver(false);
+    }
+  };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
+    dragCounter.current = 0;
     setDragOver(false);
     const data = e.dataTransfer.getData("application/furniture");
     if (data) {
@@ -329,6 +345,7 @@ function DroppableRoomCard({
           ? "border-2 border-dashed border-blue-400 bg-blue-50/50 shadow-md"
           : ""
       }`}
+      onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}

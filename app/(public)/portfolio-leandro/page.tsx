@@ -5,7 +5,7 @@ import Lenis from "@studio-freight/lenis";
 import { PortfolioHeader } from "@/components/portfolio/portfolio-header";
 import { PortfolioHero } from "@/components/portfolio/portfolio-hero";
 import { ZoomParallax } from "@/components/ui/zoom-parallax";
-import { MagicText } from "@/components/ui/magic-text";
+import { MagicText, MagicArticle } from "@/components/ui/magic-text";
 import {
   ImageComparison,
   ImageComparisonImage,
@@ -25,6 +25,7 @@ import {
   Layers,
   Rocket,
   CheckCircle2,
+  ArrowLeftRight,
 } from "lucide-react";
 
 /* ── smooth scroll ── */
@@ -71,6 +72,86 @@ const projectImages = [
     alt: "Stakeholder workshop",
   },
 ];
+
+/* ── V1/V2 comparison pairs ── */
+const comparisons = [
+  {
+    v1: "/images/comparison/comparativo/Site-Landing-Hero-V1.png",
+    v2: "/images/comparison/comparativo/Site-Landing-Hero-V2.png",
+    label: "Landing Page — Hero",
+  },
+  {
+    v1: "/images/comparison/comparativo/Produto-Minhas-Mudancas-V1.png",
+    v2: "/images/comparison/comparativo/Produto-Minhas-Mudancas-V2.png",
+    label: "Minhas Mudancas",
+  },
+  {
+    v1: "/images/comparison/comparativo/Produto-Catalogo-de-Itens-V1.png",
+    v2: "/images/comparison/comparativo/Produto-Catalogo-de-Itens-V2.png",
+    label: "Catalogo de Itens",
+  },
+  {
+    v1: "/images/comparison/comparativo/Produto-Nova-Mudanca-Variante-V1.png",
+    v2: "/images/comparison/comparativo/Produto-Nova-Mudanca-Variante-V2.png",
+    label: "Nova Mudanca",
+  },
+  {
+    v1: "/images/comparison/comparativo/Produto-Detalhe-Mudanca-Cotacoes-V1.png",
+    v2: "/images/comparison/comparativo/Produto-Detalhe-Mudanca-Cotacoes-V2.png",
+    label: "Cotacoes da Mudanca",
+  },
+  {
+    v1: "/images/comparison/comparativo/Site-Landing-Recursos-V1.png",
+    v2: "/images/comparison/comparativo/Site-Landing-Recursos-V2.png",
+    label: "Landing Page — Recursos",
+  },
+  {
+    v1: "/images/comparison/comparativo/Site-Landing-Preview-App-V1.png",
+    v2: "/images/comparison/comparativo/Site-Landing-Preview-App-V2.png",
+    label: "Landing Page — Preview do App",
+  },
+];
+
+/* ── before/after slider ── */
+function BeforeAfterSlider({
+  v1,
+  v2,
+  label,
+}: {
+  v1: string;
+  v2: string;
+  label: string;
+}) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <p className="text-sm font-medium text-muted-foreground">{label}</p>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span className="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-red-700 font-medium">V1</span>
+          <ArrowLeftRight className="h-3 w-3" />
+          <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-green-700 font-medium">V2</span>
+        </div>
+      </div>
+      <ImageComparison className="aspect-[16/10] w-full rounded-xl border border-border overflow-hidden">
+        <ImageComparisonImage
+          src={v1}
+          alt={`${label} — antes (V1)`}
+          position="left"
+        />
+        <ImageComparisonImage
+          src={v2}
+          alt={`${label} — depois (V2)`}
+          position="right"
+        />
+        <ImageComparisonSlider className="w-1 bg-[#E84225]">
+          <div className="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E84225] flex items-center justify-center shadow-lg">
+            <ArrowLeftRight className="h-4 w-4 text-white" />
+          </div>
+        </ImageComparisonSlider>
+      </ImageComparison>
+    </div>
+  );
+}
 
 /* ── metric card ── */
 function MetricCard({
@@ -172,8 +253,8 @@ export default function PortfolioPage() {
         <ZoomParallax images={projectImages} />
       </section>
 
-      {/* ── SECTION 3 — CASE STUDY (Medium-style article) ── */}
-      <article className="mx-auto max-w-[680px] px-6 pb-24">
+      {/* ── SECTION 3 — CASE STUDY (wrap everything in MagicArticle) ── */}
+      <MagicArticle className="mx-auto max-w-[680px] px-6 pb-24">
         {/* ── Case Title ── */}
         <header className="pt-16 pb-12 border-b border-border/30 mb-12">
           <MagicText
@@ -241,27 +322,11 @@ export default function PortfolioPage() {
               />
             </div>
 
-            {/* Image Comparison */}
-            <ImageComparison className="aspect-[16/10] w-full rounded-xl border border-border overflow-hidden">
-              <ImageComparisonImage
-                src="https://images.unsplash.com/photo-1555421689-d68471e189f2?w=1280&h=800&fit=crop&auto=format&q=80"
-                alt="Interface antes - formulario complexo"
-                position="left"
-              />
-              <ImageComparisonImage
-                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1280&h=800&fit=crop&auto=format&q=80"
-                alt="Interface depois - dashboard intuitivo"
-                position="right"
-              />
-              <ImageComparisonSlider className="w-1 bg-[#E84225]">
-                <div className="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E84225] flex items-center justify-center">
-                  <ArrowUpRight className="h-4 w-4 text-white" />
-                </div>
-              </ImageComparisonSlider>
-            </ImageComparison>
-            <p className="text-xs text-center text-muted-foreground">
-              Arraste o slider para comparar antes e depois
-            </p>
+            {/* Landing Hero comparison */}
+            <BeforeAfterSlider {...comparisons[0]} />
+
+            {/* Minhas Mudancas comparison */}
+            <BeforeAfterSlider {...comparisons[1]} />
 
             {/* After */}
             <div>
@@ -306,6 +371,11 @@ export default function PortfolioPage() {
                 text="Principais achados: usuarios nao conseguiam completar tarefas com fluidez. Dificuldade em entender como o preco era calculado. Tempo medio de decisao de 7 minutos. Inseguranca sobre o resultado."
                 className="text-base leading-[1.8]"
               />
+
+              {/* Cotacoes comparison */}
+              <div className="my-6">
+                <BeforeAfterSlider {...comparisons[4]} />
+              </div>
             </ProcessStep>
 
             <ProcessStep number="3" icon={MessageSquare} title="Pesquisa com usuarios">
@@ -338,11 +408,11 @@ export default function PortfolioPage() {
                 text="Nova hipotese: se o produto for gratuito para usuarios e monetizado via anuncios, o crescimento sera mais rapido. A logica e simples — reducao de barreira de entrada gera aumento de volume, que gera mais dados, que gera mais valor para anunciantes."
                 className="text-base leading-[1.8]"
               />
-              <img
-                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=600&fit=crop&auto=format&q=80"
-                alt="Business model canvas"
-                className="w-full rounded-xl my-4"
-              />
+
+              {/* Catalogo de Itens comparison */}
+              <div className="my-6">
+                <BeforeAfterSlider {...comparisons[2]} />
+              </div>
             </ProcessStep>
 
             <ProcessStep number="6" icon={Layers} title="Solucoes implementadas">
@@ -368,6 +438,11 @@ export default function PortfolioPage() {
                   impact="Decisao 3.5x mais rapida"
                 />
               </div>
+
+              {/* Nova Mudanca comparison */}
+              <div className="my-6">
+                <BeforeAfterSlider {...comparisons[3]} />
+              </div>
             </ProcessStep>
 
             <ProcessStep number="7" icon={Target} title="Validacao com hipoteses">
@@ -382,6 +457,11 @@ export default function PortfolioPage() {
                 text="Indicadores definidos: tempo de decisao e taxa de sucesso na tarefa. Ambos foram validados nos testes pos-implementacao."
                 className="text-base leading-[1.8]"
               />
+
+              {/* Landing Recursos comparison */}
+              <div className="my-6">
+                <BeforeAfterSlider {...comparisons[5]} />
+              </div>
             </ProcessStep>
 
             <ProcessStep number="8" icon={Rocket} title="Resultados finais">
@@ -394,6 +474,11 @@ export default function PortfolioPage() {
                   <p className="text-3xl font-bold text-green-700 dark:text-green-400">7 &rarr; 2 min</p>
                   <p className="text-sm text-green-600 dark:text-green-500 mt-1">tempo de decisao</p>
                 </div>
+              </div>
+
+              {/* Preview App comparison */}
+              <div className="my-6">
+                <BeforeAfterSlider {...comparisons[6]} />
               </div>
             </ProcessStep>
           </div>
@@ -432,7 +517,7 @@ export default function PortfolioPage() {
             </ul>
           </div>
         </section>
-      </article>
+      </MagicArticle>
 
       {/* ── SECTION 4 — CONTACT (sticky footer) ── */}
       <ContactSection />

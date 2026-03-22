@@ -476,6 +476,46 @@ const transportadoras = [
   },
 ];
 
+// ─── Demo mudanças (real addresses) ─────────────────────────────────────────
+
+const mudancasDemo = [
+  {
+    id: "demo-mudanca-1",
+    enderecoOrigem: "Rua Augusta, 1200 - Consolação, São Paulo - SP",
+    enderecoDestino: "Av. Paulista, 1578 - Bela Vista, São Paulo - SP",
+    status: "COTANDO" as const,
+    caminhaoTipo: "HR",
+  },
+  {
+    id: "demo-mudanca-2",
+    enderecoOrigem: "Rua Oscar Freire, 379 - Jardim Paulista, São Paulo - SP",
+    enderecoDestino: "Av. Brigadeiro Faria Lima, 3477 - Itaim Bibi, São Paulo - SP",
+    status: "RASCUNHO" as const,
+    caminhaoTipo: "3/4",
+  },
+  {
+    id: "demo-mudanca-3",
+    enderecoOrigem: "Rua Visconde de Pirajá, 550 - Ipanema, Rio de Janeiro - RJ",
+    enderecoDestino: "Av. Atlântica, 1702 - Copacabana, Rio de Janeiro - RJ",
+    status: "CONFIRMADA" as const,
+    caminhaoTipo: "Baú",
+  },
+  {
+    id: "demo-mudanca-4",
+    enderecoOrigem: "Av. Afonso Pena, 1901 - Funcionários, Belo Horizonte - MG",
+    enderecoDestino: "Rua da Bahia, 1148 - Centro, Belo Horizonte - MG",
+    status: "RASCUNHO" as const,
+    caminhaoTipo: "Fiorino",
+  },
+  {
+    id: "demo-mudanca-5",
+    enderecoOrigem: "Rua XV de Novembro, 300 - Centro, Curitiba - PR",
+    enderecoDestino: "Av. Batel, 1868 - Batel, Curitiba - PR",
+    status: "CONCLUIDA" as const,
+    caminhaoTipo: "HR",
+  },
+];
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -542,6 +582,42 @@ async function main() {
   }
 
   console.log(`  ${transportadoras.length} transportadoras upserted.`);
+
+  // Seed demo mudanças (requires at least one user in the database)
+  console.log("Seeding demo mudanças...");
+
+  const firstUser = await prisma.user.findFirst();
+
+  if (firstUser) {
+    for (const mudanca of mudancasDemo) {
+      const caminhao = await prisma.caminhao.findFirst({
+        where: { tipo: mudanca.caminhaoTipo },
+      });
+
+      await prisma.mudanca.upsert({
+        where: { id: mudanca.id },
+        update: {
+          enderecoOrigem: mudanca.enderecoOrigem,
+          enderecoDestino: mudanca.enderecoDestino,
+          status: mudanca.status,
+          caminhaoId: caminhao?.id ?? null,
+        },
+        create: {
+          id: mudanca.id,
+          userId: firstUser.id,
+          enderecoOrigem: mudanca.enderecoOrigem,
+          enderecoDestino: mudanca.enderecoDestino,
+          status: mudanca.status,
+          caminhaoId: caminhao?.id ?? null,
+          dataDesejada: new Date(Date.now() + Math.random() * 30 * 24 * 60 * 60 * 1000),
+        },
+      });
+    }
+
+    console.log(`  ${mudancasDemo.length} demo mudanças upserted for user ${firstUser.email}.`);
+  } else {
+    console.log("  Skipped — no users found. Login first, then re-run seed.");
+  }
 
   console.log("Seed completed successfully.");
 }

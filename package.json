@@ -13,9 +13,11 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
     "@prisma/client": "^6.19.2",
+    "@radix-ui/react-avatar": "^1.1.11",
     "@tanstack/react-query": "^5.90.21",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cobe": "^2.0.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^0.576.0",
     "next": "16.1.6",

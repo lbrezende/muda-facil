@@ -2,458 +2,203 @@
 
 import { useSession } from "next-auth/react";
 import { redirect, useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Truck,
   Package,
   MapPin,
   ArrowRight,
-  BarChart3,
-  Weight,
   Loader2,
   ChevronLeft,
-  Tag,
+  ChevronDown,
+  ChevronRight,
   Plus,
   X,
-  Search,
+  Box,
+  Weight,
+  Calendar,
+  Navigation,
+  Star,
+  Clock,
+  Shield,
+  Bed,
+  Sofa,
+  UtensilsCrossed,
+  Bath,
+  Monitor,
+  WashingMachine,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { toast } from "sonner";
+import { useMudanca } from "@/hooks/use-mudancas";
+import { ROOM_TYPES, calculateRoomSummary, recommendTrucks, type TruckInfo } from "@/lib/room-estimation";
+import { TruckRecommendationPanel } from "@/components/dashboard/truck-recommendation";
 
 // ─── Types ────────────────────────────────────────────────
 
-type MudancaStatus = "Rascunho" | "Cotando" | "Confirmada" | "Concluída";
+type RoomKey = string;
 
-interface TruckOption {
+interface RoomItem {
   id: string;
-  nome: string;
-  capacidadeVolume: number;
-  capacidadePeso: number;
-  descricao: string;
+  name: string;
+  volumeM3: number;
+  pesoKg: number;
 }
 
-interface Cotacao {
-  id: string;
-  empresa: string;
-  valor: number;
-  prazoEntrega: string;
-  avaliacao: number;
+interface RoomBlock {
+  key: RoomKey;
+  label: string;
+  icon: string;
+  count: number;
+  items: RoomItem[];
+  expanded: boolean;
 }
 
-interface CatalogItem {
-  id: string;
-  nome: string;
-  categoria: string;
-  largura: number;
-  altura: number;
-  profundidade: number;
-  peso: number;
-  volume: number;
-  cor: string;
-}
-
-interface CargaItem {
-  id: string;
-  item: CatalogItem;
-  quantidade: number;
-}
-
-// ─── Mock Data ────────────────────────────────────────────
-
-const MOCK_MUDANCA = {
-  id: "mud_001",
-  status: "Cotando" as MudancaStatus,
-  enderecoOrigem: "Rua das Flores, 123 – São Paulo, SP",
-  enderecoDestino: "Av. Paulista, 1500 – São Paulo, SP",
-  dataDesejada: "2026-04-05",
+const STATUS_STYLES: Record<string, { label: string; className: string }> = {
+  RASCUNHO: { label: "Rascunho", className: "bg-gray-100 text-gray-600 border-gray-200" },
+  COTANDO: { label: "Cotando", className: "bg-amber-50 text-amber-700 border-amber-200" },
+  CONFIRMADA: { label: "Confirmada", className: "bg-blue-50 text-blue-700 border-blue-200" },
+  CONCLUIDA: { label: "Concluída", className: "bg-green-50 text-green-700 border-green-200" },
 };
 
-const MOCK_TRUCKS: TruckOption[] = [
-  { id: "fiorino", nome: "Fiorino", capacidadeVolume: 2.5, capacidadePeso: 500, descricao: "Estúdios e pequenos aptos" },
-  { id: "hr", nome: "HR (Pickup)", capacidadeVolume: 5, capacidadePeso: 1000, descricao: "Aptos de 1-2 quartos" },
-  { id: "tres_quartos", nome: "Caminhão 3/4", capacidadeVolume: 14, capacidadePeso: 2500, descricao: "Aptos de 2-3 quartos" },
-  { id: "bau", nome: "Caminhão Baú", capacidadeVolume: 35, capacidadePeso: 8000, descricao: "Casas grandes" },
-];
-
-const MOCK_COTACOES: Cotacao[] = [
-  { id: "cot_001", empresa: "MudaTrans Logística", valor: 1250, prazoEntrega: "1 dia", avaliacao: 4.8 },
-  { id: "cot_002", empresa: "Fretes Rápidos SP", valor: 980, prazoEntrega: "2 dias", avaliacao: 4.5 },
-];
-
-const CATALOG_ITEMS: CatalogItem[] = [
-  { id: "cat_01", nome: "Cama Casal", categoria: "Quarto", largura: 188, altura: 45, profundidade: 138, peso: 40, volume: 1.17, cor: "bg-purple-400" },
-  { id: "cat_02", nome: "Cama Solteiro", categoria: "Quarto", largura: 90, altura: 45, profundidade: 190, peso: 25, volume: 0.77, cor: "bg-purple-300" },
-  { id: "cat_03", nome: "Guarda-Roupa 4 Portas", categoria: "Quarto", largura: 200, altura: 200, profundidade: 55, peso: 90, volume: 2.20, cor: "bg-purple-500" },
-  { id: "cat_04", nome: "Cômoda", categoria: "Quarto", largura: 80, altura: 85, profundidade: 45, peso: 25, volume: 0.31, cor: "bg-purple-400" },
-  { id: "cat_05", nome: "Geladeira Duplex", categoria: "Cozinha", largura: 70, altura: 175, profundidade: 75, peso: 90, volume: 0.92, cor: "bg-sky-400" },
-  { id: "cat_06", nome: "Fogão 4 Bocas", categoria: "Cozinha", largura: 60, altura: 85, profundidade: 60, peso: 30, volume: 0.31, cor: "bg-sky-500" },
-  { id: "cat_07", nome: "Microondas", categoria: "Cozinha", largura: 45, altura: 28, profundidade: 35, peso: 12, volume: 0.04, cor: "bg-sky-300" },
-  { id: "cat_08", nome: "Sofá 3 Lugares", categoria: "Sala", largura: 210, altura: 85, profundidade: 90, peso: 60, volume: 1.60, cor: "bg-emerald-400" },
-  { id: "cat_09", nome: "Rack de TV", categoria: "Sala", largura: 180, altura: 55, profundidade: 40, peso: 30, volume: 0.40, cor: "bg-emerald-500" },
-  { id: "cat_10", nome: "Mesa de Escritório", categoria: "Escritório", largura: 150, altura: 75, profundidade: 70, peso: 25, volume: 0.79, cor: "bg-orange-400" },
-  { id: "cat_11", nome: "Máquina de Lavar", categoria: "Área de Serviço", largura: 60, altura: 85, profundidade: 60, peso: 65, volume: 0.31, cor: "bg-indigo-400" },
-  { id: "cat_12", nome: "Caixa M", categoria: "Caixas", largura: 50, altura: 40, profundidade: 40, peso: 10, volume: 0.08, cor: "bg-amber-400" },
-  { id: "cat_13", nome: "Caixa G", categoria: "Caixas", largura: 60, altura: 50, profundidade: 50, peso: 15, volume: 0.15, cor: "bg-amber-500" },
-];
-
-// ─── Helpers ──────────────────────────────────────────────
-
-const STATUS_STYLES: Record<MudancaStatus, { label: string; className: string }> = {
-  Rascunho: { label: "Rascunho", className: "bg-gray-100 text-gray-600 border-gray-200" },
-  Cotando: { label: "Cotando", className: "bg-amber-100 text-amber-700 border-amber-200" },
-  Confirmada: { label: "Confirmada", className: "bg-blue-100 text-blue-700 border-blue-200" },
-  Concluída: { label: "Concluída", className: "bg-green-100 text-green-700 border-green-200" },
+const ROOM_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  Bed, Sofa, UtensilsCrossed, Bath, Monitor, WashingMachine,
 };
 
-function formatDate(iso: string): string {
-  const [year, month, day] = iso.split("-");
-  return `${day}/${month}/${year}`;
+// Default items per room type
+const ROOM_DEFAULT_ITEMS: Record<string, RoomItem[]> = {
+  QUARTO: [
+    { id: "q-cama", name: "Cama", volumeM3: 1.2, pesoKg: 40 },
+    { id: "q-guardaroupa", name: "Guarda-roupa", volumeM3: 1.0, pesoKg: 35 },
+    { id: "q-criadomudo", name: "Criado-mudo", volumeM3: 0.3, pesoKg: 5 },
+  ],
+  SALA: [
+    { id: "s-sofa", name: "Sofá", volumeM3: 1.0, pesoKg: 35 },
+    { id: "s-mesacentro", name: "Mesa de centro", volumeM3: 0.5, pesoKg: 15 },
+    { id: "s-rack", name: "Rack / Estante", volumeM3: 0.5, pesoKg: 15 },
+  ],
+  COZINHA: [
+    { id: "c-geladeira", name: "Geladeira", volumeM3: 0.6, pesoKg: 30 },
+    { id: "c-fogao", name: "Fogão", volumeM3: 0.5, pesoKg: 25 },
+    { id: "c-mesa", name: "Mesa com cadeiras", volumeM3: 0.4, pesoKg: 5 },
+  ],
+  BANHEIRO: [
+    { id: "b-armario", name: "Armário de banheiro", volumeM3: 0.3, pesoKg: 10 },
+  ],
+  ESCRITORIO: [
+    { id: "e-mesa", name: "Mesa de escritório", volumeM3: 0.6, pesoKg: 25 },
+    { id: "e-cadeira", name: "Cadeira", volumeM3: 0.4, pesoKg: 15 },
+    { id: "e-estante", name: "Estante", volumeM3: 0.4, pesoKg: 10 },
+  ],
+  AREA_SERVICO: [
+    { id: "as-maquina", name: "Máquina de lavar", volumeM3: 0.3, pesoKg: 50 },
+  ],
+};
+
+const CAMINHOES: TruckInfo[] = [
+  { id: "1", nome: "Fiorino", tipo: "FIORINO", capacidadeM3: 1.5, capacidadeKg: 600 },
+  { id: "2", nome: "HR / VUC", tipo: "HR", capacidadeM3: 6, capacidadeKg: 1500 },
+  { id: "3", nome: "3/4", tipo: "TRES_QUARTOS", capacidadeM3: 12, capacidadeKg: 3000 },
+  { id: "4", nome: "Baú", tipo: "BAU", capacidadeM3: 20, capacidadeKg: 5000 },
+];
+
+function formatDate(iso: string | null): string {
+  if (!iso) return "Sem data";
+  return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" });
 }
 
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
-}
+// ─── Build room blocks from numComodos ───────────────────
 
-// ─── Canvas with items ───────────────────────────────────
+function buildInitialRooms(numComodos: number): RoomBlock[] {
+  // Simple heuristic: distribute rooms
+  const blocks: RoomBlock[] = [];
 
-function CargoCanvas({
-  itens,
-  onRemove,
-  onAddMore,
-}: {
-  itens: CargaItem[];
-  onRemove: (id: string) => void;
-  onAddMore: () => void;
-}) {
-  if (itens.length === 0) {
-    return (
-      <div className="py-6">
-        <Button
-          onClick={onAddMore}
-          variant="outline"
-          className="gap-2"
-        >
-          <Plus className="h-4 w-4" />
-          Adicionar item
-        </Button>
-      </div>
-    );
+  if (numComodos <= 0) return blocks;
+
+  // Always 1 kitchen, 1 bathroom, rest as bedrooms + 1 sala
+  const kitchens = 1;
+  const bathrooms = Math.min(numComodos, Math.max(1, Math.floor(numComodos / 3)));
+  const salas = 1;
+  const remaining = Math.max(0, numComodos - kitchens - bathrooms - salas);
+  const quartos = remaining;
+
+  const distribution: Record<string, number> = {
+    QUARTO: quartos,
+    SALA: salas,
+    COZINHA: kitchens,
+    BANHEIRO: bathrooms,
+  };
+
+  for (const room of ROOM_TYPES) {
+    const count = distribution[room.key] || 0;
+    if (count > 0) {
+      // Generate items for each instance of this room
+      const items: RoomItem[] = [];
+      for (let i = 0; i < count; i++) {
+        const defaults = ROOM_DEFAULT_ITEMS[room.key] || [];
+        items.push(
+          ...defaults.map((d) => ({
+            ...d,
+            id: `${d.id}-${i}-${Math.random().toString(36).slice(2, 6)}`,
+          }))
+        );
+      }
+
+      blocks.push({
+        key: room.key,
+        label: room.label,
+        icon: room.icon,
+        count,
+        items,
+        expanded: true,
+      });
+    }
   }
 
-  return (
-    <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-        <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <Package className="h-4 w-4 text-[#E84225]" />
-          Itens da mudança ({itens.reduce((acc, i) => acc + i.quantidade, 0)} itens)
-        </div>
-        <Button
-          onClick={onAddMore}
-          size="sm"
-          variant="outline"
-          className="h-7 px-2 text-xs gap-1 border-gray-200 text-gray-600 hover:border-[#E84225] hover:text-[#E84225]"
-        >
-          <Plus className="h-3.5 w-3.5" />
-          Adicionar
-        </Button>
-      </div>
-
-      {/* Items grid */}
-      <div className="grid gap-2 p-4 sm:grid-cols-2 lg:grid-cols-3">
-        {itens.map((cargaItem) => (
-          <div
-            key={cargaItem.id}
-            className="flex items-center gap-3 rounded-lg border border-gray-100 bg-gray-50 p-3 group"
-          >
-            <div
-              className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${cargaItem.item.cor} text-white text-sm font-bold`}
-            >
-              {cargaItem.item.nome.charAt(0)}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium text-gray-800 truncate">
-                {cargaItem.item.nome}
-              </div>
-              <div className="flex gap-2 text-xs text-gray-400 mt-0.5">
-                <span>{cargaItem.item.volume} m³</span>
-                <span>{cargaItem.item.peso} kg</span>
-                {cargaItem.quantidade > 1 && (
-                  <span className="text-[#E84225] font-medium">×{cargaItem.quantidade}</span>
-                )}
-              </div>
-            </div>
-            <button
-              onClick={() => onRemove(cargaItem.id)}
-              className="shrink-0 rounded-md p-1 text-gray-300 opacity-0 transition-all hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── Add Item Dialog ──────────────────────────────────────
-
-function AddItemDialog({
-  open,
-  onOpenChange,
-  onAdd,
-  existingIds,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onAdd: (item: CatalogItem) => void;
-  existingIds: Set<string>;
-}) {
-  const [search, setSearch] = useState("");
-
-  const filtered = CATALOG_ITEMS.filter(
-    (item) =>
-      search.trim() === "" ||
-      item.nome.toLowerCase().includes(search.toLowerCase()) ||
-      item.categoria.toLowerCase().includes(search.toLowerCase())
-  );
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg max-h-[80vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle>Adicionar item à mudança</DialogTitle>
-        </DialogHeader>
-
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
-            type="search"
-            placeholder="Buscar item..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 h-9 text-sm"
-            autoFocus
-          />
-        </div>
-
-        <div className="flex-1 overflow-y-auto -mx-6 px-6 space-y-1.5 min-h-0 max-h-[400px]">
-          {filtered.map((item) => {
-            const alreadyAdded = existingIds.has(item.id);
-            return (
-              <button
-                key={item.id}
-                disabled={alreadyAdded}
-                onClick={() => onAdd(item)}
-                className={`flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-colors ${
-                  alreadyAdded
-                    ? "border-green-200 bg-green-50 cursor-default"
-                    : "border-gray-200 hover:border-[#E84225] hover:bg-red-50/50"
-                }`}
-              >
-                <div
-                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${item.cor} text-white text-sm font-bold`}
-                >
-                  {item.nome.charAt(0)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-gray-800">
-                    {item.nome}
-                  </div>
-                  <div className="flex gap-3 text-xs text-gray-400 mt-0.5">
-                    <span>{item.categoria}</span>
-                    <span>{item.volume} m³</span>
-                    <span>{item.peso} kg</span>
-                  </div>
-                </div>
-                {alreadyAdded ? (
-                  <span className="text-xs text-green-600 font-medium shrink-0">Adicionado ✓</span>
-                ) : (
-                  <Plus className="h-4 w-4 shrink-0 text-gray-400" />
-                )}
-              </button>
-            );
-          })}
-          {filtered.length === 0 && (
-            <div className="py-8 text-center text-sm text-gray-400">
-              Nenhum item encontrado.
-            </div>
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-// ─── Sub-components ───────────────────────────────────────
-
-function CargoSummaryPanel({
-  volumeTotal,
-  pesoTotal,
-  capacidadeCaminhao,
-}: {
-  volumeTotal: number;
-  pesoTotal: number;
-  capacidadeCaminhao: number;
-}) {
-  const ocupacao = capacidadeCaminhao > 0
-    ? Math.round((volumeTotal / capacidadeCaminhao) * 100)
-    : 0;
-  const isOver = ocupacao > 100;
-
-  return (
-    <Card className="border border-gray-200 bg-white shadow-sm">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <BarChart3 className="h-4 w-4 text-[#E84225]" />
-          Resumo da Carga
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-lg bg-red-50 p-3 text-center">
-            <div className="text-xs text-gray-500 mb-1">Volume</div>
-            <div className="text-lg font-semibold text-[#E84225]">
-              {volumeTotal.toFixed(1)} m³
-            </div>
-          </div>
-          <div className="rounded-lg bg-amber-50 p-3 text-center">
-            <div className="text-xs text-gray-500 mb-1">Peso</div>
-            <div className="text-lg font-semibold text-[#1A1A1A]">
-              {pesoTotal} kg
-            </div>
-          </div>
-        </div>
-
-      </CardContent>
-    </Card>
-  );
-}
-
-function TruckSelector({
-  selected,
-  onSelect,
-}: {
-  selected: string;
-  onSelect: (id: string) => void;
-}) {
-  return (
-    <Card className="border border-gray-200 bg-white shadow-sm">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <Truck className="h-4 w-4 text-[#E84225]" />
-          Selecionar Veículo
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        {MOCK_TRUCKS.map((truck) => {
-          const isSelected = selected === truck.id;
-          return (
-            <div
-              key={truck.id}
-              className={`rounded-lg border-2 p-3 transition-all cursor-pointer ${
-                isSelected
-                  ? "border-[#E84225] bg-red-50"
-                  : "border-gray-200 bg-white hover:border-gray-300"
-              }`}
-              onClick={() => onSelect(truck.id)}
-            >
-              <div className="flex items-center justify-between gap-2">
-                <div className="min-w-0">
-                  <div className={`text-sm font-medium ${isSelected ? "text-[#E84225]" : "text-gray-800"}`}>
-                    {truck.nome}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-0.5 truncate">
-                    {truck.descricao}
-                  </div>
-                  <div className="flex gap-3 mt-1">
-                    <span className="text-xs text-gray-400">{truck.capacidadeVolume} m³</span>
-                    <span className="text-xs text-gray-400">{truck.capacidadePeso} kg</span>
-                  </div>
-                </div>
-                <Button
-                  size="sm"
-                  variant={isSelected ? "default" : "outline"}
-                  className={`shrink-0 h-7 px-3 text-xs ${
-                    isSelected
-                      ? "bg-[#E84225] text-white hover:bg-[#C73820]"
-                      : "border-gray-200 text-gray-600 hover:border-[#E84225] hover:text-[#E84225]"
-                  }`}
-                  onClick={(e) => { e.stopPropagation(); onSelect(truck.id); }}
-                >
-                  {isSelected ? "Selecionado" : "Selecionar"}
-                </Button>
-              </div>
-            </div>
-          );
-        })}
-      </CardContent>
-    </Card>
-  );
-}
-
-function CotacoesPanel() {
-  return (
-    <Card className="border border-gray-200 bg-white shadow-sm">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <Tag className="h-4 w-4 text-[#1A1A1A]" />
-          Cotações
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {MOCK_COTACOES.length > 0 ? (
-          <div className="space-y-3">
-            {MOCK_COTACOES.map((cotacao) => (
-              <div key={cotacao.id} className="rounded-lg border border-gray-200 p-3 space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-800">{cotacao.empresa}</span>
-                  <span className="text-sm font-semibold text-[#E84225]">{formatCurrency(cotacao.valor)}</span>
-                </div>
-                <div className="flex items-center gap-3 text-xs text-gray-500">
-                  <span>Prazo: {cotacao.prazoEntrega}</span>
-                  <span>Avaliação: {cotacao.avaliacao} / 5</span>
-                </div>
-                <Button size="sm" className="w-full h-7 text-xs bg-[#E84225] text-white hover:bg-[#C73820] mt-1">
-                  Aceitar cotação
-                </Button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center py-4 text-center gap-3">
-            <p className="text-sm text-gray-500">Nenhuma cotação recebida ainda.</p>
-            <Button size="sm" className="bg-[#1A1A1A] text-white hover:bg-[#333333] h-8 px-4 text-xs">
-              Solicitar cotações
-            </Button>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
+  return blocks;
 }
 
 // ─── Page ─────────────────────────────────────────────────
 
 export default function MudancaDetailPage() {
-  const { data: session, status } = useSession();
+  const { data: session, status: authStatus } = useSession();
   const params = useParams();
+  const id = params.id as string;
+  const { data: mudanca, isLoading, isError } = useMudanca(id);
 
-  const [selectedTruck, setSelectedTruck] = useState("tres_quartos");
-  const [cargaItens, setCargaItens] = useState<CargaItem[]>([]);
-  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  // Room-based item state
+  const [roomBlocks, setRoomBlocks] = useState<RoomBlock[] | null>(null);
 
-  if (status === "loading") {
+  // Initialize room blocks from mudança data once loaded
+  if (mudanca && roomBlocks === null) {
+    const numComodos = (mudanca as Record<string, unknown>).numComodos as number || 3;
+    // Use setTimeout to avoid setState during render
+    setTimeout(() => setRoomBlocks(buildInitialRooms(numComodos)), 0);
+  }
+
+  // Calculate totals from room blocks
+  const totals = useMemo(() => {
+    if (!roomBlocks) return { items: 0, volumeM3: 0, pesoKg: 0 };
+    let items = 0;
+    let volumeM3 = 0;
+    let pesoKg = 0;
+    for (const block of roomBlocks) {
+      items += block.items.length;
+      for (const item of block.items) {
+        volumeM3 += item.volumeM3;
+        pesoKg += item.pesoKg;
+      }
+    }
+    return {
+      items,
+      volumeM3: Math.round(volumeM3 * 10) / 10,
+      pesoKg: Math.round(pesoKg),
+    };
+  }, [roomBlocks]);
+
+  if (authStatus === "loading" || isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
         <Loader2 className="h-8 w-8 animate-spin text-[#E84225]" />
@@ -461,113 +206,303 @@ export default function MudancaDetailPage() {
     );
   }
 
-  if (!session) {
-    redirect("/login");
-  }
+  if (!session) redirect("/login");
 
-  const mudanca = MOCK_MUDANCA;
-  const statusStyle = STATUS_STYLES[mudanca.status];
-  const selectedTruckData = MOCK_TRUCKS.find((t) => t.id === selectedTruck)!;
-
-  const volumeTotal = cargaItens.reduce((acc, i) => acc + i.item.volume * i.quantidade, 0);
-  const pesoTotal = cargaItens.reduce((acc, i) => acc + i.item.peso * i.quantidade, 0);
-  const existingItemIds = new Set(cargaItens.map((i) => i.item.id));
-
-  function handleAddItem(item: CatalogItem) {
-    const existing = cargaItens.find((i) => i.item.id === item.id);
-    if (existing) {
-      setCargaItens((prev) =>
-        prev.map((i) =>
-          i.item.id === item.id ? { ...i, quantidade: i.quantidade + 1 } : i
-        )
-      );
-    } else {
-      setCargaItens((prev) => [
-        ...prev,
-        { id: `carga_${Date.now()}`, item, quantidade: 1 },
-      ]);
-    }
-    toast.success(`${item.nome} adicionado`);
-  }
-
-  function handleRemoveItem(id: string) {
-    setCargaItens((prev) => prev.filter((i) => i.id !== id));
-  }
-
-  return (
-    <div className="flex flex-col gap-6 px-8 py-8">
-      {/* Breadcrumb */}
-      <div>
-        <Link
-          href="/dashboard"
-          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[#E84225] transition-colors"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          Minhas Mudanças
+  if (isError || !mudanca) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <Package className="h-12 w-12 text-gray-300 mb-4" />
+        <h2 className="text-lg font-semibold text-gray-900">Mudança não encontrada</h2>
+        <Link href="/dashboard" className="mt-4 text-sm text-[#E84225] hover:underline">
+          ← Voltar para mudanças
         </Link>
       </div>
+    );
+  }
 
+  const statusStyle = STATUS_STYLES[mudanca.status] || STATUS_STYLES.RASCUNHO;
+  const distanciaKm = (mudanca as Record<string, unknown>).distanciaKm as number | null;
+  const cotacoes = (mudanca as Record<string, unknown>).cotacoes as Array<{
+    id: string;
+    precoCentavos: number;
+    transportadora: { nome: string; notaMedia: number };
+  }> | undefined;
+
+  const removeItem = (roomKey: string, itemId: string) => {
+    if (!roomBlocks) return;
+    setRoomBlocks(
+      roomBlocks.map((b) =>
+        b.key === roomKey
+          ? { ...b, items: b.items.filter((i) => i.id !== itemId) }
+          : b
+      )
+    );
+  };
+
+  const addItem = (roomKey: string) => {
+    if (!roomBlocks) return;
+    const defaults = ROOM_DEFAULT_ITEMS[roomKey];
+    if (!defaults || defaults.length === 0) return;
+    // Add the first default item type
+    const newItem = {
+      ...defaults[0],
+      id: `${defaults[0].id}-new-${Math.random().toString(36).slice(2, 6)}`,
+    };
+    setRoomBlocks(
+      roomBlocks.map((b) =>
+        b.key === roomKey ? { ...b, items: [...b.items, newItem] } : b
+      )
+    );
+  };
+
+  const toggleExpand = (roomKey: string) => {
+    if (!roomBlocks) return;
+    setRoomBlocks(
+      roomBlocks.map((b) =>
+        b.key === roomKey ? { ...b, expanded: !b.expanded } : b
+      )
+    );
+  };
+
+  return (
+    <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-2">
+      <div className="border-b border-gray-200 bg-white px-6 py-4">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Badge variant="outline" className={`text-xs font-medium ${statusStyle.className}`}>
-              {statusStyle.label}
-            </Badge>
-            <span className="text-xs text-gray-400">{formatDate(mudanca.dataDesejada)}</span>
-          </div>
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2 text-base font-semibold text-gray-900">
-              <MapPin className="h-4 w-4 shrink-0 text-[#E84225]" />
-              {mudanca.enderecoOrigem}
+            <Link
+              href="/dashboard"
+              className="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </Link>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-lg font-semibold text-gray-900">
+                  Detalhes da mudança
+                </h1>
+                <Badge variant="outline" className={`text-[11px] ${statusStyle.className}`}>
+                  {statusStyle.label}
+                </Badge>
+              </div>
+              <div className="flex items-center gap-4 mt-1 text-xs text-gray-500">
+                <span className="flex items-center gap-1">
+                  <MapPin className="h-3 w-3 text-[#E84225]" />
+                  {mudanca.enderecoOrigem}
+                </span>
+                <ArrowRight className="h-3 w-3" />
+                <span>{mudanca.enderecoDestino}</span>
+                {distanciaKm && (
+                  <span className="flex items-center gap-1 font-medium">
+                    <Navigation className="h-3 w-3 text-[#E84225]" />
+                    {distanciaKm} km
+                  </span>
+                )}
+                {mudanca.dataDesejada && (
+                  <span className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    {formatDate(mudanca.dataDesejada)}
+                  </span>
+                )}
+              </div>
             </div>
-            <div className="flex items-center gap-2 ml-1 text-sm text-gray-600">
-              <ArrowRight className="h-4 w-4 shrink-0 text-gray-400" />
-              {mudanca.enderecoDestino}
-            </div>
           </div>
-        </div>
-
-        <Button
-          onClick={() => setAddDialogOpen(true)}
-          className="gap-2 bg-[#E84225] text-white hover:bg-[#C73820] shrink-0"
-          size="sm"
-        >
-          <Plus className="h-4 w-4" />
-          Adicionar item
-        </Button>
-      </div>
-
-      {/* Two-column layout */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Left: Canvas area (2/3) */}
-        <div className="lg:col-span-2">
-          <CargoCanvas
-            itens={cargaItens}
-            onRemove={handleRemoveItem}
-            onAddMore={() => setAddDialogOpen(true)}
-          />
-        </div>
-
-        {/* Right: Panels (1/3) */}
-        <div className="flex flex-col gap-4">
-          <CargoSummaryPanel
-            volumeTotal={volumeTotal}
-            pesoTotal={pesoTotal}
-            capacidadeCaminhao={selectedTruckData.capacidadeVolume}
-          />
-          <TruckSelector selected={selectedTruck} onSelect={setSelectedTruck} />
-          <CotacoesPanel />
         </div>
       </div>
 
-      {/* Add item dialog */}
-      <AddItemDialog
-        open={addDialogOpen}
-        onOpenChange={setAddDialogOpen}
-        onAdd={handleAddItem}
-        existingIds={existingItemIds}
-      />
+      {/* Body: left (items by room) + right (summary panel) */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left: Items organized by room */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-base font-semibold text-gray-900">
+              Itens por cômodo
+            </h2>
+            <span className="text-xs text-gray-500">
+              Ajuste os itens para uma estimativa mais precisa
+            </span>
+          </div>
+
+          {roomBlocks && roomBlocks.length > 0 ? (
+            roomBlocks.map((block) => {
+              const Icon = ROOM_ICONS[block.icon];
+              return (
+                <Card key={block.key} className="overflow-hidden">
+                  {/* Room header — clickable to expand */}
+                  <button
+                    onClick={() => toggleExpand(block.key)}
+                    className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors"
+                  >
+                    <div className="flex items-center gap-2">
+                      {Icon && <Icon className="h-4 w-4 text-[#E84225]" />}
+                      <span className="text-sm font-medium text-gray-900">
+                        {block.label}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        ({block.count}× | {block.items.length} itens)
+                      </span>
+                    </div>
+                    {block.expanded ? (
+                      <ChevronDown className="h-4 w-4 text-gray-400" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 text-gray-400" />
+                    )}
+                  </button>
+
+                  {/* Items list */}
+                  {block.expanded && (
+                    <CardContent className="py-2 px-4">
+                      <div className="space-y-1">
+                        {block.items.map((item) => (
+                          <div
+                            key={item.id}
+                            className="flex items-center justify-between py-1.5 px-2 rounded-md hover:bg-gray-50 group"
+                          >
+                            <div className="flex items-center gap-3">
+                              <Package className="h-3.5 w-3.5 text-gray-400" />
+                              <span className="text-sm text-gray-800">
+                                {item.name}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span className="text-xs text-gray-400">
+                                {item.volumeM3} m³ · {item.pesoKg} kg
+                              </span>
+                              <button
+                                onClick={() => removeItem(block.key, item.id)}
+                                className="flex h-5 w-5 items-center justify-center rounded text-gray-300 opacity-0 group-hover:opacity-100 hover:bg-red-50 hover:text-red-500 transition-all"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={() => addItem(block.key)}
+                        className="flex items-center gap-1.5 mt-2 px-2 py-1.5 text-xs text-[#E84225] font-medium hover:bg-[#E84225]/5 rounded-md transition-colors w-full"
+                      >
+                        <Plus className="h-3 w-3" />
+                        Adicionar item em {block.label}
+                      </button>
+                    </CardContent>
+                  )}
+                </Card>
+              );
+            })
+          ) : (
+            <div className="text-center py-12 text-gray-500">
+              <Package className="h-10 w-10 mx-auto mb-3 text-gray-300" />
+              <p className="text-sm">Nenhum cômodo configurado</p>
+            </div>
+          )}
+        </div>
+
+        {/* Right: Summary panel */}
+        <div className="w-80 border-l border-gray-200 bg-gray-50 overflow-y-auto p-4 space-y-4">
+          {/* Cargo summary */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm">Resumo da carga</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="grid grid-cols-3 gap-2">
+                <div className="text-center p-2 rounded-lg bg-blue-50">
+                  <Package className="h-4 w-4 mx-auto text-blue-500 mb-1" />
+                  <p className="text-lg font-bold text-gray-900">{totals.items}</p>
+                  <p className="text-[10px] text-gray-500">itens</p>
+                </div>
+                <div className="text-center p-2 rounded-lg bg-green-50">
+                  <Box className="h-4 w-4 mx-auto text-green-500 mb-1" />
+                  <p className="text-lg font-bold text-gray-900">{totals.volumeM3}</p>
+                  <p className="text-[10px] text-gray-500">m³</p>
+                </div>
+                <div className="text-center p-2 rounded-lg bg-amber-50">
+                  <Weight className="h-4 w-4 mx-auto text-amber-500 mb-1" />
+                  <p className="text-lg font-bold text-gray-900">{totals.pesoKg}</p>
+                  <p className="text-[10px] text-gray-500">kg</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Truck recommendation */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm">Caminhão</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <TruckRecommendationPanel
+                volumeM3={totals.volumeM3}
+                pesoKg={totals.pesoKg}
+                caminhoes={CAMINHOES}
+                compact
+              />
+            </CardContent>
+          </Card>
+
+          {/* Quotes */}
+          {cotacoes && cotacoes.length > 0 && (
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">Cotações estimadas</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {cotacoes.slice(0, 5).map((c, i) => (
+                  <div
+                    key={c.id}
+                    className={`flex items-center justify-between p-2 rounded-lg ${
+                      i === 0 ? "bg-green-50 border border-green-200" : "bg-white border border-gray-100"
+                    }`}
+                  >
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">
+                        {c.transportadora.nome}
+                      </p>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
+                        <span className="text-xs text-gray-500">
+                          {c.transportadora.notaMedia?.toFixed(1)}
+                        </span>
+                        {i === 0 && (
+                          <span className="text-[10px] font-medium text-green-600 ml-1">
+                            Melhor preço
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <span className="text-base font-bold text-gray-900">
+                      R${" "}
+                      {(c.precoCentavos / 100).toLocaleString("pt-BR", {
+                        minimumFractionDigits: 2,
+                      })}
+                    </span>
+                  </div>
+                ))}
+                <p className="text-[10px] text-gray-400 italic text-center mt-2">
+                  Preços estimados. Detalhe seus itens para maior precisão.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Distance info */}
+          {distanciaKm && (
+            <Card>
+              <CardContent className="py-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-500">Distância</span>
+                  <span className="text-sm font-bold text-gray-900 flex items-center gap-1">
+                    <Navigation className="h-3.5 w-3.5 text-[#E84225]" />
+                    {distanciaKm} km
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

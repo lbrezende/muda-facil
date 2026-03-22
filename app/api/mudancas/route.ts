@@ -2,8 +2,6 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { checkUsageLimit } from "@/lib/subscription";
 import { mudancaSchema } from "@/lib/validations";
-import { calculateDistance } from "@/lib/distance";
-import { generateAutoQuotes } from "@/lib/quoting";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -19,11 +17,6 @@ export async function GET() {
       include: {
         caminhao: true,
         cargaLayout: true,
-        cotacoes: {
-          include: { transportadora: true },
-          orderBy: { precoCentavos: "asc" },
-          take: 3,
-        },
         _count: {
           select: { cotacoes: true },
         },
@@ -93,13 +86,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { enderecoOrigem, enderecoDestino, dataDesejada, caminhaoId, numComodos, distanciaKm: inputDistancia } = parsed.data;
-
-    // Calculate distance: use user-provided value or auto-calculate
-    let distanciaKm = inputDistancia ?? null;
-    if (!distanciaKm) {
-      distanciaKm = await calculateDistance(enderecoOrigem, enderecoDestino);
-    }
+    const { enderecoOrigem, enderecoDestino, dataDesejada, caminhaoId } = parsed.data;
 
     const mudanca = await db.mudanca.create({
       data: {
@@ -108,8 +95,6 @@ export async function POST(request: Request) {
         enderecoDestino,
         dataDesejada: dataDesejada ? new Date(dataDesejada) : null,
         caminhaoId: caminhaoId ?? null,
-        numComodos: numComodos ?? 1,
-        distanciaKm,
       },
       include: {
         caminhao: true,
@@ -120,52 +105,7 @@ export async function POST(request: Request) {
       },
     });
 
-    // Auto-generate quotes from all transportadoras
-    if (distanciaKm && distanciaKm > 0) {
-      try {
-        const quotes = await generateAutoQuotes(distanciaKm, numComodos ?? 1);
-        const validadeDate = new Date();
-        validadeDate.setDate(validadeDate.getDate() + 7); // quotes valid for 7 days
-
-        for (const quote of quotes) {
-          const dataDisponivel = new Date();
-          dataDisponivel.setDate(dataDisponivel.getDate() + quote.tempoEstimadoDias);
-
-          await db.cotacao.create({
-            data: {
-              mudancaId: mudanca.id,
-              transportadoraId: quote.transportadoraId,
-              precoCentavos: quote.precoCentavos,
-              dataDisponivel,
-              seguroIncluso: quote.seguroIncluso,
-              validade: validadeDate,
-            },
-          });
-        }
-      } catch (quotingError) {
-        console.error("Auto-quoting error (non-fatal):", quotingError);
-        // Non-fatal: mudança is still created
-      }
-    }
-
-    // Re-fetch with updated cotacao count
-    const result = await db.mudanca.findUnique({
-      where: { id: mudanca.id },
-      include: {
-        caminhao: true,
-        cargaLayout: true,
-        cotacoes: {
-          include: { transportadora: true },
-          orderBy: { precoCentavos: "asc" },
-          take: 3,
-        },
-        _count: {
-          select: { cotacoes: true },
-        },
-      },
-    });
-
-    return NextResponse.json(result, { status: 201 });
+    return NextResponse.json(mudanca, { status: 201 });
   } catch (error) {
     console.error("POST /api/mudancas error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

@@ -135,7 +135,7 @@ export async function POST(request: Request) {
         dataDesejada: dataDesejada ? new Date(dataDesejada) : null,
         caminhaoId: caminhaoId ?? null,
         numComodos: numComodos ?? 1,
-        distanciaKm: distanciaKm ?? null,
+        distanciaKm: distanciaKm ?? 500, // Default 500km if not calculated
       },
     });
 

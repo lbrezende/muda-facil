@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
-import { Search, Check, Truck, MapPin, ArrowRight } from "lucide-react";
+import { Search, Truck, MapPin, ArrowRight, PackageOpen, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,89 +13,26 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { useMudancas } from "@/hooks/use-mudancas";
+import { useItens, type ItemCatalogo } from "@/hooks/use-itens";
 
-// ─── Types ────────────────────────────────────────────────
+// ─── Categories ──────────────────────────────────────────
 
-type Categoria =
-  | "Quarto"
-  | "Cozinha"
-  | "Sala"
-  | "Escritório"
-  | "Banheiro"
-  | "Área de Serviço"
-  | "Caixas";
+const CATEGORIA_MAP: Record<string, string> = {
+  QUARTO: "Quarto",
+  COZINHA: "Cozinha",
+  SALA: "Sala",
+  ESCRITORIO: "Escritório",
+  BANHEIRO: "Banheiro",
+  AREA_SERVICO: "Área de Serviço",
+  CAIXAS: "Caixas",
+};
 
-interface Item {
-  id: string;
-  nome: string;
-  categoria: Categoria;
-  largura: number;
-  altura: number;
-  profundidade: number;
-  peso: number;
-  volume: number;
-  cor: string;
+const CATEGORIAS = ["Todos", "Quarto", "Cozinha", "Sala", "Escritório", "Banheiro", "Área de Serviço", "Caixas"];
+
+function categoriaPretty(cat: string): string {
+  return CATEGORIA_MAP[cat] || cat;
 }
-
-interface MudancaMock {
-  id: string;
-  enderecoOrigem: string;
-  enderecoDestino: string;
-  status: string;
-  numeroItens: number;
-}
-
-// ─── Mock Data ────────────────────────────────────────────
-
-const MOCK_ITEMS: Item[] = [
-  { id: "item_001", nome: "Cama Casal", categoria: "Quarto", largura: 188, altura: 45, profundidade: 138, peso: 40, volume: 1.17, cor: "bg-purple-400" },
-  { id: "item_002", nome: "Guarda-Roupa 6 Portas", categoria: "Quarto", largura: 240, altura: 210, profundidade: 55, peso: 120, volume: 2.77, cor: "bg-purple-500" },
-  { id: "item_003", nome: "Geladeira Duplex", categoria: "Cozinha", largura: 70, altura: 175, profundidade: 75, peso: 90, volume: 0.92, cor: "bg-sky-400" },
-  { id: "item_004", nome: "Fogão 4 Bocas", categoria: "Cozinha", largura: 60, altura: 85, profundidade: 60, peso: 30, volume: 0.31, cor: "bg-sky-500" },
-  { id: "item_005", nome: "Sofá 3 Lugares", categoria: "Sala", largura: 210, altura: 85, profundidade: 90, peso: 60, volume: 1.60, cor: "bg-emerald-400" },
-  { id: "item_006", nome: "Mesa de Jantar", categoria: "Sala", largura: 160, altura: 76, profundidade: 90, peso: 35, volume: 1.09, cor: "bg-emerald-500" },
-  { id: "item_007", nome: "Mesa de Escritório", categoria: "Escritório", largura: 150, altura: 75, profundidade: 70, peso: 25, volume: 0.79, cor: "bg-orange-400" },
-  { id: "item_008", nome: "Cadeira de Escritório", categoria: "Escritório", largura: 65, altura: 115, profundidade: 65, peso: 15, volume: 0.49, cor: "bg-red-500" },
-  { id: "item_009", nome: "Armário de Banheiro", categoria: "Banheiro", largura: 80, altura: 60, profundidade: 20, peso: 12, volume: 0.10, cor: "bg-teal-400" },
-  { id: "item_010", nome: "Máquina de Lavar", categoria: "Área de Serviço", largura: 60, altura: 85, profundidade: 60, peso: 65, volume: 0.31, cor: "bg-indigo-400" },
-  { id: "item_011", nome: "Caixa Pequena", categoria: "Caixas", largura: 40, altura: 30, profundidade: 30, peso: 10, volume: 0.04, cor: "bg-amber-400" },
-  { id: "item_012", nome: "Caixa Grande", categoria: "Caixas", largura: 60, altura: 50, profundidade: 50, peso: 20, volume: 0.15, cor: "bg-amber-500" },
-];
-
-const MOCK_MUDANCAS: MudancaMock[] = [
-  {
-    id: "mud_001",
-    enderecoOrigem: "Rua das Flores, 123 – São Paulo, SP",
-    enderecoDestino: "Av. Paulista, 1500 – São Paulo, SP",
-    status: "Confirmada",
-    numeroItens: 34,
-  },
-  {
-    id: "mud_002",
-    enderecoOrigem: "Rua XV de Novembro, 80 – Curitiba, PR",
-    enderecoDestino: "Rua Marechal Deodoro, 200 – Curitiba, PR",
-    status: "Cotando",
-    numeroItens: 21,
-  },
-  {
-    id: "mud_003",
-    enderecoOrigem: "Rua Consolação, 400 – São Paulo, SP",
-    enderecoDestino: "Rua Oscar Freire, 900 – São Paulo, SP",
-    status: "Rascunho",
-    numeroItens: 8,
-  },
-];
-
-const CATEGORIAS: Array<"Todos" | Categoria> = [
-  "Todos",
-  "Quarto",
-  "Cozinha",
-  "Sala",
-  "Escritório",
-  "Banheiro",
-  "Área de Serviço",
-  "Caixas",
-];
 
 // ─── ItemCard ──────────────────────────────────────────────
 
@@ -104,8 +40,8 @@ function ItemCard({
   item,
   onAdd,
 }: {
-  item: Item;
-  onAdd: (item: Item) => void;
+  item: ItemCatalogo;
+  onAdd: (item: ItemCatalogo) => void;
 }) {
   return (
     <Card className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
@@ -114,23 +50,23 @@ function ItemCard({
           <div className="text-sm font-semibold text-gray-900 leading-tight">
             {item.nome}
           </div>
-          <div className="text-xs text-gray-400 mt-0.5">{item.categoria}</div>
+          <div className="text-xs text-gray-400 mt-0.5">{categoriaPretty(item.categoria)}</div>
         </div>
 
         <div className="space-y-1 border-t border-gray-100 pt-3">
           <div className="flex items-center justify-between text-xs">
             <span className="text-gray-500">Dimensões</span>
             <span className="font-medium text-gray-700">
-              {item.largura} × {item.altura} × {item.profundidade} cm
+              {item.larguraCm} × {item.alturaCm} × {item.profundidadeCm} cm
             </span>
           </div>
           <div className="flex items-center justify-between text-xs">
             <span className="text-gray-500">Peso</span>
-            <span className="font-medium text-gray-700">{item.peso} kg</span>
+            <span className="font-medium text-gray-700">{item.pesoKg} kg</span>
           </div>
           <div className="flex items-center justify-between text-xs">
             <span className="text-gray-500">Volume</span>
-            <span className="font-medium text-[#E84225]">{item.volume} m³</span>
+            <span className="font-medium text-[#E84225]">{item.volumeM3} m³</span>
           </div>
         </div>
 
@@ -150,41 +86,59 @@ function ItemCard({
 // ─── Page ─────────────────────────────────────────────────
 
 export default function CatalogoPage() {
-  const router = useRouter();
-  const [activeCategory, setActiveCategory] = useState<"Todos" | Categoria>("Todos");
+  const [activeCategory, setActiveCategory] = useState("Todos");
   const [search, setSearch] = useState("");
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [selectedItem, setSelectedItem] = useState<ItemCatalogo | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const { data: itens, isLoading: itensLoading } = useItens();
+  const { data: mudancas, isLoading: mudancasLoading } = useMudancas();
+
   const filteredItems = useMemo(() => {
-    return MOCK_ITEMS.filter((item) => {
+    if (!itens) return [];
+    return itens.filter((item) => {
       const matchesCategory =
-        activeCategory === "Todos" || item.categoria === activeCategory;
+        activeCategory === "Todos" || categoriaPretty(item.categoria) === activeCategory;
       const matchesSearch =
         search.trim() === "" ||
         item.nome.toLowerCase().includes(search.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, search]);
+  }, [activeCategory, search, itens]);
 
-  function handleAddToMudanca(item: Item) {
+  function handleAddToMudanca(item: ItemCatalogo) {
     setSelectedItem(item);
 
-    if (MOCK_MUDANCAS.length === 0) {
-      toast.error("Você não tem nenhuma mudança. Crie uma primeiro.");
-      router.push("/dashboard/nova-mudanca");
+    if (!mudancas || mudancas.length === 0) {
+      // No mudanças — show dialog with empty state
+      setDialogOpen(true);
       return;
     }
 
     setDialogOpen(true);
   }
 
-  function handleSelectMudanca(mudanca: MudancaMock) {
+  function handleSelectMudanca(mudanca: { id: string; enderecoDestino: string }) {
     setDialogOpen(false);
     toast.success(
       `"${selectedItem?.nome}" adicionado à mudança para ${mudanca.enderecoDestino.split("–")[0].trim()}`
     );
     // TODO: chamar API para adicionar item à carga da mudança
+  }
+
+  const statusLabel: Record<string, string> = {
+    RASCUNHO: "Rascunho",
+    COTANDO: "Cotando",
+    CONFIRMADA: "Confirmada",
+    CONCLUIDA: "Concluída",
+  };
+
+  if (itensLoading) {
+    return (
+      <div className="flex items-center justify-center py-32">
+        <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+      </div>
+    );
   }
 
   return (
@@ -266,59 +220,64 @@ export default function CatalogoPage() {
           <DialogHeader>
             <DialogTitle>Selecionar mudança</DialogTitle>
             <DialogDescription>
-              Em qual mudança você quer adicionar{" "}
-              <span className="font-medium text-gray-900">
-                {selectedItem?.nome}
-              </span>
-              ?
+              {mudancas && mudancas.length > 0 ? (
+                <>
+                  Em qual mudança você quer adicionar{" "}
+                  <span className="font-medium text-gray-900">
+                    {selectedItem?.nome}
+                  </span>
+                  ?
+                </>
+              ) : (
+                <>
+                  Você não tem nenhuma mudança cadastrada.
+                  <br />
+                  Cadastre uma mudança primeiro para poder adicionar itens.
+                </>
+              )}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex flex-col gap-2 mt-2">
-            {MOCK_MUDANCAS.map((mudanca) => (
-              <button
-                key={mudanca.id}
-                onClick={() => handleSelectMudanca(mudanca)}
-                className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 text-left transition-colors hover:border-[#E84225] hover:bg-red-50/50"
-              >
-                <Truck className="mt-0.5 h-5 w-5 shrink-0 text-[#E84225]" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 text-sm">
-                    <MapPin className="h-3 w-3 shrink-0 text-gray-400" />
-                    <span className="truncate text-gray-700">
-                      {mudanca.enderecoOrigem}
-                    </span>
+          {mudancas && mudancas.length > 0 ? (
+            <div className="flex flex-col gap-2 mt-2">
+              {mudancas.map((mudanca) => (
+                <button
+                  key={mudanca.id}
+                  onClick={() => handleSelectMudanca(mudanca)}
+                  className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 text-left transition-colors hover:border-[#E84225] hover:bg-red-50/50"
+                >
+                  <Truck className="mt-0.5 h-5 w-5 shrink-0 text-[#E84225]" />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 text-sm">
+                      <MapPin className="h-3 w-3 shrink-0 text-gray-400" />
+                      <span className="truncate text-gray-700">
+                        {mudanca.enderecoOrigem}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm mt-0.5">
+                      <ArrowRight className="h-3 w-3 shrink-0 text-gray-400" />
+                      <span className="truncate text-gray-700">
+                        {mudanca.enderecoDestino}
+                      </span>
+                    </div>
+                    <div className="mt-1.5 flex items-center gap-3 text-xs text-gray-400">
+                      <span className="rounded bg-gray-100 px-1.5 py-0.5">
+                        {statusLabel[mudanca.status] || mudanca.status}
+                      </span>
+                      <span>{mudanca._count.cotacoes} cotações</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm mt-0.5">
-                    <ArrowRight className="h-3 w-3 shrink-0 text-gray-400" />
-                    <span className="truncate text-gray-700">
-                      {mudanca.enderecoDestino}
-                    </span>
-                  </div>
-                  <div className="mt-1.5 flex items-center gap-3 text-xs text-gray-400">
-                    <span className="rounded bg-gray-100 px-1.5 py-0.5">
-                      {mudanca.status}
-                    </span>
-                    <span>{mudanca.numeroItens} itens</span>
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          <div className="border-t pt-3 mt-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full text-xs"
-              onClick={() => {
-                setDialogOpen(false);
-                router.push("/dashboard/nova-mudanca");
-              }}
-            >
-              + Criar nova mudança
-            </Button>
-          </div>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-8">
+              <PackageOpen className="h-10 w-10 text-gray-300" />
+              <p className="mt-3 text-sm text-gray-500 text-center">
+                Você não tem nenhuma mudança.
+              </p>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>

@@ -212,12 +212,12 @@ export const ShuffleHero = () => {
     <section className="w-full px-6 py-20 bg-white border-t">
       <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 max-w-6xl mx-auto">
         <div>
-          <span className="block mb-4 text-sm text-[#1B1660] font-semibold uppercase tracking-wide">
+          <span className="block mb-4 text-sm text-[#1A1A1A] font-semibold uppercase tracking-wide">
             +2.000 mudancas realizadas
           </span>
           <h3 className="text-3xl md:text-5xl font-bold text-gray-900 leading-tight">
             Cada caixa no lugar certo.{" "}
-            <span className="text-[#F37021]">Cada cliente satisfeito.</span>
+            <span className="text-[#E84225]">Cada cliente satisfeito.</span>
           </h3>
           <p className="text-base md:text-lg text-gray-600 my-6 leading-relaxed">
             Mudar de casa e mais do que transportar moveis — e comecar um novo capitulo.
@@ -227,9 +227,9 @@ export const ShuffleHero = () => {
           </p>
           <Link href="/login">
             <button className={cn(
-              "bg-[#F37021] text-white font-semibold py-3 px-6 rounded-lg text-base",
-              "transition-all hover:bg-[#D85E1A] active:scale-95",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F37021] focus-visible:ring-offset-2",
+              "bg-[#E84225] text-white font-semibold py-3 px-6 rounded-lg text-base",
+              "transition-all hover:bg-[#C73820] active:scale-95",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E84225] focus-visible:ring-offset-2",
               "inline-flex items-center gap-2"
             )}>
               Planejar minha mudanca com seguranca

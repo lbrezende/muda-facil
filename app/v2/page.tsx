@@ -20,7 +20,7 @@ function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         <Link href="/" className="flex items-center gap-2">
-          <Truck className="h-7 w-7 text-[#F37021]" />
+          <Truck className="h-7 w-7 text-[#E84225]" />
           <span className="text-xl font-bold">MudaFácil</span>
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
@@ -46,7 +46,7 @@ function Header() {
           <Link href="/login">
             <Button
               size="sm"
-              className="bg-[#F37021] hover:bg-[#D85E1A] text-white"
+              className="bg-[#E84225] hover:bg-[#C73820] text-white"
             >
               Começar grátis
               <ArrowRight className="ml-1 h-4 w-4" />
@@ -116,8 +116,8 @@ function Features() {
               key={feature.title}
               className="rounded-xl border bg-[#F8FAFC] p-6"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#F37021]/10">
-                <feature.icon className="h-5 w-5 text-[#F37021]" />
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#E84225]/10">
+                <feature.icon className="h-5 w-5 text-[#E84225]" />
               </div>
               <h3 className="mt-4 font-semibold text-gray-900">
                 {feature.title}
@@ -182,8 +182,8 @@ function Pricing() {
           </div>
 
           {/* Pro Plan */}
-          <div className="relative rounded-2xl border-2 border-[#F37021] bg-white p-8">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#1B1660] px-3 py-0.5 text-xs font-semibold text-white">
+          <div className="relative rounded-2xl border-2 border-[#E84225] bg-white p-8">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#1A1A1A] px-3 py-0.5 text-xs font-semibold text-white">
               Popular
             </div>
             <h3 className="text-lg font-semibold text-gray-900">Pro</h3>
@@ -205,13 +205,13 @@ function Pricing() {
                 "14 dias grátis para testar",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-3 text-sm">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#F37021]" />
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#E84225]" />
                   <span className="text-gray-600">{item}</span>
                 </li>
               ))}
             </ul>
             <Link href="/login" className="mt-8 block">
-              <Button className="w-full bg-[#F37021] hover:bg-[#D85E1A] text-white">
+              <Button className="w-full bg-[#E84225] hover:bg-[#C73820] text-white">
                 Testar 14 dias grátis
                 <ArrowRight className="ml-1 h-4 w-4" />
               </Button>
@@ -229,7 +229,7 @@ function Footer() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-2">
-            <Truck className="h-5 w-5 text-[#F37021]" />
+            <Truck className="h-5 w-5 text-[#E84225]" />
             <span className="font-semibold">MudaFácil</span>
           </div>
           <p className="text-sm text-gray-500">

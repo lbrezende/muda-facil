@@ -111,7 +111,7 @@ export const TextColors: Story = {
       {[
         { className: 'text-foreground', label: 'foreground', desc: 'Texto principal' },
         { className: 'text-muted-foreground', label: 'muted-foreground', desc: 'Texto secundario / descricoes' },
-        { className: 'text-primary', label: 'primary (#F37021)', desc: 'Links, destaques, brand' },
+        { className: 'text-primary', label: 'primary (#E84225)', desc: 'Links, destaques, brand' },
         { className: 'text-destructive', label: 'destructive', desc: 'Erros, alertas, remocao' },
         { className: 'text-accent-foreground', label: 'accent-foreground', desc: 'Texto sobre fundo accent' },
       ].map(({ className, label, desc }) => (
@@ -164,7 +164,7 @@ export const SemanticHeadings: Story = {
       </div>
       <div className="border-b pb-6">
         <p className="text-xs font-mono text-muted-foreground mb-2">Section — Subtitle / Kicker</p>
-        <span className="text-sm font-semibold text-[#1B1660] uppercase tracking-wide">
+        <span className="text-sm font-semibold text-[#1A1A1A] uppercase tracking-wide">
           +2.000 mudancas realizadas
         </span>
       </div>
@@ -248,7 +248,7 @@ export const Monospace: Story = {
       <div>
         <p className="text-xs font-mono text-muted-foreground mb-2">font-mono — Inline code</p>
         <p className="text-sm text-foreground">
-          Use a classe <code className="font-mono bg-muted px-1.5 py-0.5 rounded text-xs text-primary">text-primary</code> para destaques em laranja.
+          Use a classe <code className="font-mono bg-muted px-1.5 py-0.5 rounded text-xs text-primary">text-primary</code> para destaques em vermelho.
         </p>
       </div>
     </div>
@@ -303,7 +303,7 @@ export const FullReference: Story = {
     <div className="max-w-3xl space-y-12">
       {/* Simula uma pagina real */}
       <div className="space-y-2">
-        <span className="text-sm font-semibold text-[#1B1660] uppercase tracking-wide">
+        <span className="text-sm font-semibold text-[#1A1A1A] uppercase tracking-wide">
           +2.000 mudancas realizadas
         </span>
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground leading-tight">

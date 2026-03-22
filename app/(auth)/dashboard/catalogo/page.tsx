@@ -56,7 +56,7 @@ const MOCK_ITEMS: Item[] = [
   { id: "item_005", nome: "Sofá 3 Lugares", categoria: "Sala", largura: 210, altura: 85, profundidade: 90, peso: 60, volume: 1.60, cor: "bg-emerald-400" },
   { id: "item_006", nome: "Mesa de Jantar", categoria: "Sala", largura: 160, altura: 76, profundidade: 90, peso: 35, volume: 1.09, cor: "bg-emerald-500" },
   { id: "item_007", nome: "Mesa de Escritório", categoria: "Escritório", largura: 150, altura: 75, profundidade: 70, peso: 25, volume: 0.79, cor: "bg-orange-400" },
-  { id: "item_008", nome: "Cadeira de Escritório", categoria: "Escritório", largura: 65, altura: 115, profundidade: 65, peso: 15, volume: 0.49, cor: "bg-orange-500" },
+  { id: "item_008", nome: "Cadeira de Escritório", categoria: "Escritório", largura: 65, altura: 115, profundidade: 65, peso: 15, volume: 0.49, cor: "bg-red-500" },
   { id: "item_009", nome: "Armário de Banheiro", categoria: "Banheiro", largura: 80, altura: 60, profundidade: 20, peso: 12, volume: 0.10, cor: "bg-teal-400" },
   { id: "item_010", nome: "Máquina de Lavar", categoria: "Área de Serviço", largura: 60, altura: 85, profundidade: 60, peso: 65, volume: 0.31, cor: "bg-indigo-400" },
   { id: "item_011", nome: "Caixa Pequena", categoria: "Caixas", largura: 40, altura: 30, profundidade: 30, peso: 10, volume: 0.04, cor: "bg-amber-400" },
@@ -130,14 +130,14 @@ function ItemCard({
           </div>
           <div className="flex items-center justify-between text-xs">
             <span className="text-gray-500">Volume</span>
-            <span className="font-medium text-[#F37021]">{item.volume} m³</span>
+            <span className="font-medium text-[#E84225]">{item.volume} m³</span>
           </div>
         </div>
 
         <Button
           variant="outline"
           size="sm"
-          className="w-full h-7 text-xs border-gray-200 text-gray-600 hover:border-[#F37021] hover:text-[#F37021] mt-1"
+          className="w-full h-7 text-xs border-gray-200 text-gray-600 hover:border-[#E84225] hover:text-[#E84225] mt-1"
           onClick={() => onAdd(item)}
         >
           Adicionar à mudança
@@ -219,7 +219,7 @@ export default function CatalogoPage() {
               onClick={() => setActiveCategory(cat)}
               className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                 activeCategory === cat
-                  ? "bg-[#F37021] text-white"
+                  ? "bg-[#E84225] text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
@@ -247,7 +247,7 @@ export default function CatalogoPage() {
               setSearch("");
               setActiveCategory("Todos");
             }}
-            className="mt-3 text-xs text-[#F37021] hover:underline"
+            className="mt-3 text-xs text-[#E84225] hover:underline"
           >
             Limpar filtros
           </button>
@@ -279,9 +279,9 @@ export default function CatalogoPage() {
               <button
                 key={mudanca.id}
                 onClick={() => handleSelectMudanca(mudanca)}
-                className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 text-left transition-colors hover:border-[#F37021] hover:bg-orange-50/50"
+                className="flex items-start gap-3 rounded-lg border border-gray-200 p-3 text-left transition-colors hover:border-[#E84225] hover:bg-red-50/50"
               >
-                <Truck className="mt-0.5 h-5 w-5 shrink-0 text-[#F37021]" />
+                <Truck className="mt-0.5 h-5 w-5 shrink-0 text-[#E84225]" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 text-sm">
                     <MapPin className="h-3 w-3 shrink-0 text-gray-400" />

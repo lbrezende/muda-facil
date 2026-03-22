@@ -65,9 +65,9 @@ export default function PricingPage() {
           </Card>
 
           {/* PRO Plan */}
-          <Card className="relative border-[#F37021] border-2">
+          <Card className="relative border-[#E84225] border-2">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-              <span className="rounded-full bg-[#1B1660] px-3 py-1 text-xs font-medium text-white">
+              <span className="rounded-full bg-[#1A1A1A] px-3 py-1 text-xs font-medium text-white">
                 Mais popular
               </span>
             </div>
@@ -86,7 +86,7 @@ export default function PricingPage() {
               <Feature text="Filtros avançados de cotação" highlight />
               <Feature text="14 dias grátis para testar" highlight />
               <Button
-                className="w-full mt-4 bg-[#F37021] hover:bg-[#D85E1A]"
+                className="w-full mt-4 bg-[#E84225] hover:bg-[#C73820]"
                 onClick={handleCheckout}
               >
                 Começar trial gratuito
@@ -102,7 +102,7 @@ export default function PricingPage() {
 function Feature({ text, highlight }: { text: string; highlight?: boolean }) {
   return (
     <div className="flex items-center gap-2">
-      <Check className={`h-4 w-4 shrink-0 ${highlight ? "text-[#F37021]" : "text-gray-400"}`} />
+      <Check className={`h-4 w-4 shrink-0 ${highlight ? "text-[#E84225]" : "text-gray-400"}`} />
       <span className={`text-sm ${highlight ? "text-gray-900" : "text-gray-600"}`}>
         {text}
       </span>

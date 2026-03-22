@@ -123,7 +123,7 @@ function NovaMudancaModal({
               value={origem}
               onChange={(e) => setOrigem(e.target.value)}
               placeholder="Rua das Flores, 123 - Sao Paulo, SP"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#F37021] focus:outline-none focus:ring-2 focus:ring-[#F37021]/20"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#E84225] focus:outline-none focus:ring-2 focus:ring-[#E84225]/20"
               required
             />
           </div>
@@ -137,7 +137,7 @@ function NovaMudancaModal({
               value={destino}
               onChange={(e) => setDestino(e.target.value)}
               placeholder="Av. Paulista, 1500 - Sao Paulo, SP"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#F37021] focus:outline-none focus:ring-2 focus:ring-[#F37021]/20"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#E84225] focus:outline-none focus:ring-2 focus:ring-[#E84225]/20"
               required
             />
           </div>
@@ -150,7 +150,7 @@ function NovaMudancaModal({
               type="date"
               value={data}
               onChange={(e) => setData(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#F37021] focus:outline-none focus:ring-2 focus:ring-[#F37021]/20"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#E84225] focus:outline-none focus:ring-2 focus:ring-[#E84225]/20"
             />
           </div>
 
@@ -171,7 +171,7 @@ function NovaMudancaModal({
             </Button>
             <Button
               type="submit"
-              className="flex-1 bg-[#F37021] text-white hover:bg-[#D85E1A]"
+              className="flex-1 bg-[#E84225] text-white hover:bg-[#C73820]"
               disabled={createMudanca.isPending || !origem.trim() || !destino.trim()}
             >
               {createMudanca.isPending ? (
@@ -243,7 +243,7 @@ function MudancaCard({ mudanca }: { mudanca: MudancaListItem }) {
           {/* Origin → Destination */}
           <div className="flex flex-col gap-1.5">
             <div className="flex items-start gap-2 text-sm text-gray-700">
-              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#F37021]" />
+              <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#E84225]" />
               <span className="leading-snug">{mudanca.enderecoOrigem}</span>
             </div>
             <div className="ml-6 flex items-center gap-1.5 text-xs text-gray-400">
@@ -257,13 +257,13 @@ function MudancaCard({ mudanca }: { mudanca: MudancaListItem }) {
           {/* Meta row */}
           <div className="flex flex-wrap items-center gap-4 border-t border-gray-100 pt-3">
             <div className="flex items-center gap-1.5 text-xs text-gray-500">
-              <Calendar className="h-3.5 w-3.5 text-[#1B1660]" />
+              <Calendar className="h-3.5 w-3.5 text-[#1A1A1A]" />
               <span>{formatDate(mudanca.dataDesejada)}</span>
             </div>
 
             {itemCount > 0 && (
               <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                <Package className="h-3.5 w-3.5 text-[#F37021]" />
+                <Package className="h-3.5 w-3.5 text-[#E84225]" />
                 <span>
                   {itemCount} {itemCount === 1 ? "cotacao" : "cotacoes"}
                 </span>
@@ -293,7 +293,7 @@ export default function DashboardPage() {
   if (authStatus === "loading" || isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-[#F37021]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#E84225]" />
       </div>
     );
   }
@@ -327,7 +327,7 @@ export default function DashboardPage() {
           isBlocked={isAtLimit}
         >
           <Button
-            className="gap-2 bg-[#F37021] text-white hover:bg-[#D85E1A]"
+            className="gap-2 bg-[#E84225] text-white hover:bg-[#C73820]"
             onClick={() => setModalOpen(true)}
           >
             <Plus className="h-4 w-4" />
@@ -348,8 +348,8 @@ export default function DashboardPage() {
       {/* Empty state */}
       {!isError && mudancaCount === 0 && (
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-200 py-20 text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#F37021]/10 mb-4">
-            <Truck className="h-8 w-8 text-[#F37021]" />
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#E84225]/10 mb-4">
+            <Truck className="h-8 w-8 text-[#E84225]" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900">
             Nenhuma mudanca ainda
@@ -358,7 +358,7 @@ export default function DashboardPage() {
             Crie sua primeira mudanca para comecar a planejar sua carga, comparar caminhoes e receber cotacoes de transportadoras.
           </p>
           <Button
-            className="mt-6 gap-2 bg-[#F37021] text-white hover:bg-[#D85E1A]"
+            className="mt-6 gap-2 bg-[#E84225] text-white hover:bg-[#C73820]"
             onClick={() => setModalOpen(true)}
           >
             <Plus className="h-4 w-4" />

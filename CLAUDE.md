@@ -50,9 +50,9 @@ This is a Next.js 14+ SaaS MVP for moving/relocation planning with interactive c
 
 ## Brand Colors
 
-- Primary: #F37021 (laranja marca)
-- Background: #F8FAFC (cinza quase branco)
-- Navy: #1B1660 (azul marinho profundo)
+- Primary: #E84225 (vermelho container Trekon)
+- Background: #F8FAFC (cinza neutro claro)
+- Dark: #1A1A1A (preto industrial)
 
 ## Storybook
 

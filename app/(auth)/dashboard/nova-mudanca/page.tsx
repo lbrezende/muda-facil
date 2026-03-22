@@ -24,7 +24,7 @@ export default function NovaMudancaPage() {
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-[#F37021]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#E84225]" />
       </div>
     );
   }
@@ -81,7 +81,7 @@ export default function NovaMudancaPage() {
         <Card className="border border-gray-200 bg-white shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base font-semibold text-gray-800">
-              <Truck className="h-5 w-5 text-[#F37021]" />
+              <Truck className="h-5 w-5 text-[#E84225]" />
               Dados da mudança
             </CardTitle>
           </CardHeader>
@@ -94,7 +94,7 @@ export default function NovaMudancaPage() {
                   htmlFor="origem"
                   className="flex items-center gap-1.5 text-sm font-medium text-gray-700"
                 >
-                  <MapPin className="h-3.5 w-3.5 text-[#F37021]" />
+                  <MapPin className="h-3.5 w-3.5 text-[#E84225]" />
                   Endereço de origem
                 </label>
                 <Input
@@ -123,7 +123,7 @@ export default function NovaMudancaPage() {
                   htmlFor="destino"
                   className="flex items-center gap-1.5 text-sm font-medium text-gray-700"
                 >
-                  <MapPin className="h-3.5 w-3.5 text-[#1B1660]" />
+                  <MapPin className="h-3.5 w-3.5 text-[#1A1A1A]" />
                   Endereço de destino
                 </label>
                 <Input
@@ -161,7 +161,7 @@ export default function NovaMudancaPage() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-10 bg-[#F37021] text-white hover:bg-[#D85E1A] font-medium"
+                className="w-full h-10 bg-[#E84225] text-white hover:bg-[#C73820] font-medium"
               >
                 {isSubmitting ? (
                   <>

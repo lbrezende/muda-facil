@@ -155,14 +155,14 @@ function CargoCanvas({
       {/* Header */}
       <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <Package className="h-4 w-4 text-[#F37021]" />
+          <Package className="h-4 w-4 text-[#E84225]" />
           Itens da mudança ({itens.reduce((acc, i) => acc + i.quantidade, 0)} itens)
         </div>
         <Button
           onClick={onAddMore}
           size="sm"
           variant="outline"
-          className="h-7 px-2 text-xs gap-1 border-gray-200 text-gray-600 hover:border-[#F37021] hover:text-[#F37021]"
+          className="h-7 px-2 text-xs gap-1 border-gray-200 text-gray-600 hover:border-[#E84225] hover:text-[#E84225]"
         >
           <Plus className="h-3.5 w-3.5" />
           Adicionar
@@ -189,7 +189,7 @@ function CargoCanvas({
                 <span>{cargaItem.item.volume} m³</span>
                 <span>{cargaItem.item.peso} kg</span>
                 {cargaItem.quantidade > 1 && (
-                  <span className="text-[#F37021] font-medium">×{cargaItem.quantidade}</span>
+                  <span className="text-[#E84225] font-medium">×{cargaItem.quantidade}</span>
                 )}
               </div>
             </div>
@@ -258,7 +258,7 @@ function AddItemDialog({
                 className={`flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-colors ${
                   alreadyAdded
                     ? "border-green-200 bg-green-50 cursor-default"
-                    : "border-gray-200 hover:border-[#F37021] hover:bg-orange-50/50"
+                    : "border-gray-200 hover:border-[#E84225] hover:bg-red-50/50"
                 }`}
               >
                 <div
@@ -315,21 +315,21 @@ function CargoSummaryPanel({
     <Card className="border border-gray-200 bg-white shadow-sm">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <BarChart3 className="h-4 w-4 text-[#F37021]" />
+          <BarChart3 className="h-4 w-4 text-[#E84225]" />
           Resumo da Carga
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-lg bg-orange-50 p-3 text-center">
+          <div className="rounded-lg bg-red-50 p-3 text-center">
             <div className="text-xs text-gray-500 mb-1">Volume</div>
-            <div className="text-lg font-semibold text-[#F37021]">
+            <div className="text-lg font-semibold text-[#E84225]">
               {volumeTotal.toFixed(1)} m³
             </div>
           </div>
           <div className="rounded-lg bg-amber-50 p-3 text-center">
             <div className="text-xs text-gray-500 mb-1">Peso</div>
-            <div className="text-lg font-semibold text-[#1B1660]">
+            <div className="text-lg font-semibold text-[#1A1A1A]">
               {pesoTotal} kg
             </div>
           </div>
@@ -351,7 +351,7 @@ function TruckSelector({
     <Card className="border border-gray-200 bg-white shadow-sm">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <Truck className="h-4 w-4 text-[#F37021]" />
+          <Truck className="h-4 w-4 text-[#E84225]" />
           Selecionar Veículo
         </CardTitle>
       </CardHeader>
@@ -363,14 +363,14 @@ function TruckSelector({
               key={truck.id}
               className={`rounded-lg border-2 p-3 transition-all cursor-pointer ${
                 isSelected
-                  ? "border-[#F37021] bg-orange-50"
+                  ? "border-[#E84225] bg-red-50"
                   : "border-gray-200 bg-white hover:border-gray-300"
               }`}
               onClick={() => onSelect(truck.id)}
             >
               <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0">
-                  <div className={`text-sm font-medium ${isSelected ? "text-[#F37021]" : "text-gray-800"}`}>
+                  <div className={`text-sm font-medium ${isSelected ? "text-[#E84225]" : "text-gray-800"}`}>
                     {truck.nome}
                   </div>
                   <div className="text-xs text-gray-500 mt-0.5 truncate">
@@ -386,8 +386,8 @@ function TruckSelector({
                   variant={isSelected ? "default" : "outline"}
                   className={`shrink-0 h-7 px-3 text-xs ${
                     isSelected
-                      ? "bg-[#F37021] text-white hover:bg-[#D85E1A]"
-                      : "border-gray-200 text-gray-600 hover:border-[#F37021] hover:text-[#F37021]"
+                      ? "bg-[#E84225] text-white hover:bg-[#C73820]"
+                      : "border-gray-200 text-gray-600 hover:border-[#E84225] hover:text-[#E84225]"
                   }`}
                   onClick={(e) => { e.stopPropagation(); onSelect(truck.id); }}
                 >
@@ -407,7 +407,7 @@ function CotacoesPanel() {
     <Card className="border border-gray-200 bg-white shadow-sm">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-          <Tag className="h-4 w-4 text-[#1B1660]" />
+          <Tag className="h-4 w-4 text-[#1A1A1A]" />
           Cotações
         </CardTitle>
       </CardHeader>
@@ -418,13 +418,13 @@ function CotacoesPanel() {
               <div key={cotacao.id} className="rounded-lg border border-gray-200 p-3 space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-gray-800">{cotacao.empresa}</span>
-                  <span className="text-sm font-semibold text-[#F37021]">{formatCurrency(cotacao.valor)}</span>
+                  <span className="text-sm font-semibold text-[#E84225]">{formatCurrency(cotacao.valor)}</span>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-gray-500">
                   <span>Prazo: {cotacao.prazoEntrega}</span>
                   <span>Avaliação: {cotacao.avaliacao} / 5</span>
                 </div>
-                <Button size="sm" className="w-full h-7 text-xs bg-[#F37021] text-white hover:bg-[#D85E1A] mt-1">
+                <Button size="sm" className="w-full h-7 text-xs bg-[#E84225] text-white hover:bg-[#C73820] mt-1">
                   Aceitar cotação
                 </Button>
               </div>
@@ -433,7 +433,7 @@ function CotacoesPanel() {
         ) : (
           <div className="flex flex-col items-center py-4 text-center gap-3">
             <p className="text-sm text-gray-500">Nenhuma cotação recebida ainda.</p>
-            <Button size="sm" className="bg-[#1B1660] text-white hover:bg-[#2A2578] h-8 px-4 text-xs">
+            <Button size="sm" className="bg-[#1A1A1A] text-white hover:bg-[#333333] h-8 px-4 text-xs">
               Solicitar cotações
             </Button>
           </div>
@@ -456,7 +456,7 @@ export default function MudancaDetailPage() {
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-[#F37021]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#E84225]" />
       </div>
     );
   }
@@ -500,7 +500,7 @@ export default function MudancaDetailPage() {
       <div>
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[#F37021] transition-colors"
+          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-[#E84225] transition-colors"
         >
           <ChevronLeft className="h-4 w-4" />
           Minhas Mudanças
@@ -518,7 +518,7 @@ export default function MudancaDetailPage() {
           </div>
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2 text-base font-semibold text-gray-900">
-              <MapPin className="h-4 w-4 shrink-0 text-[#F37021]" />
+              <MapPin className="h-4 w-4 shrink-0 text-[#E84225]" />
               {mudanca.enderecoOrigem}
             </div>
             <div className="flex items-center gap-2 ml-1 text-sm text-gray-600">
@@ -530,7 +530,7 @@ export default function MudancaDetailPage() {
 
         <Button
           onClick={() => setAddDialogOpen(true)}
-          className="gap-2 bg-[#F37021] text-white hover:bg-[#D85E1A] shrink-0"
+          className="gap-2 bg-[#E84225] text-white hover:bg-[#C73820] shrink-0"
           size="sm"
         >
           <Plus className="h-4 w-4" />

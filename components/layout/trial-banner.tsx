@@ -22,13 +22,13 @@ export function TrialBanner() {
   if (daysLeft <= 0) return null;
 
   return (
-    <div className="flex items-center justify-center gap-2 bg-[#F37021] px-4 py-2 text-sm text-white">
+    <div className="flex items-center justify-center gap-2 bg-[#E84225] px-4 py-2 text-sm text-white">
       <Clock className="h-4 w-4" />
       <span>
         {daysLeft} {daysLeft === 1 ? "dia restante" : "dias restantes"} no seu
         trial.
       </span>
-      <Link href="/pricing" className="underline font-medium hover:text-orange-100">
+      <Link href="/pricing" className="underline font-medium hover:text-red-100">
         Fazer upgrade
       </Link>
     </div>

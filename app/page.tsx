@@ -20,7 +20,7 @@ function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         <Link href="/" className="flex items-center gap-2">
-          <Truck className="h-7 w-7 text-[#F37021]" />
+          <Truck className="h-7 w-7 text-[#E84225]" />
           <span className="text-xl font-bold">MudaFácil</span>
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
@@ -46,7 +46,7 @@ function Header() {
           <Link href="/login">
             <Button
               size="sm"
-              className="bg-[#F37021] hover:bg-[#D85E1A] text-white"
+              className="bg-[#E84225] hover:bg-[#C73820] text-white"
             >
               Começar grátis
               <ArrowRight className="ml-1 h-4 w-4" />
@@ -60,15 +60,15 @@ function Header() {
 
 function Hero() {
   return (
-    <GridScan className="py-24 sm:py-32 bg-[#1B1660]" lineColor="rgba(243, 112, 33, 0.12)" scanColor="rgba(243, 112, 33, 0.2)">
+    <GridScan className="py-24 sm:py-32 bg-[#1A1A1A]" lineColor="rgba(243, 112, 33, 0.12)" scanColor="rgba(243, 112, 33, 0.2)">
       <div className="mx-auto max-w-6xl px-6 text-center">
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm px-4 py-1.5 text-sm text-white/80 shadow-sm">
-          <Zap className="h-4 w-4 text-[#F37021]" />
+          <Zap className="h-4 w-4 text-[#E84225]" />
           14 dias grátis no Pro — sem cartão de crédito
         </div>
         <h1 className="mx-auto max-w-3xl text-4xl font-bold tracking-tight text-white sm:text-6xl">
           Arraste seus móveis, escolha o caminhão e{" "}
-          <span className="text-[#F37021]">mude sem estresse</span>
+          <span className="text-[#E84225]">mude sem estresse</span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-white/70">
           Monte visualmente a carga da sua mudança com drag & drop, compare
@@ -79,7 +79,7 @@ function Hero() {
           <Link href="/login">
             <Button
               size="lg"
-              className="px-8 text-base bg-[#F37021] hover:bg-[#D85E1A] text-white"
+              className="px-8 text-base bg-[#E84225] hover:bg-[#C73820] text-white"
             >
               Planejar minha mudança
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -94,7 +94,7 @@ function Hero() {
 
         {/* Drag & Drop Canvas Mockup */}
         <div className="relative mx-auto mt-16 max-w-4xl">
-          <div className="rounded-xl border bg-white p-2 shadow-2xl shadow-[#F37021]/10">
+          <div className="rounded-xl border bg-white p-2 shadow-2xl shadow-[#E84225]/10">
             <div className="rounded-lg border bg-gray-50 p-6 sm:p-8">
               {/* Browser chrome */}
               <div className="mb-4 flex items-center gap-3">
@@ -123,18 +123,18 @@ function Hero() {
                         key={item.label}
                         className={`flex items-center justify-between rounded-md border px-3 py-2 text-xs cursor-grab ${
                           item.dragging
-                            ? "border-[#F37021] bg-[#F37021]/5 shadow-sm"
+                            ? "border-[#E84225] bg-[#E84225]/5 shadow-sm"
                             : "bg-gray-50"
                         }`}
                       >
                         <div className="flex items-center gap-2">
                           <Package
-                            className={`h-3.5 w-3.5 ${item.dragging ? "text-[#F37021]" : "text-gray-400"}`}
+                            className={`h-3.5 w-3.5 ${item.dragging ? "text-[#E84225]" : "text-gray-400"}`}
                           />
                           <span
                             className={
                               item.dragging
-                                ? "font-medium text-[#F37021]"
+                                ? "font-medium text-[#E84225]"
                                 : "text-gray-600"
                             }
                           >
@@ -148,26 +148,26 @@ function Hero() {
                 </div>
 
                 {/* Canvas area */}
-                <div className="rounded-lg border-2 border-dashed border-[#F37021]/30 bg-[#F37021]/5 p-4">
+                <div className="rounded-lg border-2 border-dashed border-[#E84225]/30 bg-[#E84225]/5 p-4">
                   <div className="mb-2 flex items-center justify-between">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-[#F37021]">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#E84225]">
                       Container — Caminhão 3/4
                     </p>
-                    <Truck className="h-4 w-4 text-[#F37021]" />
+                    <Truck className="h-4 w-4 text-[#E84225]" />
                   </div>
-                  <div className="relative h-36 rounded-md bg-white border border-[#F37021]/20">
+                  <div className="relative h-36 rounded-md bg-white border border-[#E84225]/20">
                     {/* Furniture items placed inside container */}
-                    <div className="absolute left-2 top-2 rounded bg-[#1B1660]/20 border border-[#1B1660]/40 px-2 py-1 text-[10px] font-medium text-[#9A4510]">
+                    <div className="absolute left-2 top-2 rounded bg-[#1A1A1A]/20 border border-[#1A1A1A]/40 px-2 py-1 text-[10px] font-medium text-[#8B2E18]">
                       Sofá
                     </div>
-                    <div className="absolute left-16 top-2 rounded bg-[#F37021]/20 border border-[#F37021]/40 px-2 py-1 text-[10px] font-medium text-[#1B1660]">
+                    <div className="absolute left-16 top-2 rounded bg-[#E84225]/20 border border-[#E84225]/40 px-2 py-1 text-[10px] font-medium text-[#1A1A1A]">
                       Geladeira
                     </div>
-                    <div className="absolute left-2 top-12 rounded bg-[#1B1660]/20 border border-[#1B1660]/40 px-2 py-1 text-[10px] font-medium text-[#9A4510]">
+                    <div className="absolute left-2 top-12 rounded bg-[#1A1A1A]/20 border border-[#1A1A1A]/40 px-2 py-1 text-[10px] font-medium text-[#8B2E18]">
                       Guarda-roupa
                     </div>
                     {/* Dragging item indicator */}
-                    <div className="absolute right-3 top-8 rounded border-2 border-dashed border-[#F37021] bg-[#F37021]/10 px-2 py-1 text-[10px] font-medium text-[#F37021] animate-pulse">
+                    <div className="absolute right-3 top-8 rounded border-2 border-dashed border-[#E84225] bg-[#E84225]/10 px-2 py-1 text-[10px] font-medium text-[#E84225] animate-pulse">
                       Cama queen
                     </div>
                   </div>
@@ -175,11 +175,11 @@ function Hero() {
                   <div className="mt-3">
                     <div className="mb-1 flex justify-between text-[10px] text-gray-500">
                       <span>Ocupação</span>
-                      <span className="font-semibold text-[#F37021]">68%</span>
+                      <span className="font-semibold text-[#E84225]">68%</span>
                     </div>
                     <div className="h-1.5 w-full rounded-full bg-gray-200">
                       <div
-                        className="h-1.5 rounded-full bg-[#F37021]"
+                        className="h-1.5 rounded-full bg-[#E84225]"
                         style={{ width: "68%" }}
                       />
                     </div>
@@ -203,7 +203,7 @@ function Hero() {
                           key={truck.name}
                           className={`flex items-center justify-between rounded-md px-2 py-1.5 text-xs ${
                             truck.active
-                              ? "bg-[#F37021] text-white"
+                              ? "bg-[#E84225] text-white"
                               : "bg-gray-50 text-gray-600"
                           }`}
                         >
@@ -228,7 +228,7 @@ function Hero() {
                         <span>Peso estimado</span>
                         <span className="font-semibold">820 kg</span>
                       </div>
-                      <div className="flex justify-between text-[#F37021]">
+                      <div className="flex justify-between text-[#E84225]">
                         <span>Cotações</span>
                         <span className="font-semibold">3 disponíveis</span>
                       </div>
@@ -302,8 +302,8 @@ function Features() {
               key={feature.title}
               className="rounded-xl border bg-[#F8FAFC] p-6"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#F37021]/10">
-                <feature.icon className="h-5 w-5 text-[#F37021]" />
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#E84225]/10">
+                <feature.icon className="h-5 w-5 text-[#E84225]" />
               </div>
               <h3 className="mt-4 font-semibold text-gray-900">
                 {feature.title}
@@ -368,8 +368,8 @@ function Pricing() {
           </div>
 
           {/* Pro Plan */}
-          <div className="relative rounded-2xl border-2 border-[#F37021] bg-white p-8">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#1B1660] px-3 py-0.5 text-xs font-semibold text-white">
+          <div className="relative rounded-2xl border-2 border-[#E84225] bg-white p-8">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#1A1A1A] px-3 py-0.5 text-xs font-semibold text-white">
               Popular
             </div>
             <h3 className="text-lg font-semibold text-gray-900">Pro</h3>
@@ -391,13 +391,13 @@ function Pricing() {
                 "14 dias grátis para testar",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-3 text-sm">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#F37021]" />
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#E84225]" />
                   <span className="text-gray-600">{item}</span>
                 </li>
               ))}
             </ul>
             <Link href="/login" className="mt-8 block">
-              <Button className="w-full bg-[#F37021] hover:bg-[#D85E1A] text-white">
+              <Button className="w-full bg-[#E84225] hover:bg-[#C73820] text-white">
                 Testar 14 dias grátis
                 <ArrowRight className="ml-1 h-4 w-4" />
               </Button>
@@ -415,7 +415,7 @@ function Footer() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-2">
-            <Truck className="h-5 w-5 text-[#F37021]" />
+            <Truck className="h-5 w-5 text-[#E84225]" />
             <span className="font-semibold">MudaFácil</span>
           </div>
           <p className="text-sm text-gray-500">

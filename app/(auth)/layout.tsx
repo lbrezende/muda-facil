@@ -13,11 +13,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <TrialBanner />
       <TopHeader onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar: hidden on mobile, visible on md+ */}
-        <div className="hidden md:flex">
-          <Sidebar />
-        </div>
-        {/* Mobile sidebar (overlay) */}
         <Sidebar
           mobileOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}

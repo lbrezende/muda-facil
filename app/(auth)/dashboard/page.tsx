@@ -232,9 +232,10 @@ function NovaMudancaModal({
   const showEstimates = hasAddresses && hasRooms;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm overflow-y-auto py-8">
-      <div className="mx-4 w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between mb-5">
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="w-full max-w-lg md:mx-4 md:rounded-xl rounded-t-2xl bg-white shadow-2xl flex flex-col h-full md:h-auto md:max-h-[90vh]">
+        {/* Fixed header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
               Nova mudança
@@ -251,7 +252,9 @@ function NovaMudancaModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+        {/* Scrollable body */}
+        <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
           {/* Origin */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -358,33 +361,36 @@ function NovaMudancaModal({
               {createMudanca.error?.message || "Erro ao criar mudança"}
             </p>
           )}
+        </div>
 
-          {/* Actions */}
-          <div className="flex gap-3 pt-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="flex-1"
-              onClick={onClose}
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              className="flex-1 bg-[#E84225] text-white hover:bg-[#C73820]"
-              disabled={
-                createMudanca.isPending || !origem.trim() || !destino.trim()
-              }
-            >
-              {createMudanca.isPending ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Criando...
-                </>
-              ) : (
-                "Criar mudança"
-              )}
-            </Button>
+          {/* Fixed footer */}
+          <div className="shrink-0 border-t border-gray-100 px-5 py-4 bg-white md:rounded-b-xl">
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1"
+                onClick={onClose}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                className="flex-1 bg-[#E84225] text-white hover:bg-[#C73820]"
+                disabled={
+                  createMudanca.isPending || !origem.trim() || !destino.trim()
+                }
+              >
+                {createMudanca.isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Criando...
+                  </>
+                ) : (
+                  "Criar mudança"
+                )}
+              </Button>
+            </div>
           </div>
         </form>
       </div>
@@ -584,7 +590,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 px-8 py-6">
+    <div className="flex flex-col gap-6 px-4 py-4 md:px-8 md:py-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -646,7 +652,7 @@ export default function DashboardPage() {
 
       {/* Cards grid */}
       {!isError && mudancaCount > 0 && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
           {(mudancas as MudancaWithExtras[])!.map((mudanca) => (
             <MudancaCard
               key={mudanca.id}

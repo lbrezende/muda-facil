@@ -9,16 +9,20 @@ import {
   Settings,
   LogOut,
   ChevronDown,
+  Menu,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 
-export function TopHeader() {
+interface TopHeaderProps {
+  onMenuToggle?: () => void;
+}
+
+export function TopHeader({ onMenuToggle }: TopHeaderProps) {
   const { data: session } = useSession();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -38,9 +42,17 @@ export function TopHeader() {
       .slice(0, 2) || "U";
 
   return (
-    <header className="flex h-14 shrink-0 items-center border-b border-[#E5E9EB] bg-white px-6">
-      {/* Left: logo + nav */}
-      <div className="flex items-center gap-3">
+    <header className="flex h-14 shrink-0 items-center border-b border-[#E5E9EB] bg-white px-4 md:px-6">
+      {/* Left: hamburger (mobile) + logo + nav */}
+      <div className="flex items-center gap-2 md:gap-3">
+        {/* Hamburger — mobile only */}
+        <button
+          onClick={onMenuToggle}
+          className="flex h-8 w-8 items-center justify-center rounded-md text-[#6E7C87] hover:bg-[#F6F8F9] md:hidden"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+
         <Link
           href="/dashboard"
           className="flex h-8 w-8 items-center justify-center rounded-md text-[#E84225] hover:bg-[#F6F8F9]"
@@ -49,7 +61,7 @@ export function TopHeader() {
         </Link>
         <Link
           href="/dashboard"
-          className="rounded-md px-3 py-1 text-sm font-medium text-[#252C32] hover:bg-[#F6F8F9]"
+          className="hidden sm:inline-block rounded-md px-3 py-1 text-sm font-medium text-[#252C32] hover:bg-[#F6F8F9]"
         >
           Minhas Mudanças
         </Link>
@@ -59,19 +71,19 @@ export function TopHeader() {
 
       {/* Right: notifications + user dropdown */}
       <div className="flex items-center gap-1">
-        <button className="flex h-8 w-8 items-center justify-center rounded-md text-[#6E7C87] hover:bg-[#F6F8F9]">
+        <button className="hidden sm:flex h-8 w-8 items-center justify-center rounded-md text-[#6E7C87] hover:bg-[#F6F8F9]">
           <Bell className="h-5 w-5" />
         </button>
-        <button className="flex h-8 w-8 items-center justify-center rounded-md text-[#6E7C87] hover:bg-[#F6F8F9]">
+        <button className="hidden sm:flex h-8 w-8 items-center justify-center rounded-md text-[#6E7C87] hover:bg-[#F6F8F9]">
           <HelpCircle className="h-5 w-5" />
         </button>
 
         {/* User dropdown */}
         {session?.user && (
-          <div className="relative ml-2" ref={menuRef}>
+          <div className="relative ml-1 md:ml-2" ref={menuRef}>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-[#F6F8F9] transition-colors"
+              className="flex items-center gap-1 md:gap-2 rounded-lg px-1.5 md:px-2 py-1 hover:bg-[#F6F8F9] transition-colors"
             >
               <Avatar className="h-7 w-7 border border-black/10">
                 <AvatarImage
@@ -82,12 +94,15 @@ export function TopHeader() {
                   {initials}
                 </AvatarFallback>
               </Avatar>
-              <ChevronDown className={`h-3.5 w-3.5 text-gray-400 transition-transform ${menuOpen ? "rotate-180" : ""}`} />
+              <ChevronDown
+                className={`h-3.5 w-3.5 text-gray-400 transition-transform ${
+                  menuOpen ? "rotate-180" : ""
+                }`}
+              />
             </button>
 
             {menuOpen && (
               <div className="absolute right-0 top-full mt-1 w-56 rounded-lg border border-gray-200 bg-white py-1 shadow-lg z-50">
-                {/* User info */}
                 <div className="px-3 py-2 border-b border-gray-100">
                   <p className="text-sm font-medium text-gray-900 truncate">
                     {session.user.name}
@@ -96,7 +111,6 @@ export function TopHeader() {
                     {session.user.email}
                   </p>
                 </div>
-
                 <Link
                   href="/settings/billing"
                   onClick={() => setMenuOpen(false)}
@@ -105,7 +119,6 @@ export function TopHeader() {
                   <Settings className="h-4 w-4 text-gray-400" />
                   Configurações da conta
                 </Link>
-
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
                   className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50"

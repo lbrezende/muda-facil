@@ -1,70 +1,97 @@
 "use client";
 
-import { Check, AlertTriangle } from "lucide-react";
+import { Check, AlertTriangle, Truck } from "lucide-react";
 import {
   recommendTrucks,
   type TruckInfo,
-  type TruckRecommendation as TruckRec,
 } from "@/lib/room-estimation";
 
-// Simple truck SVG icons by size
-function TruckIcon({
-  size,
-  className = "",
+// ─── Visual truck fill bar ───────────────────────────────
+
+function TruckFillBar({
+  occupancyPercent,
+  quantity,
+  truckName,
+  isRecommended,
 }: {
-  size: "small" | "medium" | "large" | "xlarge";
-  className?: string;
+  occupancyPercent: number;
+  quantity: number;
+  truckName: string;
+  isRecommended: boolean;
 }) {
-  const widths = { small: 32, medium: 40, large: 48, xlarge: 56 };
-  const heights = { small: 20, medium: 24, large: 28, xlarge: 32 };
-  const w = widths[size];
-  const h = heights[size];
+  // For multiple trucks, show each one
+  const trucks = [];
+  for (let i = 0; i < quantity; i++) {
+    const isLast = i === quantity - 1;
+    // Last truck may be partially full
+    const fillPercent = isLast
+      ? occupancyPercent
+      : 100;
+
+    trucks.push(
+      <div key={i} className="flex items-center gap-2">
+        {/* Truck body with fill animation */}
+        <div className="relative flex-1 h-8 rounded-md border-2 border-gray-300 bg-gray-100 overflow-hidden">
+          {/* Fill from left to right */}
+          <div
+            className={`absolute inset-y-0 left-0 transition-all duration-700 ease-out rounded-r-sm ${
+              fillPercent > 90
+                ? "bg-red-400"
+                : fillPercent > 70
+                ? "bg-amber-400"
+                : "bg-green-400"
+            }`}
+            style={{ width: `${Math.min(100, fillPercent)}%` }}
+          />
+          {/* Fill percentage text inside */}
+          <div className="absolute inset-0 flex items-center justify-center text-xs font-bold text-gray-700">
+            {fillPercent}%
+          </div>
+        </div>
+
+        {/* Cabin */}
+        <div className="flex h-8 w-6 items-center justify-center rounded-md border-2 border-gray-300 bg-gray-200">
+          <Truck className="h-3 w-3 text-gray-500" />
+        </div>
+
+        {/* Label for multi-truck */}
+        {quantity > 1 && (
+          <span className="text-[10px] text-gray-500 shrink-0 w-4">
+            #{i + 1}
+          </span>
+        )}
+      </div>
+    );
+  }
 
   return (
-    <svg
-      width={w}
-      height={h}
-      viewBox={`0 0 ${w} ${h}`}
-      fill="none"
-      className={className}
-    >
-      {/* Cargo area */}
-      <rect
-        x="0"
-        y="2"
-        width={w * 0.65}
-        height={h - 6}
-        rx="2"
-        fill="currentColor"
-        opacity="0.15"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      {/* Cabin */}
-      <rect
-        x={w * 0.65}
-        y={h * 0.3}
-        width={w * 0.3}
-        height={h * 0.5}
-        rx="2"
-        fill="currentColor"
-        opacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      {/* Wheels */}
-      <circle cx={w * 0.2} cy={h - 2} r={2.5} fill="currentColor" />
-      <circle cx={w * 0.8} cy={h - 2} r={2.5} fill="currentColor" />
-    </svg>
+    <div className="space-y-1.5">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-gray-800">{truckName}</span>
+          {isRecommended && (
+            <span className="flex items-center gap-0.5 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-medium text-green-700">
+              <Check className="h-3 w-3" />
+              Ideal
+            </span>
+          )}
+          {quantity > 1 && (
+            <span className="flex items-center gap-0.5 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-medium text-amber-700">
+              <AlertTriangle className="h-3 w-3" />
+              {quantity} caminhões
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Truck fill bars */}
+      {trucks}
+    </div>
   );
 }
 
-const TRUCK_SIZES: Record<string, "small" | "medium" | "large" | "xlarge"> = {
-  Fiorino: "small",
-  "HR / VUC": "medium",
-  "3/4": "large",
-  Baú: "xlarge",
-};
+// ─── Main component ──────────────────────────────────────
 
 interface TruckRecommendationProps {
   volumeM3: number;
@@ -82,97 +109,55 @@ export function TruckRecommendationPanel({
   if (caminhoes.length === 0 || (volumeM3 === 0 && pesoKg === 0)) return null;
 
   const recommendations = recommendTrucks(volumeM3, pesoKg, caminhoes);
+  const best = recommendations.find((r) => r.isRecommended) || recommendations[recommendations.length - 1];
+
+  if (!best) return null;
 
   if (compact) {
-    // Mini version: just show the recommended truck
-    const best = recommendations.find((r) => r.isRecommended);
-    if (!best) return null;
-
     return (
-      <div className="flex items-center gap-2 text-xs text-gray-600">
-        <TruckIcon
-          size={TRUCK_SIZES[best.truck.nome] || "medium"}
-          className="text-[#E84225]"
+      <div className="space-y-2">
+        <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+          Caminhão estimado
+        </h4>
+        <TruckFillBar
+          occupancyPercent={best.occupancyPercent}
+          quantity={best.quantity}
+          truckName={best.truck.nome}
+          isRecommended={best.isRecommended}
         />
-        <span>
-          <strong>{best.truck.nome}</strong>
-          {best.quantity > 1 && ` × ${best.quantity}`} — {best.occupancyPercent}%
-          ocupado
-        </span>
+        <p className="text-[10px] text-gray-400">
+          {best.truck.capacidadeM3} m³ de capacidade · {best.truck.capacidadeKg} kg max
+        </p>
       </div>
     );
   }
 
-  // Full version
+  // Full version: show all trucks
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <h4 className="text-sm font-medium text-gray-700">
         Caminhão recomendado
       </h4>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="space-y-4">
         {recommendations.map((rec) => (
           <div
             key={rec.truck.id}
-            className={`relative rounded-lg border p-3 transition-colors ${
+            className={`rounded-lg border p-3 transition-colors ${
               rec.isRecommended
-                ? "border-green-300 bg-green-50/50 ring-1 ring-green-200"
-                : rec.fits
-                ? "border-gray-200 bg-white"
-                : "border-gray-200 bg-gray-50 opacity-60"
+                ? "border-green-200 bg-green-50/30"
+                : "border-gray-100 bg-gray-50/50 opacity-60"
             }`}
           >
-            {/* Recommended badge */}
-            {rec.isRecommended && (
-              <div className="absolute -top-2 right-2 flex items-center gap-0.5 rounded-full bg-green-600 px-2 py-0.5 text-[10px] font-medium text-white">
-                <Check className="h-3 w-3" />
-                Ideal
-              </div>
-            )}
-
-            <div className="flex items-center gap-2 mb-2">
-              <TruckIcon
-                size={TRUCK_SIZES[rec.truck.nome] || "medium"}
-                className={
-                  rec.isRecommended ? "text-green-600" : "text-gray-400"
-                }
-              />
-              <div>
-                <p className="text-sm font-medium text-gray-900">
-                  {rec.truck.nome}
-                </p>
-                <p className="text-[10px] text-gray-500">
-                  {rec.truck.capacidadeM3} m³ / {rec.truck.capacidadeKg} kg
-                </p>
-              </div>
-            </div>
-
-            {/* Occupancy bar */}
-            <div className="space-y-1">
-              <div className="h-2 w-full rounded-full bg-gray-200 overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all ${
-                    rec.occupancyPercent > 100
-                      ? "bg-red-500"
-                      : rec.occupancyPercent > 80
-                      ? "bg-amber-500"
-                      : "bg-green-500"
-                  }`}
-                  style={{
-                    width: `${Math.min(100, rec.occupancyPercent)}%`,
-                  }}
-                />
-              </div>
-              <div className="flex justify-between text-[10px] text-gray-500">
-                <span>{rec.occupancyPercent}% ocupado</span>
-                {rec.quantity > 1 && (
-                  <span className="flex items-center gap-0.5 text-amber-600">
-                    <AlertTriangle className="h-3 w-3" />
-                    {rec.quantity}× caminhões
-                  </span>
-                )}
-              </div>
-            </div>
+            <TruckFillBar
+              occupancyPercent={rec.occupancyPercent}
+              quantity={rec.quantity}
+              truckName={rec.truck.nome}
+              isRecommended={rec.isRecommended}
+            />
+            <p className="text-[10px] text-gray-400 mt-1">
+              {rec.truck.capacidadeM3} m³ · {rec.truck.capacidadeKg} kg
+            </p>
           </div>
         ))}
       </div>

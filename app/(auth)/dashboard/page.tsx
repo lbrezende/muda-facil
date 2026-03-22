@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Truck,
@@ -167,9 +167,11 @@ function DeleteConfirmModal({
 function NovaMudancaModal({
   open,
   onClose,
+  onCreated,
 }: {
   open: boolean;
   onClose: () => void;
+  onCreated?: (id: string) => void;
 }) {
   const [origem, setOrigem] = useState("");
   const [destino, setDestino] = useState("");
@@ -204,7 +206,7 @@ function NovaMudancaModal({
     if (!origem.trim() || !destino.trim()) return;
 
     try {
-      await createMudanca.mutateAsync({
+      const result = await createMudanca.mutateAsync({
         enderecoOrigem: origem.trim(),
         enderecoDestino: destino.trim(),
         dataDesejada: data ? new Date(data).toISOString() : undefined,
@@ -216,6 +218,10 @@ function NovaMudancaModal({
       setData("");
       setRooms({});
       onClose();
+      // Redirect to detail page
+      if (result?.id && onCreated) {
+        onCreated(result.id);
+      }
     } catch {
       // error handled by mutation state
     }
@@ -543,6 +549,7 @@ function MudancaCard({
 // ─── Page ─────────────────────────────────────────────────
 
 export default function DashboardPage() {
+  const router = useRouter();
   const { data: session, status: authStatus } = useSession();
   const { data: mudancas, isLoading, isError, error } = useMudancas();
   const [modalOpen, setModalOpen] = useState(false);
@@ -651,7 +658,11 @@ export default function DashboardPage() {
       )}
 
       {/* Modals */}
-      <NovaMudancaModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      <NovaMudancaModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onCreated={(id) => router.push(`/dashboard/mudanca/${id}`)}
+      />
       <DeleteConfirmModal
         open={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}

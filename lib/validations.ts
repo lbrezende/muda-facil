@@ -28,6 +28,8 @@ export const mudancaSchema = z.object({
     .max(300, "Endereço muito longo"),
   dataDesejada: z.string().datetime().optional(),
   caminhaoId: z.string().cuid().optional(),
+  numComodos: z.number().int().min(1).max(20).optional().default(1),
+  distanciaKm: z.number().min(0).optional(),
 });
 
 export const itemSchema = z.object({

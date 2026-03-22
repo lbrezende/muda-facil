@@ -133,6 +133,11 @@ model Transportadora {
   totalAvaliacoes Int      @default(0)
   cidade          String
   tiposCaminhao   String[]
+  precoPorKm      Float    @default(3.50)  // R$ por km
+  precoPorComodo  Float    @default(150.0) // R$ por cômodo
+  taxaBase        Float    @default(200.0) // taxa fixa mínima R$
+  tempoEstimadoDias Int    @default(3)     // dias úteis para entrega
+  seguroIncluso   Boolean  @default(false)
   createdAt       DateTime @default(now())
 
   cotacoes Cotacao[]
@@ -147,6 +152,8 @@ model Mudanca {
   enderecoDestino String
   dataDesejada    DateTime?
   caminhaoId      String?
+  numComodos      Int           @default(1)
+  distanciaKm     Float?
   status          MudancaStatus @default(RASCUNHO)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt

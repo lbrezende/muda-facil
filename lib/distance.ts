@@ -96,11 +96,14 @@ function extractNeighborhoodCoords(address: string): Coordinates | null {
 
 async function geocodeWithRetry(
   address: string,
-  retries = 2
+  retries = 1
 ): Promise<Coordinates | null> {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const encoded = encodeURIComponent(address + ", Brasil");
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 3000);
+
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${encoded}&format=json&limit=1`,
         {
@@ -108,14 +111,16 @@ async function geocodeWithRetry(
             "User-Agent": "MudaFacil/1.0 (https://muda-facil-one.vercel.app)",
             "Accept": "application/json",
           },
+          signal: controller.signal,
         }
       );
 
+      clearTimeout(timeout);
+
       if (res.status === 429) {
-        // Rate limited — wait and retry
-        console.warn(`Nominatim 429 on attempt ${attempt + 1}, waiting...`);
-        await sleep(2000 * (attempt + 1));
-        continue;
+        // Rate limited — use fallback immediately, don't wait
+        console.warn(`Nominatim 429, using fallback`);
+        return null;
       }
 
       if (!res.ok) return null;
@@ -128,10 +133,6 @@ async function geocodeWithRetry(
         lon: parseFloat(data[0].lon),
       };
     } catch {
-      if (attempt < retries) {
-        await sleep(1500);
-        continue;
-      }
       return null;
     }
   }

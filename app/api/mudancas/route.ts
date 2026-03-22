@@ -113,11 +113,14 @@ export async function POST(request: Request) {
       distanciaKm: providedDistance,
     } = parsed.data;
 
-    // Calculate distance if not provided
+    // Use distance from frontend if provided, otherwise try to calculate (non-blocking, fast)
     let distanciaKm = providedDistance ?? null;
     if (!distanciaKm) {
       try {
-        distanciaKm = await calculateDistance(enderecoOrigem, enderecoDestino);
+        distanciaKm = await Promise.race([
+          calculateDistance(enderecoOrigem, enderecoDestino),
+          new Promise<null>((resolve) => setTimeout(() => resolve(null), 5000)),
+        ]);
       } catch {
         // Non-blocking — distance is optional
       }

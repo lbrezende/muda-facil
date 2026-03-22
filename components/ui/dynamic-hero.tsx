@@ -28,6 +28,8 @@ interface ArrowLabels {
 interface DynamicHeroProps {
   /** The element ref to point the arrow at */
   targetRef: React.RefObject<HTMLElement | null>;
+  /** Boundary element — arrow only draws when mouse is inside this */
+  boundaryRef?: React.RefObject<HTMLElement | null>;
   /** Labels shown based on arrow direction — one at a time */
   arrowLabels?: ArrowLabels;
 }
@@ -47,6 +49,7 @@ function getQuadraticPoint(
 
 function DynamicHeroCanvas({
   targetRef,
+  boundaryRef,
   arrowLabels = {
     left: "Entrega segura",
     right: "Entrega rápida",
@@ -114,6 +117,14 @@ function DynamicHeroCanvas({
     const y0 = mouse.y;
 
     if (x0 === null || y0 === null) return;
+
+    // Only draw when mouse is inside the hero boundary
+    if (boundaryRef?.current) {
+      const bounds = boundaryRef.current.getBoundingClientRect();
+      if (y0 > bounds.bottom || y0 < bounds.top || x0 < bounds.left || x0 > bounds.right) {
+        return;
+      }
+    }
 
     const rect = targetEl.getBoundingClientRect();
     const cxTarget = rect.left + rect.width / 2;
@@ -221,7 +232,7 @@ function DynamicHeroCanvas({
         ctx.restore();
       }
     }
-  }, [arrowLabels, targetRef]);
+  }, [arrowLabels, targetRef, boundaryRef]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

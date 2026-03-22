@@ -105,16 +105,16 @@ function TestimonialCard({
 
 export default function TestimonialsSection() {
   return (
-    <section className="py-24 bg-[#1B1660] overflow-hidden">
+    <section className="py-24 bg-white overflow-hidden">
       <div className="mx-auto max-w-6xl px-6 text-center mb-12">
         <p className="text-sm font-semibold uppercase tracking-widest text-[#F37021] mb-3">
           Depoimentos reais
         </p>
-        <h2 className="text-3xl sm:text-4xl font-bold text-white">
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
           Cada caixa no lugar certo.{" "}
           <span className="text-[#F37021]">Cada cliente satisfeito.</span>
         </h2>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-white/60">
+        <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-500">
           Milhares de mudanças realizadas com cuidado, pontualidade e zero
           dor de cabeça.
         </p>
@@ -162,10 +162,10 @@ export default function TestimonialsSection() {
           </Marquee>
 
           {/* Gradient overlays */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-[#1B1660]" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-[#1B1660]" />
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-[#1B1660]" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-[#1B1660]" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-white" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-white" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-white" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-white" />
         </div>
       </div>
 
@@ -181,7 +181,7 @@ export default function TestimonialsSection() {
             <p className="text-3xl sm:text-4xl font-bold text-[#F37021]">
               {stat.value}
             </p>
-            <p className="mt-1 text-sm text-white/50">{stat.label}</p>
+            <p className="mt-1 text-sm text-gray-500">{stat.label}</p>
           </div>
         ))}
       </div>

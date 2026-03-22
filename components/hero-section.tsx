@@ -13,9 +13,10 @@ import { DynamicHeroCanvas } from "@/components/ui/dynamic-hero";
 
 export function HeroSection() {
   const ctaRef = useRef<HTMLAnchorElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   return (
-    <section className="py-24 sm:py-32 bg-[#F8FAFC] relative">
+    <section ref={sectionRef} className="py-24 sm:py-32 bg-[#F8FAFC] relative">
       <div className="mx-auto max-w-6xl px-6 text-center">
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm text-gray-600 shadow-sm">
           <Zap className="h-4 w-4 text-[#F37021]" />
@@ -51,8 +52,8 @@ export function HeroSection() {
           </a>
         </div>
 
-        {/* Drag & Drop Canvas Mockup */}
-        <div className="relative mx-auto mt-16 max-w-4xl">
+        {/* Drag & Drop Canvas Mockup — z-index above arrow canvas */}
+        <div className="relative z-[6] mx-auto mt-16 max-w-4xl">
           <div className="rounded-xl border bg-white p-2 shadow-2xl shadow-[#F37021]/10">
             <div className="rounded-lg border bg-gray-50 p-6 sm:p-8">
               {/* Browser chrome */}
@@ -204,6 +205,7 @@ export function HeroSection() {
       {/* Arrow canvas — z-index below sticky header and interactive elements */}
       <DynamicHeroCanvas
         targetRef={ctaRef}
+        boundaryRef={sectionRef}
         arrowLabels={{
           left: "Entrega segura",
           right: "Entrega rápida",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -10,10 +10,13 @@ import {
   Loader2,
   X,
   Trash2,
-  Pencil,
   Calendar,
   Navigation,
   AlertTriangle,
+  ChevronRight,
+  Box,
+  Weight,
+  MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -26,16 +29,35 @@ import {
   useDeleteMudanca,
   type MudancaListItem,
 } from "@/hooks/use-mudancas";
+import { RoomSelector } from "@/components/dashboard/room-selector";
+import { QuotePreview } from "@/components/dashboard/quote-preview";
+import { TruckRecommendationPanel } from "@/components/dashboard/truck-recommendation";
+import { calculateRoomSummary } from "@/lib/room-estimation";
+import { useDistance } from "@/hooks/use-distance";
+import { useEstimateQuotes } from "@/hooks/use-quotes";
 
 // ─── Types ────────────────────────────────────────────────
 
 type MudancaStatus = "RASCUNHO" | "COTANDO" | "CONFIRMADA" | "CONCLUIDA";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type MudancaWithExtras = MudancaListItem & {
   distanciaKm?: number | null;
+  numComodos?: number | null;
+  cotacoes?: Array<{
+    id: string;
+    precoCentavos: number;
+    transportadora: {
+      nome: string;
+      notaMedia: number;
+    };
+  }>;
 };
 
-const STATUS_STYLES: Record<MudancaStatus, { label: string; className: string }> = {
+const STATUS_STYLES: Record<
+  MudancaStatus,
+  { label: string; className: string }
+> = {
   RASCUNHO: {
     label: "Rascunho",
     className: "bg-gray-100 text-gray-600 border-gray-200",
@@ -66,19 +88,11 @@ function formatDate(iso: string | null): string {
   });
 }
 
-/** Truncate address to street name only */
 function truncateAddress(address: string): string {
-  // Take just the street part (before the first dash or comma after number)
   const parts = address.split(/\s*[-–]\s*/);
   const street = parts[0].trim();
-  if (street.length > 35) return street.slice(0, 32) + "…";
+  if (street.length > 30) return street.slice(0, 27) + "…";
   return street;
-}
-
-function getStaticMapUrl(origin: string, destination: string): string {
-  const o = encodeURIComponent(origin);
-  const d = encodeURIComponent(destination);
-  return `https://www.google.com/maps/embed/v1/directions?key=&origin=${o}&destination=${d}&mode=driving&maptype=roadmap`;
 }
 
 function getGoogleMapsEmbedUrl(origin: string, destination: string): string {
@@ -86,8 +100,8 @@ function getGoogleMapsEmbedUrl(origin: string, destination: string): string {
   return `https://www.google.com/maps?q=${query}&output=embed&z=13&layer=transit&disableDefaultUI=1`;
 }
 
-function getGoogleMapsDirectionsUrl(origin: string, destination: string): string {
-  return `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}`;
+function todayISO(): string {
+  return new Date().toISOString().split("T")[0];
 }
 
 // ─── Delete Confirmation Modal ───────────────────────────
@@ -120,7 +134,6 @@ function DeleteConfirmModal({
             configurações de cômodos, cotações e dados do mapa.
           </p>
         </div>
-
         <div className="flex gap-3 mt-6">
           <Button
             type="button"
@@ -149,7 +162,7 @@ function DeleteConfirmModal({
   );
 }
 
-// ─── Nova Mudanca Modal ──────────────────────────────────
+// ─── Nova Mudanca Modal (with Room Selector + Live Quotes) ─
 
 function NovaMudancaModal({
   open,
@@ -161,7 +174,28 @@ function NovaMudancaModal({
   const [origem, setOrigem] = useState("");
   const [destino, setDestino] = useState("");
   const [data, setData] = useState("");
+  const [rooms, setRooms] = useState<Record<string, number>>({});
+  const dateRef = useRef<HTMLInputElement>(null);
   const createMudanca = useCreateMudanca();
+
+  // Live calculations
+  const summary = calculateRoomSummary(rooms);
+  const { data: distanciaKm, isLoading: distLoading } = useDistance(
+    origem,
+    destino
+  );
+  const { data: quotes, isLoading: quotesLoading } = useEstimateQuotes(
+    distanciaKm ?? null,
+    summary.numComodos
+  );
+
+  // Mock truck data for recommendation (matches seed)
+  const caminhoes = [
+    { id: "1", nome: "Fiorino", tipo: "FIORINO", capacidadeM3: 1.5, capacidadeKg: 600 },
+    { id: "2", nome: "HR / VUC", tipo: "HR", capacidadeM3: 6, capacidadeKg: 1500 },
+    { id: "3", nome: "3/4", tipo: "TRES_QUARTOS", capacidadeM3: 12, capacidadeKg: 3000 },
+    { id: "4", nome: "Baú", tipo: "BAU", capacidadeM3: 20, capacidadeKg: 5000 },
+  ];
 
   if (!open) return null;
 
@@ -174,26 +208,33 @@ function NovaMudancaModal({
         enderecoOrigem: origem.trim(),
         enderecoDestino: destino.trim(),
         dataDesejada: data ? new Date(data).toISOString() : undefined,
+        numComodos: summary.numComodos || undefined,
+        distanciaKm: distanciaKm ?? undefined,
       });
       setOrigem("");
       setDestino("");
       setData("");
+      setRooms({});
       onClose();
     } catch {
-      // error is handled by mutation state
+      // error handled by mutation state
     }
   };
 
+  const hasAddresses = origem.length >= 5 && destino.length >= 5;
+  const hasRooms = summary.numComodos > 0;
+  const showEstimates = hasAddresses && hasRooms;
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="mx-4 w-full max-w-md rounded-xl bg-white p-6 shadow-2xl">
-        <div className="flex items-center justify-between mb-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm overflow-y-auto py-8">
+      <div className="mx-4 w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-5">
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
               Nova mudança
             </h2>
             <p className="text-xs text-gray-500 mt-0.5">
-              Informe de onde e para onde você vai
+              Informe os dados e receba estimativas instantâneas
             </p>
           </div>
           <button
@@ -205,6 +246,7 @@ function NovaMudancaModal({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Origin */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               De onde você está saindo?
@@ -219,6 +261,7 @@ function NovaMudancaModal({
             />
           </div>
 
+          {/* Destination */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Para onde você vai?
@@ -233,24 +276,84 @@ function NovaMudancaModal({
             />
           </div>
 
+          {/* Distance indicator */}
+          {hasAddresses && (
+            <div className="flex items-center gap-2 text-xs text-gray-500 px-1">
+              <Navigation className="h-3.5 w-3.5 text-[#E84225]" />
+              {distLoading ? (
+                <span className="flex items-center gap-1">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  Calculando distância...
+                </span>
+              ) : distanciaKm ? (
+                <span>
+                  Distância estimada:{" "}
+                  <strong className="text-gray-700">{distanciaKm} km</strong>
+                </span>
+              ) : (
+                <span className="text-amber-600">
+                  Não foi possível calcular a distância
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Room Selector */}
+          <RoomSelector rooms={rooms} onChange={setRooms} />
+
+          {/* Date */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Quando você quer mudar?
             </label>
-            <input
-              type="date"
-              value={data}
-              onChange={(e) => setData(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#E84225] focus:outline-none focus:ring-2 focus:ring-[#E84225]/20"
-            />
+            <div className="relative">
+              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              <input
+                ref={dateRef}
+                type="date"
+                value={data}
+                min={todayISO()}
+                onChange={(e) => setData(e.target.value)}
+                onClick={() => dateRef.current?.showPicker?.()}
+                className="w-full rounded-lg border border-gray-300 pl-10 pr-3 py-2 text-sm focus:border-[#E84225] focus:outline-none focus:ring-2 focus:ring-[#E84225]/20 cursor-pointer"
+              />
+            </div>
+            <p className="text-[10px] text-gray-400 mt-1 px-1">
+              Escolha uma data aproximada — você pode alterar depois
+            </p>
           </div>
 
+          {/* Live Estimates */}
+          {showEstimates && (
+            <div className="space-y-3 border-t border-gray-100 pt-4">
+              {/* Truck recommendation */}
+              <TruckRecommendationPanel
+                volumeM3={summary.volumeM3}
+                pesoKg={summary.pesoKg}
+                caminhoes={caminhoes}
+                compact
+              />
+
+              {/* Quote preview */}
+              {quotesLoading ? (
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  Buscando melhores preços...
+                </div>
+              ) : quotes && quotes.length > 0 ? (
+                <QuotePreview quotes={quotes} />
+              ) : null}
+            </div>
+          )}
+
+          {/* Error */}
           {createMudanca.isError && (
             <p className="text-sm text-red-600">
               {createMudanca.error?.message || "Erro ao criar mudança"}
             </p>
           )}
 
+          {/* Actions */}
           <div className="flex gap-3 pt-2">
             <Button
               type="button"
@@ -263,7 +366,9 @@ function NovaMudancaModal({
             <Button
               type="submit"
               className="flex-1 bg-[#E84225] text-white hover:bg-[#C73820]"
-              disabled={createMudanca.isPending || !origem.trim() || !destino.trim()}
+              disabled={
+                createMudanca.isPending || !origem.trim() || !destino.trim()
+              }
             >
               {createMudanca.isPending ? (
                 <>
@@ -291,16 +396,12 @@ function MudancaCard({
   onDelete: (id: string) => void;
 }) {
   const statusStyle = STATUS_STYLES[mudanca.status] || STATUS_STYLES.RASCUNHO;
-  const mapsUrl = getGoogleMapsDirectionsUrl(
-    mudanca.enderecoOrigem,
-    mudanca.enderecoDestino
-  );
   const embedUrl = getGoogleMapsEmbedUrl(
     mudanca.enderecoOrigem,
     mudanca.enderecoDestino
   );
-
-  const distancia = (mudanca as MudancaWithExtras).distanciaKm;
+  const distancia = mudanca.distanciaKm;
+  const cotacoes = mudanca.cotacoes;
 
   return (
     <Card className="group relative flex flex-col border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md overflow-hidden !py-0 !gap-0">
@@ -317,30 +418,23 @@ function MudancaCard({
         <Trash2 className="h-3.5 w-3.5" />
       </button>
 
-      {/* T2: Minimalist map — reduced height */}
-      <a
-        href={mapsUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="relative block h-[90px] w-full overflow-hidden bg-gray-100"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <iframe
-          src={embedUrl}
-          className="pointer-events-none h-[180px] w-full border-0 -mt-[30px] saturate-[0.3] contrast-[0.9]"
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          tabIndex={-1}
-          title={`Rota: ${mudanca.enderecoOrigem} → ${mudanca.enderecoDestino}`}
-        />
-        <div className="absolute inset-0 bg-transparent hover:bg-black/5 transition-colors" />
-      </a>
+      {/* T5: Map — illustrative only, no click */}
+      <Link href={`/dashboard/mudanca/${mudanca.id}`} className="flex flex-1 flex-col">
+        <div className="relative block h-[80px] w-full overflow-hidden bg-gray-100">
+          <iframe
+            src={embedUrl}
+            className="pointer-events-none h-[180px] w-full border-0 -mt-[35px] saturate-[0.25] contrast-[0.85] brightness-[1.05]"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            tabIndex={-1}
+            title={`Rota: ${mudanca.enderecoOrigem} → ${mudanca.enderecoDestino}`}
+          />
+          <div className="absolute bottom-1.5 left-2 flex items-center gap-1 rounded bg-white/80 px-1.5 py-0.5 text-[9px] text-gray-500 backdrop-blur-sm">
+            <MapPin className="h-2.5 w-2.5" />
+            Prévia da rota
+          </div>
+        </div>
 
-      {/* T3: flex-grow body so footer pins to bottom */}
-      <Link
-        href={`/dashboard/mudanca/${mudanca.id}`}
-        className="flex flex-1 flex-col"
-      >
         {/* Status badge */}
         <div className="px-4 pt-3 pb-2">
           <Badge
@@ -351,12 +445,10 @@ function MudancaCard({
           </Badge>
         </div>
 
-        {/* T1 + T5: De/Para + distance — main info block */}
+        {/* De/Para + distance */}
         <div className="flex-1 px-4">
           <div className="flex items-stretch gap-3">
-            {/* De / Para column */}
             <div className="flex-1 min-w-0">
-              {/* De */}
               <div className="flex items-center gap-2">
                 <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wider text-gray-400 w-6">
                   De
@@ -368,7 +460,6 @@ function MudancaCard({
                   {truncateAddress(mudanca.enderecoOrigem)}
                 </span>
               </div>
-              {/* Para */}
               <div className="flex items-center gap-2 mt-1">
                 <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wider text-gray-400 w-6">
                   Para
@@ -382,7 +473,6 @@ function MudancaCard({
               </div>
             </div>
 
-            {/* T5: Distance badge */}
             {distancia && (
               <div className="flex flex-col items-center justify-center shrink-0 rounded-lg bg-gray-50 px-3 py-1.5 border border-gray-100">
                 <Navigation className="h-3.5 w-3.5 text-[#E84225] mb-0.5" />
@@ -395,19 +485,54 @@ function MudancaCard({
               </div>
             )}
           </div>
+
+          {/* T9: Cargo summary */}
+          {mudanca.numComodos && mudanca.numComodos > 0 && (
+            <div className="flex items-center gap-3 mt-2 text-[11px] text-gray-500">
+              <span className="flex items-center gap-1">
+                <Box className="h-3 w-3 text-blue-400" />
+                {mudanca.numComodos} côm.
+              </span>
+            </div>
+          )}
         </div>
 
-        {/* T3: Footer pinned to bottom */}
+        {/* T7: Top 3 quotes preview */}
+        {cotacoes && cotacoes.length > 0 && (
+          <div className="px-4 pt-2 pb-1 border-t border-gray-50 mt-2">
+            <div className="space-y-1">
+              {cotacoes.slice(0, 3).map((c) => (
+                <div
+                  key={c.id}
+                  className="flex items-center justify-between text-xs"
+                >
+                  <span className="text-gray-600 truncate">
+                    {c.transportadora.nome}
+                  </span>
+                  <span className="font-semibold text-gray-800 shrink-0 ml-2">
+                    R${" "}
+                    {(c.precoCentavos / 100).toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
+              ))}
+              <p className="text-[9px] text-gray-400 italic">
+                * Estimativa
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Footer: date + "Ver detalhes" always visible */}
         <div className="mt-auto border-t border-gray-100 px-4 py-2.5 flex items-center justify-between">
           <div className="flex items-center gap-1.5 text-xs text-gray-500">
             <Calendar className="h-3.5 w-3.5 text-gray-400" />
             <span>{formatDate(mudanca.dataDesejada)}</span>
           </div>
-
-          {/* T0.1: Edit button */}
-          <span className="inline-flex items-center gap-1 text-xs text-[#E84225] font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-            <Pencil className="h-3 w-3" />
-            Editar
+          <span className="inline-flex items-center gap-1 text-xs text-[#E84225] font-medium">
+            Ver detalhes
+            <ChevronRight className="h-3 w-3" />
           </span>
         </div>
       </Link>
@@ -446,14 +571,14 @@ export default function DashboardPage() {
     try {
       await deleteMudanca.mutateAsync(deleteTarget);
     } catch {
-      // handled by mutation state
+      // handled
     }
     setDeleteTarget(null);
   };
 
   return (
     <div className="flex flex-col gap-6 px-8 py-6">
-      {/* T6: UX Writing — clearer header */}
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
@@ -463,7 +588,6 @@ export default function DashboardPage() {
             Aqui você acompanha cada mudança do início ao fim.
           </p>
         </div>
-
         <PaywallGate
           featureName="mudança ativa"
           currentUsage={mudancaCount}
@@ -480,16 +604,17 @@ export default function DashboardPage() {
         </PaywallGate>
       </div>
 
-      {/* Error state */}
+      {/* Error */}
       {isError && (
         <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center">
           <p className="text-sm text-red-600">
-            {error?.message || "Não foi possível carregar suas mudanças. Tente novamente."}
+            {error?.message ||
+              "Não foi possível carregar suas mudanças. Tente novamente."}
           </p>
         </div>
       )}
 
-      {/* T6: Empty state — friendlier, action-oriented */}
+      {/* Empty state */}
       {!isError && mudancaCount === 0 && (
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-200 py-20 text-center">
           <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#E84225]/10 mb-4">
@@ -499,8 +624,8 @@ export default function DashboardPage() {
             Pronto para mudar?
           </h3>
           <p className="mt-2 max-w-sm text-sm text-gray-500 leading-relaxed">
-            Comece informando de onde você sai e para onde vai. A gente cuida do resto —
-            calculamos a distância e encontramos as melhores opções para você.
+            Comece informando de onde você sai e para onde vai. Selecione os
+            cômodos da sua casa e receba estimativas de preço na hora.
           </p>
           <Button
             className="mt-6 gap-2 bg-[#E84225] text-white hover:bg-[#C73820]"
@@ -512,7 +637,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* T3: Grid with equal-height cards */}
+      {/* Cards grid */}
       {!isError && mudancaCount > 0 && (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
           {(mudancas as MudancaWithExtras[])!.map((mudanca) => (

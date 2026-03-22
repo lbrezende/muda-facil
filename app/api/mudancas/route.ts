@@ -2,6 +2,8 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { checkUsageLimit } from "@/lib/subscription";
 import { mudancaSchema } from "@/lib/validations";
+import { calculateDistance } from "@/lib/distance";
+import { generateAutoQuotes } from "@/lib/quoting";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -17,6 +19,19 @@ export async function GET() {
       include: {
         caminhao: true,
         cargaLayout: true,
+        cotacoes: {
+          take: 3,
+          orderBy: { precoCentavos: "asc" },
+          include: {
+            transportadora: {
+              select: {
+                id: true,
+                nome: true,
+                notaMedia: true,
+              },
+            },
+          },
+        },
         _count: {
           select: { cotacoes: true },
         },
@@ -27,7 +42,10 @@ export async function GET() {
     return NextResponse.json(mudancas);
   } catch (error) {
     console.error("GET /api/mudancas error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
@@ -86,8 +104,26 @@ export async function POST(request: Request) {
       );
     }
 
-    const { enderecoOrigem, enderecoDestino, dataDesejada, caminhaoId } = parsed.data;
+    const {
+      enderecoOrigem,
+      enderecoDestino,
+      dataDesejada,
+      caminhaoId,
+      numComodos,
+      distanciaKm: providedDistance,
+    } = parsed.data;
 
+    // Calculate distance if not provided
+    let distanciaKm = providedDistance ?? null;
+    if (!distanciaKm) {
+      try {
+        distanciaKm = await calculateDistance(enderecoOrigem, enderecoDestino);
+      } catch {
+        // Non-blocking — distance is optional
+      }
+    }
+
+    // Create the mudança
     const mudanca = await db.mudanca.create({
       data: {
         userId: session.user.id,
@@ -95,19 +131,74 @@ export async function POST(request: Request) {
         enderecoDestino,
         dataDesejada: dataDesejada ? new Date(dataDesejada) : null,
         caminhaoId: caminhaoId ?? null,
+        numComodos: numComodos ?? 1,
+        distanciaKm: distanciaKm ?? null,
       },
+    });
+
+    // Auto-generate quotes if we have distance and numComodos
+    const effectiveComodos = numComodos ?? 1;
+    if (distanciaKm && distanciaKm > 0) {
+      try {
+        const autoQuotes = await generateAutoQuotes(
+          distanciaKm,
+          effectiveComodos
+        );
+
+        // Save top 10 quotes as Cotacao records
+        const quotesToSave = autoQuotes.slice(0, 10);
+        if (quotesToSave.length > 0) {
+          await db.cotacao.createMany({
+            data: quotesToSave.map((q) => ({
+              mudancaId: mudanca.id,
+              transportadoraId: q.transportadoraId,
+              precoCentavos: q.precoCentavos,
+              seguroIncluso: q.seguroIncluso,
+              dataDisponivel: dataDesejada
+                ? new Date(dataDesejada)
+                : new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+              validade: new Date(
+                Date.now() + 7 * 24 * 60 * 60 * 1000
+              ), // 7 days validity
+            })),
+          });
+        }
+      } catch (err) {
+        console.error("Auto-quote generation failed (non-blocking):", err);
+      }
+    }
+
+    // Return the full mudança with cotações
+    const result = await db.mudanca.findUnique({
+      where: { id: mudanca.id },
       include: {
         caminhao: true,
         cargaLayout: true,
+        cotacoes: {
+          take: 3,
+          orderBy: { precoCentavos: "asc" },
+          include: {
+            transportadora: {
+              select: {
+                id: true,
+                nome: true,
+                notaMedia: true,
+              },
+            },
+          },
+        },
         _count: {
           select: { cotacoes: true },
         },
       },
     });
 
-    return NextResponse.json(mudanca, { status: 201 });
+    return NextResponse.json(result, { status: 201 });
   } catch (error) {
     console.error("POST /api/mudancas error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

@@ -41,35 +41,35 @@ function useLenis() {
   }, []);
 }
 
-/* ── project gallery images ── */
+/* ── project gallery images (real MudaFácil screens) ── */
 const projectImages = [
   {
-    src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1280&h=720&fit=crop&auto=format&q=80",
-    alt: "Dashboard de cotacao MudaFacil",
+    src: "/images/comparison/comparativo/Site-Landing-Hero-V2.png",
+    alt: "Landing page hero — MudaFácil V2",
   },
   {
-    src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1280&h=720&fit=crop&auto=format&q=80",
-    alt: "Metricas de conversao",
+    src: "/images/comparison/comparativo/Produto-Minhas-Mudancas-V2.png",
+    alt: "Minhas Mudanças — dashboard do usuário",
   },
   {
-    src: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&h=800&fit=crop&auto=format&q=80",
-    alt: "UX Research findings",
+    src: "/images/comparison/comparativo/Produto-Catalogo-de-Itens-V2.png",
+    alt: "Catálogo de itens — seleção de móveis",
   },
   {
-    src: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1280&h=720&fit=crop&auto=format&q=80",
-    alt: "Prototipo de alta fidelidade",
+    src: "/images/comparison/comparativo/Produto-Detalhe-Mudanca-Cotacoes-V2.png",
+    alt: "Cotações da mudança — comparação de preços",
   },
   {
-    src: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&h=800&fit=crop&auto=format&q=80",
-    alt: "Design system components",
+    src: "/images/comparison/comparativo/Produto-Nova-Mudanca-Variante-V2.png",
+    alt: "Nova mudança — formulário redesenhado",
   },
   {
-    src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1280&h=720&fit=crop&auto=format&q=80",
-    alt: "Teste de usabilidade",
+    src: "/images/comparison/comparativo/Site-Landing-Preview-App-V2.png",
+    alt: "Landing page — preview do app",
   },
   {
-    src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1280&h=720&fit=crop&auto=format&q=80",
-    alt: "Stakeholder workshop",
+    src: "/images/comparison/comparativo/Site-Landing-Recursos-V2.png",
+    alt: "Landing page — seção de recursos",
   },
 ];
 

@@ -45,7 +45,8 @@ function useLenis() {
 const projectImages = [
   {
     src: "/images/mocks/desktop.webp",
-    alt: "MudaFácil — landing page no desktop",
+    alt: "MudaFácil — demo do produto",
+    videoId: "_jZ55Ez0e6g",
   },
   {
     src: "/images/mocks/tablet.webp",

@@ -57,7 +57,7 @@ export function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
         {/* Project header */}
         <div className="flex items-center justify-between px-4 pt-4 pb-4">
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#E84225] text-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-white">
               <AtSign className="h-5 w-5" />
             </div>
             <div className="flex flex-col">
@@ -95,7 +95,7 @@ export function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
                   onClick={onClose}
                   className={`flex items-center gap-2 rounded-md px-2 py-1 text-sm tracking-[-0.084px] transition-colors ${
                     isActive
-                      ? "bg-[#FDEAE6] font-semibold text-[#E84225]"
+                      ? "bg-primary/10 font-semibold text-primary"
                       : "font-normal text-[#252C32] hover:bg-[#E5E9EB]"
                   }`}
                 >
@@ -119,7 +119,7 @@ export function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
                 onClick={onClose}
                 className={`flex items-center gap-2 rounded-md px-2 py-1 text-sm tracking-[-0.084px] transition-colors ${
                   isActive
-                    ? "bg-[#FDEAE6] font-semibold text-[#E84225]"
+                    ? "bg-primary/10 font-semibold text-primary"
                     : "font-normal text-[#252C32] hover:bg-[#E5E9EB]"
                 }`}
               >
@@ -139,7 +139,7 @@ export function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
                   src={session.user.image || ""}
                   alt={session.user.name || ""}
                 />
-                <AvatarFallback className="bg-[#FDEAE6] text-xs font-semibold text-[#E84225]">
+                <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
                   {session.user.name
                     ?.split(" ")
                     .map((n) => n[0])

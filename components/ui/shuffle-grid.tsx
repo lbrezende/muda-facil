@@ -217,7 +217,7 @@ export const ShuffleHero = () => {
           </span>
           <h3 className="text-3xl md:text-5xl font-bold text-gray-900 leading-tight">
             Cada caixa no lugar certo.{" "}
-            <span className="text-[#E84225]">Cada cliente satisfeito.</span>
+            <span className="text-primary">Cada cliente satisfeito.</span>
           </h3>
           <p className="text-base md:text-lg text-gray-600 my-6 leading-relaxed">
             Mudar de casa e mais do que transportar moveis — e comecar um novo capitulo.
@@ -227,9 +227,9 @@ export const ShuffleHero = () => {
           </p>
           <Link href="/login">
             <button className={cn(
-              "bg-[#E84225] text-white font-semibold py-3 px-6 rounded-lg text-base",
-              "transition-all hover:bg-[#C73820] active:scale-95",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E84225] focus-visible:ring-offset-2",
+              "bg-primary text-white font-semibold py-3 px-6 rounded-lg text-base",
+              "transition-all hover:bg-primary/90 active:scale-95",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
               "inline-flex items-center gap-2"
             )}>
               Planejar minha mudanca com seguranca

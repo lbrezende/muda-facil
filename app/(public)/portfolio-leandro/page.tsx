@@ -130,7 +130,7 @@ function BeforeAfterSlider({
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <span className="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-red-700 font-medium">V1</span>
           <ArrowLeftRight className="h-3 w-3" />
-          <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-green-700 font-medium">V2</span>
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-primary font-medium">V2</span>
         </div>
       </div>
       <ImageComparison className="aspect-[16/10] w-full rounded-xl border border-border overflow-hidden">
@@ -144,8 +144,8 @@ function BeforeAfterSlider({
           alt={`${label} — depois (V2)`}
           position="right"
         />
-        <ImageComparisonSlider className="w-1 bg-[#E84225]">
-          <div className="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E84225] flex items-center justify-center shadow-lg">
+        <ImageComparisonSlider className="w-1 bg-primary">
+          <div className="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary flex items-center justify-center shadow-lg">
             <ArrowLeftRight className="h-4 w-4 text-white" />
           </div>
         </ImageComparisonSlider>
@@ -166,7 +166,7 @@ function MetricCard({
 }) {
   return (
     <div className="flex flex-col items-center gap-2 rounded-2xl border border-border/50 bg-card p-6 text-center">
-      <Icon className="h-6 w-6 text-[#E84225]" />
+      <Icon className="h-6 w-6 text-primary" />
       <span className="text-3xl font-bold tracking-tight">{value}</span>
       <span className="text-sm text-muted-foreground leading-snug">{label}</span>
     </div>
@@ -187,11 +187,11 @@ function ProcessStep({
 }) {
   return (
     <div className="relative pl-12 pb-12 border-l-2 border-border/40 last:border-l-0 last:pb-0">
-      <div className="absolute -left-5 top-0 flex h-10 w-10 items-center justify-center rounded-full bg-[#E84225] text-white text-sm font-bold">
+      <div className="absolute -left-5 top-0 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white text-sm font-bold">
         {number}
       </div>
       <div className="flex items-center gap-2 mb-3">
-        <Icon className="h-5 w-5 text-[#E84225]" />
+        <Icon className="h-5 w-5 text-primary" />
         <h3 className="text-xl font-bold">{title}</h3>
       </div>
       <div className="text-muted-foreground leading-relaxed space-y-3">
@@ -214,14 +214,14 @@ function SolutionCard({
   return (
     <div className="rounded-2xl border border-border/50 bg-card p-6 space-y-3">
       <h4 className="font-bold text-lg flex items-center gap-2">
-        <CheckCircle2 className="h-5 w-5 text-green-500" />
+        <CheckCircle2 className="h-5 w-5 text-primary" />
         {title}
       </h4>
       <p className="text-sm text-muted-foreground">
         <span className="font-medium text-foreground">Problema:</span> {problem}
       </p>
       <p className="text-sm text-muted-foreground">
-        <span className="font-medium text-[#E84225]">Impacto:</span> {impact}
+        <span className="font-medium text-primary">Impacto:</span> {impact}
       </p>
     </div>
   );
@@ -244,7 +244,7 @@ export default function PortfolioPage() {
       {/* ── SECTION 2 — PROJECTS (zoom parallax) ── */}
       <section id="projetos">
         <div className="text-center px-6 mb-8">
-          <p className="text-sm uppercase tracking-widest text-[#E84225] mb-2 font-medium">
+          <p className="text-sm uppercase tracking-widest text-primary mb-2 font-medium">
             Projetos
           </p>
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
@@ -264,7 +264,7 @@ export default function PortfolioPage() {
           />
           <div className="flex items-center gap-4 mt-8 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-full bg-[#E84225] flex items-center justify-center text-white text-xs font-bold">
+              <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold">
                 LR
               </div>
               <span>Leandro Rezende</span>
@@ -288,8 +288,8 @@ export default function PortfolioPage() {
             <MetricCard icon={Users} value="B2C" label="pivotamos o modelo de negócio" />
           </div>
 
-          <div className="rounded-2xl bg-[#E84225]/5 border border-[#E84225]/20 p-6 mb-8">
-            <p className="text-sm font-medium text-[#E84225] mb-1">Insight-chave</p>
+          <div className="rounded-2xl bg-primary/5 border border-primary/20 p-6 mb-8">
+            <p className="text-sm font-medium text-primary mb-1">Insight-chave</p>
             <MagicText
               text="O problema nunca foi a interface. Era a falta de compreensão sobre o valor e a lógica de precificação. Usuários não conseguiam conectar seus móveis a um preço justo."
               className="text-base leading-relaxed"
@@ -332,7 +332,7 @@ export default function PortfolioPage() {
             {/* After */}
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                   Depois
                 </span>
               </div>
@@ -384,8 +384,8 @@ export default function PortfolioPage() {
                 text="Apliquei questionário estruturado com usuários reais para mapear o público prioritário e entender motivações, dores e expectativas."
                 className="text-base leading-[1.8]"
               />
-              <div className="rounded-xl bg-[#E84225]/5 border border-[#E84225]/20 p-4 my-4">
-                <p className="text-sm font-medium text-[#E84225]">Insight decisivo</p>
+              <div className="rounded-xl bg-primary/5 border border-primary/20 p-4 my-4">
+                <p className="text-sm font-medium text-primary">Insight decisivo</p>
                 <MagicText
                   text="O principal público não é a transportadora. É o usuário final tentando cotar sua mudança. Isso mudou toda a estratégia de produto."
                   className="text-sm leading-relaxed"
@@ -467,13 +467,13 @@ export default function PortfolioPage() {
 
             <ProcessStep number="8" icon={Rocket} title="Resultados finais">
               <div className="grid grid-cols-2 gap-4 my-4">
-                <div className="rounded-xl bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 p-5 text-center">
-                  <p className="text-3xl font-bold text-green-700 dark:text-green-400">+70%</p>
-                  <p className="text-sm text-green-600 dark:text-green-500 mt-1">sucesso nas tarefas</p>
+                <div className="rounded-xl bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/30 p-5 text-center">
+                  <p className="text-3xl font-bold text-primary dark:text-primary">+70%</p>
+                  <p className="text-sm text-primary/80 dark:text-primary/70 mt-1">sucesso nas tarefas</p>
                 </div>
-                <div className="rounded-xl bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 p-5 text-center">
-                  <p className="text-3xl font-bold text-green-700 dark:text-green-400">7 &rarr; 2 min</p>
-                  <p className="text-sm text-green-600 dark:text-green-500 mt-1">tempo de decisão</p>
+                <div className="rounded-xl bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/30 p-5 text-center">
+                  <p className="text-3xl font-bold text-primary dark:text-primary">7 &rarr; 2 min</p>
+                  <p className="text-sm text-primary/80 dark:text-primary/70 mt-1">tempo de decisão</p>
                 </div>
               </div>
 
@@ -511,7 +511,7 @@ export default function PortfolioPage() {
                 "Criar histórico de mudanças e mecanismo de recorrência",
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <ArrowUpRight className="h-4 w-4 text-[#E84225] mt-1 shrink-0" />
+                  <ArrowUpRight className="h-4 w-4 text-primary mt-1 shrink-0" />
                   <span className="text-base leading-relaxed">{item}</span>
                 </li>
               ))}

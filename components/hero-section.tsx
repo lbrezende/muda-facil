@@ -19,12 +19,12 @@ export function HeroSection() {
     <section ref={sectionRef} className="py-24 sm:py-32 bg-[#F8FAFC] relative">
       <div className="mx-auto max-w-6xl px-6 text-center">
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-1.5 text-sm text-gray-600 shadow-sm">
-          <Zap className="h-4 w-4 text-[#E84225]" />
+          <Zap className="h-4 w-4 text-primary" />
           14 dias grátis no Pro — sem cartão de crédito
         </div>
         <h1 className="mx-auto max-w-3xl text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
           Arraste seus móveis, escolha o caminhão e{" "}
-          <span className="text-[#E84225]">mude sem estresse</span>
+          <span className="text-primary">mude sem estresse</span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-500">
           Monte visualmente a carga da sua mudança com drag & drop, compare
@@ -35,7 +35,7 @@ export function HeroSection() {
           <Link href="/login" ref={ctaRef}>
             <Button
               size="lg"
-              className="px-8 text-base bg-[#E84225] hover:bg-[#C73820] text-white"
+              className="px-8 text-base bg-primary hover:bg-primary/90 text-white"
             >
               Planejar minha mudança
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -54,7 +54,7 @@ export function HeroSection() {
 
         {/* Drag & Drop Canvas Mockup — z-index above arrow canvas */}
         <div className="relative z-[6] mx-auto mt-16 max-w-4xl">
-          <div className="rounded-xl border bg-white p-2 shadow-2xl shadow-[#E84225]/10">
+          <div className="rounded-xl border bg-white p-2 shadow-2xl shadow-primary/10">
             <div className="rounded-lg border bg-gray-50 p-6 sm:p-8">
               {/* Browser chrome */}
               <div className="mb-4 flex items-center gap-3">
@@ -83,18 +83,18 @@ export function HeroSection() {
                         key={item.label}
                         className={`flex items-center justify-between rounded-md border px-3 py-2 text-xs cursor-grab ${
                           item.dragging
-                            ? "border-[#E84225] bg-[#E84225]/5 shadow-sm"
+                            ? "border-primary bg-primary/5 shadow-sm"
                             : "bg-gray-50"
                         }`}
                       >
                         <div className="flex items-center gap-2">
                           <Package
-                            className={`h-3.5 w-3.5 ${item.dragging ? "text-[#E84225]" : "text-gray-400"}`}
+                            className={`h-3.5 w-3.5 ${item.dragging ? "text-primary" : "text-gray-400"}`}
                           />
                           <span
                             className={
                               item.dragging
-                                ? "font-medium text-[#E84225]"
+                                ? "font-medium text-primary"
                                 : "text-gray-600"
                             }
                           >
@@ -108,35 +108,35 @@ export function HeroSection() {
                 </div>
 
                 {/* Canvas area */}
-                <div className="rounded-lg border-2 border-dashed border-[#E84225]/30 bg-[#E84225]/5 p-4">
+                <div className="rounded-lg border-2 border-dashed border-primary/30 bg-primary/5 p-4">
                   <div className="mb-2 flex items-center justify-between">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-[#E84225]">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-primary">
                       Container — Caminhão 3/4
                     </p>
-                    <Truck className="h-4 w-4 text-[#E84225]" />
+                    <Truck className="h-4 w-4 text-primary" />
                   </div>
-                  <div className="relative h-36 rounded-md bg-white border border-[#E84225]/20">
+                  <div className="relative h-36 rounded-md bg-white border border-primary/20">
                     <div className="absolute left-2 top-2 rounded bg-[#1A1A1A]/20 border border-[#1A1A1A]/40 px-2 py-1 text-[10px] font-medium text-[#8B2E18]">
                       Sofá
                     </div>
-                    <div className="absolute left-16 top-2 rounded bg-[#E84225]/20 border border-[#E84225]/40 px-2 py-1 text-[10px] font-medium text-[#1A1A1A]">
+                    <div className="absolute left-16 top-2 rounded bg-primary/20 border border-primary/40 px-2 py-1 text-[10px] font-medium text-[#1A1A1A]">
                       Geladeira
                     </div>
                     <div className="absolute left-2 top-12 rounded bg-[#1A1A1A]/20 border border-[#1A1A1A]/40 px-2 py-1 text-[10px] font-medium text-[#8B2E18]">
                       Guarda-roupa
                     </div>
-                    <div className="absolute right-3 top-8 rounded border-2 border-dashed border-[#E84225] bg-[#E84225]/10 px-2 py-1 text-[10px] font-medium text-[#E84225] animate-pulse">
+                    <div className="absolute right-3 top-8 rounded border-2 border-dashed border-primary bg-primary/10 px-2 py-1 text-[10px] font-medium text-primary animate-pulse">
                       Cama queen
                     </div>
                   </div>
                   <div className="mt-3">
                     <div className="mb-1 flex justify-between text-[10px] text-gray-500">
                       <span>Ocupação</span>
-                      <span className="font-semibold text-[#E84225]">68%</span>
+                      <span className="font-semibold text-primary">68%</span>
                     </div>
                     <div className="h-1.5 w-full rounded-full bg-gray-200">
                       <div
-                        className="h-1.5 rounded-full bg-[#E84225]"
+                        className="h-1.5 rounded-full bg-primary"
                         style={{ width: "68%" }}
                       />
                     </div>
@@ -160,7 +160,7 @@ export function HeroSection() {
                           key={truck.name}
                           className={`flex items-center justify-between rounded-md px-2 py-1.5 text-xs ${
                             truck.active
-                              ? "bg-[#E84225] text-white"
+                              ? "bg-primary text-white"
                               : "bg-gray-50 text-gray-600"
                           }`}
                         >
@@ -189,7 +189,7 @@ export function HeroSection() {
                         <span>Peso estimado</span>
                         <span className="font-semibold">820 kg</span>
                       </div>
-                      <div className="flex justify-between text-[#E84225]">
+                      <div className="flex justify-between text-primary">
                         <span>Cotações</span>
                         <span className="font-semibold">3 disponíveis</span>
                       </div>

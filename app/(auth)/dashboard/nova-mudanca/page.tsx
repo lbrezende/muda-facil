@@ -24,7 +24,7 @@ export default function NovaMudancaPage() {
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-[#E84225]" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -81,7 +81,7 @@ export default function NovaMudancaPage() {
         <Card className="border border-gray-200 bg-white shadow-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base font-semibold text-gray-800">
-              <Truck className="h-5 w-5 text-[#E84225]" />
+              <Truck className="h-5 w-5 text-primary" />
               Dados da mudança
             </CardTitle>
           </CardHeader>
@@ -94,7 +94,7 @@ export default function NovaMudancaPage() {
                   htmlFor="origem"
                   className="flex items-center gap-1.5 text-sm font-medium text-gray-700"
                 >
-                  <MapPin className="h-3.5 w-3.5 text-[#E84225]" />
+                  <MapPin className="h-3.5 w-3.5 text-primary" />
                   Endereço de origem
                 </label>
                 <Input
@@ -161,7 +161,7 @@ export default function NovaMudancaPage() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-10 bg-[#E84225] text-white hover:bg-[#C73820] font-medium"
+                className="w-full h-10 bg-primary text-white hover:bg-primary/90 font-medium"
               >
                 {isSubmitting ? (
                   <>

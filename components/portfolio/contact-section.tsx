@@ -20,12 +20,12 @@ export function ContactSection() {
       <div className="sticky bottom-0 min-h-screen flex items-center justify-center bg-[#1A1A1A] text-white">
         <div className="w-full max-w-2xl mx-auto px-6 py-20">
           <div className="text-center mb-12">
-            <p className="text-sm uppercase tracking-widest text-[#E84225] mb-4 font-medium">
+            <p className="text-sm uppercase tracking-widest text-primary mb-4 font-medium">
               Vamos tomar um café?
             </p>
             <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">
               Bora construir algo{" "}
-              <span className="text-[#E84225]">incrível</span> juntos.
+              <span className="text-primary">incrível</span> juntos.
             </h2>
             <p className="text-white/60 text-lg max-w-lg mx-auto">
               Se você busca um Design Engineer que une pesquisa, estratégia e
@@ -83,14 +83,14 @@ export function ContactSection() {
                   rows={5}
                   className={cn(
                     "flex w-full rounded-md border bg-white/5 border-white/10 px-3 py-2 text-sm text-white placeholder:text-white/30",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E84225]/50 focus-visible:border-[#E84225]",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary",
                     "resize-none"
                   )}
                 />
               </div>
               <Button
                 type="submit"
-                className="w-full h-12 rounded-xl bg-[#E84225] hover:bg-[#E84225]/90 text-white font-semibold text-base"
+                className="w-full h-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold text-base"
               >
                 Enviar mensagem
               </Button>

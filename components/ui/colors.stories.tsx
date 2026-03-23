@@ -49,11 +49,11 @@ export const BrandColors: Story = {
     <div className="space-y-8">
       <div>
         <h3 className="text-lg font-semibold text-foreground mb-4">Cores da Marca — Trekon</h3>
-        <p className="text-sm text-muted-foreground mb-6">Paleta inspirada na identidade Trekon: vermelho container industrial, fundo neutro e preto tipografico.</p>
+        <p className="text-sm text-muted-foreground mb-6">Paleta inspirada na identidade Trekon: laranja primary, fundo neutro e preto tipografico.</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div className="space-y-3">
             <div className="w-full h-24 rounded-xl shadow-md" style={{ backgroundColor: '#E84225' }} />
-            <div><p className="text-sm font-semibold">Primary — Vermelho Container</p><p className="text-xs font-mono text-muted-foreground">#E84225</p><p className="text-xs text-muted-foreground mt-1">CTAs, links, destaques, botoes principais</p></div>
+            <div><p className="text-sm font-semibold">Primary — Laranja</p><p className="text-xs font-mono text-muted-foreground">#E84225</p><p className="text-xs text-muted-foreground mt-1">CTAs, links, destaques, botoes principais</p></div>
           </div>
           <div className="space-y-3">
             <div className="w-full h-24 rounded-xl border shadow-md" style={{ backgroundColor: '#F8FAFC' }} />
@@ -72,7 +72,7 @@ export const BrandColors: Story = {
 export const PrimaryPalette: Story = {
   render: () => (
     <div className="space-y-6">
-      <h3 className="text-lg font-semibold text-foreground">Escala Primary (Vermelho Container)</h3>
+      <h3 className="text-lg font-semibold text-foreground">Escala Primary (Verde)</h3>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
           { name: 'Primary / 5%', bg: '#E842250D', hex: '#E84225/5%', usage: 'Hover backgrounds' },
@@ -80,8 +80,8 @@ export const PrimaryPalette: Story = {
           { name: 'Primary / 20%', bg: '#E8422533', hex: '#E84225/20%', usage: 'Canvas items' },
           { name: 'Primary / 30%', bg: '#E842254D', hex: '#E84225/30%', usage: 'Borders dashed' },
           { name: 'Primary', bg: '#E84225', hex: '#E84225', usage: 'Botoes, links' },
-          { name: 'Primary Hover', bg: '#C73820', hex: '#C73820', usage: 'Hover de CTAs' },
-          { name: 'Red Dark Text', bg: '#8B2E18', hex: '#8B2E18', usage: 'Texto sobre bg vermelho claro' },
+          { name: 'Primary Hover', bg: '#007B2E', hex: '#007B2E', usage: 'Hover de CTAs' },
+          { name: 'Green Dark Text', bg: '#B5331C', hex: '#B5331C', usage: 'Texto sobre bg verde claro' },
           { name: 'Primary Foreground', bg: '#FFFFFF', hex: '#FFFFFF', usage: 'Texto sobre primary' },
         ].map((c) => (
           <div key={c.name} className="space-y-2">
@@ -161,7 +161,7 @@ export const FeedbackColors: Story = {
           { name: 'Sucesso', bg: '#22c55e', bgLight: '#22c55e1A', text: '#15803d', sample: 'Carga salva com sucesso' },
           { name: 'Alerta', bg: '#1A1A1A', bgLight: '#1A1A1A1A', text: '#1A1A1A', sample: 'Ocupacao acima de 80%' },
           { name: 'Erro', bg: '#DC2626', bgLight: '#DC26261A', text: '#991b1b', sample: 'Capacidade excedida' },
-          { name: 'Info', bg: '#E84225', bgLight: '#E842251A', text: '#8B2E18', sample: '3 cotacoes disponiveis' },
+          { name: 'Info', bg: '#E84225', bgLight: '#E842251A', text: '#B5331C', sample: '3 cotacoes disponiveis' },
         ].map((c) => (
           <div key={c.name} className="space-y-3">
             <div className="flex items-center gap-3">

@@ -24,7 +24,7 @@ export function PortfolioHero() {
         <div className="mb-6 mt-10 sm:justify-center md:mb-4 md:mt-32">
           <div className="relative flex items-center rounded-full border bg-popover px-3 py-1 text-xs text-primary/60">
             Design Engineer + IA
-            <span className="ml-2 inline-flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+            <span className="ml-2 inline-flex h-2 w-2 rounded-full bg-primary animate-pulse" />
           </div>
         </div>
         <div className="mx-auto max-w-5xl">
@@ -36,19 +36,19 @@ export function PortfolioHero() {
             <h1 className="flex flex-col text-center text-4xl font-semibold leading-[1.1] tracking-tight md:text-6xl md:leading-[1.05] lg:text-7xl lg:leading-[1.05]">
               <span>
                 Projetos que levavam sprints ou meses{" "}
-                <span className="text-[#E84225]">entregues em dias.</span>
+                <span className="text-primary">entregues em dias.</span>
               </span>
             </h1>
             <div className="flex items-center mt-4 justify-center gap-1">
               <span className="relative flex h-3 w-3 items-center justify-center">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
               </span>
-              <p className="text-xs text-green-500">Disponível para projetos</p>
+              <p className="text-xs text-primary">Disponível para projetos</p>
             </div>
           </div>
           <p className="mt-8 text-xl md:text-2xl text-foreground/80">
-            Sou <span className="text-[#E84225] font-bold">Leandro Rezende</span>,{" "}
+            Sou <span className="text-primary font-bold">Leandro Rezende</span>,{" "}
             Design Engineer Senior.
           </p>
           <p className="text-muted-foreground py-4 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
@@ -57,7 +57,7 @@ export function PortfolioHero() {
           </p>
           <p className="text-base md:text-lg text-muted-foreground whitespace-nowrap">
             Especialista em{" "}
-            <span className="text-[#E84225] font-semibold">
+            <span className="text-primary font-semibold">
               <TypeWriter strings={talkAbout} />
             </span>
           </p>

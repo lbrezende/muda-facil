@@ -55,7 +55,7 @@ export function TopHeader({ onMenuToggle }: TopHeaderProps) {
 
         <Link
           href="/dashboard"
-          className="flex h-8 w-8 items-center justify-center rounded-md text-[#E84225] hover:bg-[#F6F8F9]"
+          className="flex h-8 w-8 items-center justify-center rounded-md text-primary hover:bg-[#F6F8F9]"
         >
           <Truck className="h-5 w-5" />
         </Link>
@@ -90,7 +90,7 @@ export function TopHeader({ onMenuToggle }: TopHeaderProps) {
                   src={session.user.image || ""}
                   alt={session.user.name || ""}
                 />
-                <AvatarFallback className="bg-[#FDEAE6] text-[10px] font-semibold text-[#E84225]">
+                <AvatarFallback className="bg-primary/10 text-[10px] font-semibold text-primary">
                   {initials}
                 </AvatarFallback>
               </Avatar>

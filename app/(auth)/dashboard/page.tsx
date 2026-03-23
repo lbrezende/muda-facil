@@ -287,7 +287,7 @@ function InlineNewMudancaForm({
               ref={buttonRef}
               type="submit"
               disabled={isSubmitDisabled}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#E84225] text-white shadow-md transition-all hover:bg-[#C73820] hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-white shadow-md transition-all hover:bg-primary/90 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
             >
               {createMudanca.isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -381,7 +381,7 @@ function MudancaCard({
             {/* Distance */}
             {distancia && distancia > 0 && (
               <div className="flex flex-col items-center shrink-0 rounded-lg bg-gray-50 px-3 py-2 border border-gray-100">
-                <Navigation className="h-3.5 w-3.5 text-[#E84225] mb-0.5" />
+                <Navigation className="h-3.5 w-3.5 text-primary mb-0.5" />
                 <span className="text-sm font-bold text-gray-800">{distancia}</span>
                 <span className="text-[9px] uppercase tracking-wider text-gray-400">km</span>
               </div>
@@ -390,7 +390,7 @@ function MudancaCard({
 
           {/* Footer */}
           <div className="mt-3 flex items-center">
-            <span className="inline-flex items-center gap-1 text-xs text-[#E84225] font-medium">
+            <span className="inline-flex items-center gap-1 text-xs text-primary font-medium">
               Ver detalhes
               <ChevronRight className="h-3 w-3" />
             </span>
@@ -479,7 +479,7 @@ export default function DashboardPage() {
   if (authStatus === "loading" || isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-[#E84225]" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }

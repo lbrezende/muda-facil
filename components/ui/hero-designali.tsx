@@ -142,7 +142,10 @@ function render() {
     ctx.globalCompositeOperation = "source-over";
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.globalCompositeOperation = "lighter";
-    ctx.strokeStyle = "hsla(" + Math.round(f.update()) + ",100%,50%,0.025)";
+    // Clamp hue to 280-370 range (purple → magenta → orange)
+    const rawHue = Math.round(f.update());
+    const hue = rawHue > 360 ? rawHue - 360 : rawHue < 0 ? rawHue + 360 : rawHue;
+    ctx.strokeStyle = "hsla(" + hue + ",90%,55%,0.03)";
     ctx.lineWidth = 10;
     for (let t = 0; t < E.trails; t++) {
       lines[t].update();
@@ -167,11 +170,12 @@ const renderCanvas = function () {
   if (!ctx) return;
   ctx.running = true;
   ctx.frame = 1;
+  // Hue range: 280 (purple) ↔ 370/10 (orange) via magenta
   f = new Oscillator({
     phase: Math.random() * 2 * Math.PI,
-    amplitude: 85,
+    amplitude: 45,
     frequency: 0.0015,
-    offset: 285,
+    offset: 325,
   });
   document.addEventListener("mousemove", onMousemove as EventListener);
   document.addEventListener("touchstart", onMousemove as EventListener);

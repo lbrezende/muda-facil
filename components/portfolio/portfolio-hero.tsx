@@ -33,10 +33,10 @@ export function PortfolioHero() {
             <Plus strokeWidth={4} className="text-primary/20 absolute -bottom-5 -left-5 h-10 w-10" />
             <Plus strokeWidth={4} className="text-primary/20 absolute -right-5 -top-5 h-10 w-10" />
             <Plus strokeWidth={4} className="text-primary/20 absolute -bottom-5 -right-5 h-10 w-10" />
-            <h1 className="flex flex-col text-center text-4xl font-semibold leading-tight tracking-tight md:text-7xl lg:text-8xl">
+            <h1 className="flex flex-col text-center text-4xl font-semibold leading-[1.1] tracking-tight md:text-6xl md:leading-[1.05] lg:text-7xl lg:leading-[1.05]">
               <span>
-                Plataformas que levavam meses.{" "}
-                <span className="text-[#E84225]">Entregues em dias.</span>
+                Projetos que levavam sprints ou meses{" "}
+                <span className="text-[#E84225]">entregues em dias.</span>
               </span>
             </h1>
             <div className="flex items-center mt-4 justify-center gap-1">

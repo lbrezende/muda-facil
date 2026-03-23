@@ -8,10 +8,10 @@ export function PortfolioHero() {
   const talkAbout = [
     "Design de Produto",
     "IA aplicada a UX",
-    "Prototipacao rapida",
+    "Prototipação rápida",
     "Design Systems",
-    "Pesquisa com usuarios",
-    "Estrategia de produto",
+    "Pesquisa com usuários",
+    "Estratégia de produto",
   ];
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export function PortfolioHero() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
               </span>
-              <p className="text-xs text-green-500">Disponivel para projetos</p>
+              <p className="text-xs text-green-500">Disponível para projetos</p>
             </div>
           </div>
           <p className="mt-8 text-xl md:text-2xl text-foreground/80">
@@ -53,7 +53,7 @@ export function PortfolioHero() {
           </p>
           <p className="text-muted-foreground py-4 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
             Aplico IA em todas as etapas do processo de design para transformar
-            pesquisa em interfaces que movem metricas de negocio.
+            pesquisa em interfaces que movem métricas de negócio.
           </p>
           <p className="text-base md:text-lg text-muted-foreground whitespace-nowrap">
             Especialista em{" "}

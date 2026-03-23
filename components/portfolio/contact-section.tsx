@@ -21,15 +21,15 @@ export function ContactSection() {
         <div className="w-full max-w-2xl mx-auto px-6 py-20">
           <div className="text-center mb-12">
             <p className="text-sm uppercase tracking-widest text-[#E84225] mb-4 font-medium">
-              Vamos tomar um cafe?
+              Vamos tomar um café?
             </p>
             <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">
               Bora construir algo{" "}
-              <span className="text-[#E84225]">incrivel</span> juntos.
+              <span className="text-[#E84225]">incrível</span> juntos.
             </h2>
             <p className="text-white/60 text-lg max-w-lg mx-auto">
-              Se voce busca um Design Engineer que une pesquisa, estrategia e
-              IA para mover metricas reais, estou pronto para conversar.
+              Se você busca um Design Engineer que une pesquisa, estratégia e
+              IA para mover métricas reais, estou pronto para conversar.
             </p>
           </div>
 
@@ -38,7 +38,7 @@ export function ContactSection() {
               <div className="text-5xl mb-4">&#9749;</div>
               <h3 className="text-2xl font-bold mb-2">Mensagem enviada!</h3>
               <p className="text-white/60">
-                Vou responder em breve. Prepara o cafe!
+                Vou responder em breve. Prepara o café!
               </p>
             </div>
           ) : (

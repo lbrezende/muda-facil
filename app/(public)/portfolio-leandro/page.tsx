@@ -83,22 +83,22 @@ const comparisons = [
   {
     v1: "/images/comparison/comparativo/Produto-Minhas-Mudancas-V1.png",
     v2: "/images/comparison/comparativo/Produto-Minhas-Mudancas-V2.png",
-    label: "Minhas Mudancas",
+    label: "Minhas Mudanças",
   },
   {
     v1: "/images/comparison/comparativo/Produto-Catalogo-de-Itens-V1.png",
     v2: "/images/comparison/comparativo/Produto-Catalogo-de-Itens-V2.png",
-    label: "Catalogo de Itens",
+    label: "Catálogo de Itens",
   },
   {
     v1: "/images/comparison/comparativo/Produto-Nova-Mudanca-Variante-V1.png",
     v2: "/images/comparison/comparativo/Produto-Nova-Mudanca-Variante-V2.png",
-    label: "Nova Mudanca",
+    label: "Nova Mudança",
   },
   {
     v1: "/images/comparison/comparativo/Produto-Detalhe-Mudanca-Cotacoes-V1.png",
     v2: "/images/comparison/comparativo/Produto-Detalhe-Mudanca-Cotacoes-V2.png",
-    label: "Cotacoes da Mudanca",
+    label: "Cotações da Mudança",
   },
   {
     v1: "/images/comparison/comparativo/Site-Landing-Recursos-V1.png",
@@ -258,7 +258,7 @@ export default function PortfolioPage() {
         {/* ── Case Title ── */}
         <header className="pt-16 pb-12 border-b border-border/30 mb-12">
           <MagicText
-            text="+70% de sucesso nas tarefas e decisao 3,5x mais rapida. Como transformei a experiencia de cotacao de mudancas em um motor de crescimento B2C."
+            text="+70% de sucesso nas tarefas e decisão 3,5x mais rápida. Como transformei a experiência de cotação de mudanças em um motor de crescimento B2C."
             className="text-3xl md:text-4xl font-bold leading-tight tracking-tight"
           />
           <div className="flex items-center gap-4 mt-8 text-sm text-muted-foreground">
@@ -276,27 +276,27 @@ export default function PortfolioPage() {
         {/* ── 1. BUSINESS RESULTS ── */}
         <section className="mb-16">
           <MagicText
-            text="O resultado de negocio. Antes de falar sobre processo, veja o que mudou nos numeros."
+            text="O resultado de negócio. Antes de falar sobre processo, veja o que mudou nos números."
             className="text-2xl font-bold mb-8"
           />
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-            <MetricCard icon={TrendingUp} value="+70%" label="sucesso na conclusao de tarefas" />
-            <MetricCard icon={Clock} value="3.5x" label="decisao mais rapida (7min para 2min)" />
-            <MetricCard icon={Target} value="-65%" label="friccao no fluxo de cotacao" />
-            <MetricCard icon={Users} value="B2C" label="pivotamos o modelo de negocio" />
+            <MetricCard icon={TrendingUp} value="+70%" label="sucesso na conclusão de tarefas" />
+            <MetricCard icon={Clock} value="3.5x" label="decisão mais rápida (7min para 2min)" />
+            <MetricCard icon={Target} value="-65%" label="fricção no fluxo de cotação" />
+            <MetricCard icon={Users} value="B2C" label="pivotamos o modelo de negócio" />
           </div>
 
           <div className="rounded-2xl bg-[#E84225]/5 border border-[#E84225]/20 p-6 mb-8">
             <p className="text-sm font-medium text-[#E84225] mb-1">Insight-chave</p>
             <MagicText
-              text="O problema nunca foi a interface. Era a falta de compreensao sobre o valor e a logica de precificacao. Usuarios nao conseguiam conectar seus moveis a um preco justo."
+              text="O problema nunca foi a interface. Era a falta de compreensão sobre o valor e a lógica de precificação. Usuários não conseguiam conectar seus móveis a um preço justo."
               className="text-base leading-relaxed"
             />
           </div>
 
           <MagicText
-            text="O impacto estrategico foi ainda maior: mudamos o modelo de negocio. Saimos de um SaaS B2B onde transportadoras pagavam assinatura para um marketplace B2C monetizado via anuncios. A consequencia direta: barreira de entrada zerada, volume de usuarios multiplicado e mais dados gerando mais valor para anunciantes."
+            text="O impacto estratégico foi ainda maior: mudamos o modelo de negócio. Saímos de um SaaS B2B onde transportadoras pagavam assinatura para um marketplace B2C monetizado via anúncios. A consequência direta: barreira de entrada zerada, volume de usuários multiplicado e mais dados gerando mais valor para anunciantes."
             className="text-lg leading-[1.8] text-muted-foreground"
           />
         </section>
@@ -304,7 +304,7 @@ export default function PortfolioPage() {
         {/* ── 2. BEFORE vs AFTER ── */}
         <section className="mb-16">
           <MagicText
-            text="Antes vs Depois. O contraste que conta a historia."
+            text="Antes vs Depois. O contraste que conta a história."
             className="text-2xl font-bold mb-8"
           />
 
@@ -317,7 +317,7 @@ export default function PortfolioPage() {
                 </span>
               </div>
               <MagicText
-                text="Usuarios travavam no preenchimento de endereco. Nao entendiam como o preco era calculado. Tinham que digitar tudo manualmente. Resultado: tempo alto de decisao e baixa confianca no resultado final."
+                text="Usuários travavam no preenchimento de endereço. Não entendiam como o preço era calculado. Tinham que digitar tudo manualmente. Resultado: tempo alto de decisão e baixa confiança no resultado final."
                 className="text-base leading-[1.8] text-muted-foreground mb-4"
               />
             </div>
@@ -336,7 +336,7 @@ export default function PortfolioPage() {
                 </span>
               </div>
               <MagicText
-                text="Autocomplete de endereco. Date picker visivel e intuitivo. Interface visual de carga: moveis entram no caminhao, o preco atualiza em tempo real. Feedback imediato. Decisao rapida e com confianca."
+                text="Autocomplete de endereço. Date picker visível e intuitivo. Interface visual de carga: móveis entram no caminhão, o preço atualiza em tempo real. Feedback imediato. Decisão rápida e com confiança."
                 className="text-base leading-[1.8] text-muted-foreground"
               />
             </div>
@@ -351,24 +351,24 @@ export default function PortfolioPage() {
           />
 
           <div className="space-y-0">
-            <ProcessStep number="1" icon={Search} title="Analise heuristica + Quick Wins">
+            <ProcessStep number="1" icon={Search} title="Análise heurística + Quick Wins">
               <MagicText
-                text="Comecei com uma auditoria heuristica completa da plataforma existente. Em dois dias, identifiquei friccoes obvias que poderiam ser resolvidas imediatamente: falta de autocomplete de endereco, input manual de data, ausencia de feedback de calculo e baixa previsibilidade do sistema."
+                text="Comecei com uma auditoria heurística completa da plataforma existente. Em dois dias, identifiquei fricções óbvias que poderiam ser resolvidas imediatamente: falta de autocomplete de endereço, input manual de data, ausência de feedback de cálculo e baixa previsibilidade do sistema."
                 className="text-base leading-[1.8]"
               />
               <MagicText
-                text="Os quick wins geraram resultado rapido e construiram confianca com stakeholders para as mudancas maiores que viriam."
+                text="Os quick wins geraram resultado rápido e construíram confiança com stakeholders para as mudanças maiores que viriam."
                 className="text-base leading-[1.8]"
               />
             </ProcessStep>
 
             <ProcessStep number="2" icon={Users} title="Teste de usabilidade">
               <MagicText
-                text="Objetivo: validar onde usuarios realmente travavam no fluxo. A tarefa testada foi simples — simule uma mudanca com seus moveis e encontre o preco."
+                text="Objetivo: validar onde usuários realmente travavam no fluxo. A tarefa testada foi simples — simule uma mudança com seus móveis e encontre o preço."
                 className="text-base leading-[1.8]"
               />
               <MagicText
-                text="Principais achados: usuarios nao conseguiam completar tarefas com fluidez. Dificuldade em entender como o preco era calculado. Tempo medio de decisao de 7 minutos. Inseguranca sobre o resultado."
+                text="Principais achados: usuários não conseguiam completar tarefas com fluidez. Dificuldade em entender como o preço era calculado. Tempo médio de decisão de 7 minutos. Insegurança sobre o resultado."
                 className="text-base leading-[1.8]"
               />
 
@@ -378,34 +378,34 @@ export default function PortfolioPage() {
               </div>
             </ProcessStep>
 
-            <ProcessStep number="3" icon={MessageSquare} title="Pesquisa com usuarios">
+            <ProcessStep number="3" icon={MessageSquare} title="Pesquisa com usuários">
               <MagicText
-                text="Apliquei questionario estruturado com usuarios reais para mapear o publico prioritario e entender motivacoes, dores e expectativas."
+                text="Apliquei questionário estruturado com usuários reais para mapear o público prioritário e entender motivações, dores e expectativas."
                 className="text-base leading-[1.8]"
               />
               <div className="rounded-xl bg-[#E84225]/5 border border-[#E84225]/20 p-4 my-4">
                 <p className="text-sm font-medium text-[#E84225]">Insight decisivo</p>
                 <MagicText
-                  text="O principal publico nao e a transportadora. E o usuario final tentando cotar sua mudanca. Isso mudou toda a estrategia de produto."
+                  text="O principal público não é a transportadora. É o usuário final tentando cotar sua mudança. Isso mudou toda a estratégia de produto."
                   className="text-sm leading-relaxed"
                 />
               </div>
             </ProcessStep>
 
-            <ProcessStep number="4" icon={Lightbulb} title="Redefinicao de estrategia">
+            <ProcessStep number="4" icon={Lightbulb} title="Redefinição de estratégia">
               <MagicText
-                text="Com os dados em maos, propus uma mudanca critica de posicionamento. De: produto focado em transportadoras, modelo SaaS B2B. Para: produto focado em usuarios finais, modelo marketplace B2C."
+                text="Com os dados em mãos, propus uma mudança crítica de posicionamento. De: produto focado em transportadoras, modelo SaaS B2B. Para: produto focado em usuários finais, modelo marketplace B2C."
                 className="text-base leading-[1.8]"
               />
               <MagicText
-                text="Essa mudanca nao foi apenas de interface. Foi uma decisao de negocio fundamentada em evidencias de pesquisa."
+                text="Essa mudança não foi apenas de interface. Foi uma decisão de negócio fundamentada em evidências de pesquisa."
                 className="text-base leading-[1.8]"
               />
             </ProcessStep>
 
-            <ProcessStep number="5" icon={BarChart3} title="Modelo de negocio (Business Thinking)">
+            <ProcessStep number="5" icon={BarChart3} title="Modelo de negócio (Business Thinking)">
               <MagicText
-                text="Nova hipotese: se o produto for gratuito para usuarios e monetizado via anuncios, o crescimento sera mais rapido. A logica e simples — reducao de barreira de entrada gera aumento de volume, que gera mais dados, que gera mais valor para anunciantes."
+                text="Nova hipótese: se o produto for gratuito para usuários e monetizado via anúncios, o crescimento será mais rápido. A lógica é simples — redução de barreira de entrada gera aumento de volume, que gera mais dados, que gera mais valor para anunciantes."
                 className="text-base leading-[1.8]"
               />
 
@@ -415,27 +415,27 @@ export default function PortfolioPage() {
               </div>
             </ProcessStep>
 
-            <ProcessStep number="6" icon={Layers} title="Solucoes implementadas">
+            <ProcessStep number="6" icon={Layers} title="Soluções implementadas">
               <div className="grid gap-4 my-4">
                 <SolutionCard
-                  title="Autocomplete de endereco"
-                  problem="Usuario nao conseguia preencher corretamente"
-                  impact="Aumento de 40% na conclusao do formulario"
+                  title="Autocomplete de endereço"
+                  problem="Usuário não conseguia preencher corretamente"
+                  impact="Aumento de 40% na conclusão do formulário"
                 />
                 <SolutionCard
-                  title="Date Picker visivel"
-                  problem="Usuarios digitavam data manualmente e erravam"
-                  impact="Reducao de 90% nos erros de data"
+                  title="Date Picker visível"
+                  problem="Usuários digitavam data manualmente e erravam"
+                  impact="Redução de 90% nos erros de data"
                 />
                 <SolutionCard
-                  title="Visualizacao do preco baseada em carga"
-                  problem="Preco era uma caixa preta para o usuario"
-                  impact="Relacao direta entre moveis, caminhao e preco"
+                  title="Visualização do preço baseada em carga"
+                  problem="Preço era uma caixa preta para o usuário"
+                  impact="Relação direta entre móveis, caminhão e preço"
                 />
                 <SolutionCard
-                  title="Feedback instantaneo de preco"
+                  title="Feedback instantâneo de preço"
                   problem="Demora para entender o custo"
-                  impact="Decisao 3.5x mais rapida"
+                  impact="Decisão 3.5x mais rápida"
                 />
               </div>
 
@@ -445,16 +445,16 @@ export default function PortfolioPage() {
               </div>
             </ProcessStep>
 
-            <ProcessStep number="7" icon={Target} title="Validacao com hipoteses">
+            <ProcessStep number="7" icon={Target} title="Validação com hipóteses">
               <div className="rounded-xl bg-muted/50 border p-5 my-4">
-                <p className="font-semibold text-foreground mb-2">Hipotese principal</p>
+                <p className="font-semibold text-foreground mb-2">Hipótese principal</p>
                 <MagicText
-                  text="Eu acredito que, ao tornar o preco visual e baseado nos moveis, os usuarios vao tomar decisoes mais rapidas e com mais confianca."
+                  text="Eu acredito que, ao tornar o preço visual e baseado nos móveis, os usuários vão tomar decisões mais rápidas e com mais confiança."
                   className="text-base leading-relaxed italic"
                 />
               </div>
               <MagicText
-                text="Indicadores definidos: tempo de decisao e taxa de sucesso na tarefa. Ambos foram validados nos testes pos-implementacao."
+                text="Indicadores definidos: tempo de decisão e taxa de sucesso na tarefa. Ambos foram validados nos testes pós-implementação."
                 className="text-base leading-[1.8]"
               />
 
@@ -472,7 +472,7 @@ export default function PortfolioPage() {
                 </div>
                 <div className="rounded-xl bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 p-5 text-center">
                   <p className="text-3xl font-bold text-green-700 dark:text-green-400">7 &rarr; 2 min</p>
-                  <p className="text-sm text-green-600 dark:text-green-500 mt-1">tempo de decisao</p>
+                  <p className="text-sm text-green-600 dark:text-green-500 mt-1">tempo de decisão</p>
                 </div>
               </div>
 
@@ -492,22 +492,22 @@ export default function PortfolioPage() {
           />
           <div className="space-y-4">
             <MagicText
-              text="UX nao e sobre tela. E sobre modelo mental do usuario. O problema de negocio quase sempre e um problema de entendimento. E design sem estrategia nao move metrica."
+              text="UX não é sobre tela. É sobre modelo mental do usuário. O problema de negócio quase sempre é um problema de entendimento. E design sem estratégia não move métrica."
               className="text-lg leading-[1.8] text-muted-foreground"
             />
           </div>
 
           <div className="mt-10">
             <MagicText
-              text="Proximos passos"
+              text="Próximos passos"
               className="text-xl font-bold mb-4"
             />
             <ul className="space-y-3 text-muted-foreground">
               {[
-                "Testar monetizacao com anuncios e validar unit economics",
-                "Otimizar aquisicao de usuarios via growth loops",
-                "Melhorar recomendacao de transportadoras com IA",
-                "Criar historico de mudancas e mecanismo de recorrencia",
+                "Testar monetização com anúncios e validar unit economics",
+                "Otimizar aquisição de usuários via growth loops",
+                "Melhorar recomendação de transportadoras com IA",
+                "Criar histórico de mudanças e mecanismo de recorrência",
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-3">
                   <ArrowUpRight className="h-4 w-4 text-[#E84225] mt-1 shrink-0" />

@@ -11,7 +11,7 @@ export function PortfolioHeader() {
 
 	const links = [
 		{ label: 'Meus projetos', href: '#projetos' },
-		{ label: 'Vamos tomar um cafe', href: '#contato' },
+		{ label: 'Vamos tomar um café', href: '#contato' },
 	];
 
 	React.useEffect(() => {

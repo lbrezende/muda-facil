@@ -38,7 +38,7 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 							style={{ scale }}
 							className={`absolute top-0 flex h-full w-full items-center justify-center ${index === 1 ? '[&>div]:!-top-[30vh] [&>div]:!left-[5vw] [&>div]:!h-[30vh] [&>div]:!w-[35vw]' : ''} ${index === 2 ? '[&>div]:!-top-[10vh] [&>div]:!-left-[25vw] [&>div]:!h-[45vh] [&>div]:!w-[20vw]' : ''} ${index === 3 ? '[&>div]:!left-[27.5vw] [&>div]:!h-[25vh] [&>div]:!w-[25vw]' : ''} ${index === 4 ? '[&>div]:!top-[27.5vh] [&>div]:!left-[5vw] [&>div]:!h-[25vh] [&>div]:!w-[20vw]' : ''} ${index === 5 ? '[&>div]:!top-[27.5vh] [&>div]:!-left-[22.5vw] [&>div]:!h-[25vh] [&>div]:!w-[30vw]' : ''} ${index === 6 ? '[&>div]:!top-[22.5vh] [&>div]:!left-[25vw] [&>div]:!h-[15vh] [&>div]:!w-[15vw]' : ''} `}
 						>
-							<div className="relative h-[25vh] w-[25vw] overflow-hidden">
+							<div className={`relative ${videoId ? 'w-[25vw] aspect-video' : 'h-[25vh] w-[25vw]'}`}>
 								{videoId ? (
 									<iframe
 										src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&showinfo=0&rel=0&modestbranding=1&playsinline=1&disablekb=1&fs=0&iv_load_policy=3&vq=hd1080`}
@@ -46,8 +46,8 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 										width={1920}
 										height={1080}
 										allow="accelerometer; autoplay; encrypted-media; gyroscope"
-										className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-										style={{ border: 'none', pointerEvents: 'none', width: '1920px', height: '1080px', minWidth: '100%', minHeight: '100%' }}
+										className="absolute inset-0 w-full h-full"
+										style={{ border: 'none', pointerEvents: 'none' }}
 										title={alt || 'Video'}
 									/>
 								) : (

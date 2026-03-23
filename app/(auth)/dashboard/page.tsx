@@ -153,7 +153,6 @@ function InlineNewMudancaForm({
         numComodos: summary.numComodos || undefined,
         distanciaKm: distKm && distKm > 0 ? distKm : undefined,
       });
-      // Reset form
       setOrigem("");
       setDestino("");
       setData("");
@@ -179,44 +178,62 @@ function InlineNewMudancaForm({
   }
 
   return (
-    <Card className="border-gray-200 bg-white shadow-sm overflow-hidden">
+    <div className="space-y-5">
       <form onSubmit={handleSubmit}>
-        {/* Header */}
-        <div className="bg-gradient-to-r from-[#E84225] to-[#C73820] px-5 py-4">
-          <h2 className="text-white text-lg font-semibold">Para onde você quer se mudar?</h2>
-          <p className="text-white/70 text-xs mt-0.5">
+        {/* Headline */}
+        <div className="text-center mb-5">
+          <h2 className="text-xl font-semibold text-gray-900">
+            Para onde você quer se mudar?
+          </h2>
+          <p className="text-sm text-gray-500 mt-1">
             Preencha os dados e receba estimativas de preço na hora
           </p>
         </div>
 
-        {/* Address row */}
-        <div className="px-5 pt-4 pb-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">De onde?</label>
-            <input
-              type="text"
-              value={origem}
-              onChange={(e) => setOrigem(e.target.value)}
-              placeholder="Rua Augusta, 500 - SP"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#E84225] focus:outline-none focus:ring-2 focus:ring-[#E84225]/20"
-              required
-            />
+        {/* Airbnb-style unified search pill */}
+        <div className="relative flex flex-col sm:flex-row items-stretch rounded-full border border-gray-300 bg-white shadow-sm hover:shadow-md transition-shadow">
+          {/* De onde */}
+          <div className="flex-1 relative group">
+            <div className="px-5 py-3">
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-800">
+                De onde
+              </label>
+              <input
+                type="text"
+                value={origem}
+                onChange={(e) => setOrigem(e.target.value)}
+                placeholder="Endereço de origem"
+                className="w-full bg-transparent text-sm text-gray-600 placeholder-gray-400 outline-none"
+                required
+              />
+            </div>
+            <div className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 h-8 w-px bg-gray-200" />
           </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Para onde?</label>
-            <input
-              type="text"
-              value={destino}
-              onChange={(e) => setDestino(e.target.value)}
-              placeholder="Av. Paulista, 1578 - SP"
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-[#E84225] focus:outline-none focus:ring-2 focus:ring-[#E84225]/20"
-              required
-            />
+
+          {/* Para onde */}
+          <div className="flex-1 relative group border-t sm:border-t-0">
+            <div className="px-5 py-3">
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-800">
+                Para onde
+              </label>
+              <input
+                type="text"
+                value={destino}
+                onChange={(e) => setDestino(e.target.value)}
+                placeholder="Endereço de destino"
+                className="w-full bg-transparent text-sm text-gray-600 placeholder-gray-400 outline-none"
+                required
+              />
+            </div>
+            <div className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 h-8 w-px bg-gray-200" />
           </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Quando?</label>
-            <div className="relative">
-              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+
+          {/* Quando */}
+          <div className="relative group border-t sm:border-t-0 sm:w-40">
+            <div className="px-5 py-3">
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-800">
+                Quando
+              </label>
               <input
                 ref={dateRef}
                 type="date"
@@ -224,61 +241,54 @@ function InlineNewMudancaForm({
                 min={todayISO()}
                 onChange={(e) => setData(e.target.value)}
                 onClick={() => dateRef.current?.showPicker?.()}
-                className="w-full rounded-lg border border-gray-300 pl-10 pr-3 py-2 text-sm focus:border-[#E84225] focus:outline-none focus:ring-2 focus:ring-[#E84225]/20 cursor-pointer"
+                className="w-full bg-transparent text-sm text-gray-600 placeholder-gray-400 outline-none cursor-pointer"
               />
             </div>
+            <div className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 h-8 w-px bg-gray-200" />
           </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">
-              Distância estimada (km)
-            </label>
-            <div className="relative">
-              <Ruler className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+
+          {/* Distância + Search button */}
+          <div className="flex items-center gap-2 border-t sm:border-t-0 sm:w-48 pr-2">
+            <div className="flex-1 px-5 py-3 sm:pl-5 sm:pr-0">
+              <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-800">
+                Distância
+              </label>
               <input
                 type="number"
                 value={distancia}
                 onChange={(e) => setDistancia(e.target.value)}
-                placeholder="Ex: 15"
+                placeholder="km"
                 min={1}
-                className="w-full rounded-lg border border-gray-300 pl-10 pr-3 py-2 text-sm focus:border-[#E84225] focus:outline-none focus:ring-2 focus:ring-[#E84225]/20"
+                className="w-full bg-transparent text-sm text-gray-600 placeholder-gray-400 outline-none"
               />
             </div>
+            <button
+              type="submit"
+              disabled={createMudanca.isPending || !origem.trim() || !destino.trim()}
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#E84225] text-white shadow-md transition-all hover:bg-[#C73820] hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+            >
+              {createMudanca.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Plus className="h-5 w-5" />
+              )}
+            </button>
           </div>
         </div>
 
-        {/* Room selector row */}
-        <div className="px-5 pb-4">
-          <RoomSelector rooms={rooms} onChange={setRooms} />
-        </div>
+        {/* Error message */}
+        {createMudanca.isError && (
+          <p className="text-sm text-red-600 text-center mt-3">
+            {createMudanca.error?.message || "Erro ao criar mudança"}
+          </p>
+        )}
 
-        {/* Submit row */}
-        <div className="px-5 pb-4 flex items-center justify-between">
-          {createMudanca.isError && (
-            <p className="text-sm text-red-600 flex-1">
-              {createMudanca.error?.message || "Erro ao criar mudança"}
-            </p>
-          )}
-          <div className="flex-1" />
-          <Button
-            type="submit"
-            className="gap-2 bg-[#E84225] text-white hover:bg-[#C73820] px-6"
-            disabled={createMudanca.isPending || !origem.trim() || !destino.trim()}
-          >
-            {createMudanca.isPending ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Criando...
-              </>
-            ) : (
-              <>
-                <Plus className="h-4 w-4" />
-                Criar mudança
-              </>
-            )}
-          </Button>
+        {/* Room categories — Airbnb-style horizontal tabs */}
+        <div className="mt-6">
+          <RoomSelector rooms={rooms} onChange={setRooms} variant="tabs" />
         </div>
       </form>
-    </Card>
+    </div>
   );
 }
 

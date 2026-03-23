@@ -181,10 +181,10 @@ function InlineNewMudancaForm({
     <div className="space-y-5">
       <form onSubmit={handleSubmit}>
         {/* Headline */}
-        <div className="text-center mb-5">
-          <h2 className="text-xl font-semibold text-gray-900">
+        <div className="mb-5">
+          <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
             Para onde você quer se mudar?
-          </h2>
+          </h1>
           <p className="text-sm text-gray-500 mt-1">
             Preencha os dados e receba estimativas de preço na hora
           </p>
@@ -434,16 +434,6 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-6 px-4 py-4 md:px-8 md:py-6 max-w-4xl mx-auto w-full">
-      {/* Page header */}
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-          Suas mudanças
-        </h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Aqui você acompanha cada mudança do início ao fim.
-        </p>
-      </div>
-
       {/* Inline form — always visible */}
       <InlineNewMudancaForm
         onCreated={(id) => router.push(`/dashboard/mudanca/${id}`)}

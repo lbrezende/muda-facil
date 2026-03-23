@@ -49,7 +49,7 @@ export function RoomSelector({ rooms, onChange, variant = "grid" }: RoomSelector
     return (
       <div className="space-y-3">
         {/* Horizontal category tabs */}
-        <div className="flex items-end gap-6 overflow-x-auto pb-2 border-b border-gray-200 scrollbar-hide">
+        <div className="flex items-end justify-center gap-6 overflow-x-auto pb-2 border-b border-gray-200 scrollbar-hide">
           {ROOM_TYPES.map((room) => {
             const Icon = ICONS[room.icon];
             const count = rooms[room.key] || 0;

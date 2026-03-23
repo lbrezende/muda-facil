@@ -110,12 +110,14 @@ function onMousemove(e: MouseEvent | TouchEvent) {
       lines.push(new TrailLine({ spring: 0.45 + (i / E.trails) * 0.025 }));
   }
   function handleMove(ev: MouseEvent | TouchEvent) {
+    const canvas = document.getElementById("canvas");
+    const rect = canvas?.getBoundingClientRect();
     if ("touches" in ev) {
-      pos.x = ev.touches[0].pageX;
-      pos.y = ev.touches[0].pageY;
+      pos.x = ev.touches[0].clientX - (rect?.left || 0);
+      pos.y = ev.touches[0].clientY - (rect?.top || 0);
     } else {
-      pos.x = ev.clientX;
-      pos.y = ev.clientY;
+      pos.x = ev.clientX - (rect?.left || 0);
+      pos.y = ev.clientY - (rect?.top || 0);
     }
     ev.preventDefault();
   }

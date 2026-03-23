@@ -41,7 +41,7 @@ function useLenis() {
   }, []);
 }
 
-/* ── project gallery images (MudaFácil device mocks + product screens) ── */
+/* ── project gallery images (all MudaFácil device mocks) ── */
 const projectImages = [
   {
     src: "/images/mocks/desktop.webp",
@@ -64,12 +64,12 @@ const projectImages = [
     alt: "MudaFácil — apresentação no projetor",
   },
   {
-    src: "/images/comparison/comparativo/Produto-Minhas-Mudancas-V2.png",
-    alt: "Minhas Mudanças — dashboard do usuário",
+    src: "/images/mocks/twoguysonemock.webp",
+    alt: "MudaFácil — desktop e mobile lado a lado",
   },
   {
-    src: "/images/comparison/comparativo/Produto-Detalhe-Mudanca-Cotacoes-V2.png",
-    alt: "Cotações da mudança — comparação de preços",
+    src: "/images/mocks/wow.webp",
+    alt: "MudaFácil — equipe celebrando o resultado",
   },
 ];
 

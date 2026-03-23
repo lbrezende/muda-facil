@@ -208,10 +208,10 @@ function InlineNewMudancaForm({
         </div>
 
         {/* Airbnb-style unified search pill */}
-        <div className="relative flex flex-col sm:flex-row items-stretch rounded-full border border-gray-300 bg-white shadow-sm hover:shadow-md transition-shadow">
+        <div className="relative flex flex-col sm:flex-row items-stretch rounded-2xl sm:rounded-full border border-gray-300 bg-white shadow-sm hover:shadow-md transition-shadow">
           {/* De onde */}
           <div className="flex-1 relative group">
-            <div className="pl-9 pr-5 py-3">
+            <div className="pl-5 sm:pl-9 pr-5 py-3">
               <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-800">
                 De onde
               </label>

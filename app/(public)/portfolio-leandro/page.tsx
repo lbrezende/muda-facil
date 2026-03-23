@@ -60,16 +60,16 @@ const projectImages = [
     alt: "MudaFácil — app na mão do usuário",
   },
   {
+    src: "/images/mocks/projector.webp",
+    alt: "MudaFácil — apresentação no projetor",
+  },
+  {
     src: "/images/comparison/comparativo/Produto-Minhas-Mudancas-V2.png",
     alt: "Minhas Mudanças — dashboard do usuário",
   },
   {
     src: "/images/comparison/comparativo/Produto-Detalhe-Mudanca-Cotacoes-V2.png",
     alt: "Cotações da mudança — comparação de preços",
-  },
-  {
-    src: "/images/comparison/comparativo/Produto-Catalogo-de-Itens-V2.png",
-    alt: "Catálogo de itens — seleção de móveis",
   },
 ];
 

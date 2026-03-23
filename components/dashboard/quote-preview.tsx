@@ -132,7 +132,7 @@ export function QuotePreview({
         {mudancaId && (
           <a
             href={`/dashboard/mudanca/${mudancaId}`}
-            className="inline-flex items-center gap-1 text-xs font-medium text-[#E84225] mt-1 hover:underline"
+            className="inline-flex items-center gap-1 text-xs font-medium text-[#009B3A] mt-1 hover:underline"
           >
             Detalhar meus móveis para preço real
             <ArrowRight className="h-3 w-3" />

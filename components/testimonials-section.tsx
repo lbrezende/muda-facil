@@ -107,12 +107,12 @@ export default function TestimonialsSection() {
   return (
     <section className="py-24 bg-white overflow-hidden">
       <div className="mx-auto max-w-6xl px-6 text-center mb-12">
-        <p className="text-sm font-semibold uppercase tracking-widest text-[#E84225] mb-3">
+        <p className="text-sm font-semibold uppercase tracking-widest text-[#009B3A] mb-3">
           Depoimentos reais
         </p>
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
           Cada caixa no lugar certo.{" "}
-          <span className="text-[#E84225]">Cada cliente satisfeito.</span>
+          <span className="text-[#009B3A]">Cada cliente satisfeito.</span>
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-500">
           Milhares de mudanças realizadas com cuidado, pontualidade e zero
@@ -178,7 +178,7 @@ export default function TestimonialsSection() {
           { value: "4.8★", label: "Nota média" },
         ].map((stat) => (
           <div key={stat.label} className="text-center">
-            <p className="text-3xl sm:text-4xl font-bold text-[#E84225]">
+            <p className="text-3xl sm:text-4xl font-bold text-[#009B3A]">
               {stat.value}
             </p>
             <p className="mt-1 text-sm text-gray-500">{stat.label}</p>

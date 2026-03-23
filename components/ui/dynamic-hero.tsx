@@ -220,7 +220,7 @@ function DynamicHeroCanvas({
         ctx.rotate(rotAngle);
 
         // Pill background
-        ctx.fillStyle = `rgba(243, 112, 33, ${labelOpacity * 0.92})`;
+        ctx.fillStyle = `rgba(0, 155, 58, ${labelOpacity * 0.92})`;
         ctx.beginPath();
         ctx.roundRect(-boxW / 2, floatOffset - boxH / 2, boxW, boxH, boxH / 2);
         ctx.fill();

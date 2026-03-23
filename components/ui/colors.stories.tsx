@@ -7,7 +7,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Tokens de cor do MudaFacil — paleta Trekon. Todos definidos como CSS custom properties em `globals.css`. Alterar os valores la atualiza automaticamente o site, o dashboard e o Storybook.',
+          'Tokens de cor do MudaFacil — paleta JR Transportadora. Todos definidos como CSS custom properties em `globals.css`. Alterar os valores la atualiza automaticamente o site, o dashboard e o Storybook.',
       },
     },
   },
@@ -48,12 +48,12 @@ export const BrandColors: Story = {
   render: () => (
     <div className="space-y-8">
       <div>
-        <h3 className="text-lg font-semibold text-foreground mb-4">Cores da Marca — Trekon</h3>
-        <p className="text-sm text-muted-foreground mb-6">Paleta inspirada na identidade Trekon: vermelho container industrial, fundo neutro e preto tipografico.</p>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Cores da Marca — JR Transportadora</h3>
+        <p className="text-sm text-muted-foreground mb-6">Paleta inspirada na identidade JR Transportadora: verde estrada, fundo neutro e preto tipografico.</p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div className="space-y-3">
-            <div className="w-full h-24 rounded-xl shadow-md" style={{ backgroundColor: '#E84225' }} />
-            <div><p className="text-sm font-semibold">Primary — Vermelho Container</p><p className="text-xs font-mono text-muted-foreground">#E84225</p><p className="text-xs text-muted-foreground mt-1">CTAs, links, destaques, botoes principais</p></div>
+            <div className="w-full h-24 rounded-xl shadow-md" style={{ backgroundColor: '#009B3A' }} />
+            <div><p className="text-sm font-semibold">Primary — Verde JR</p><p className="text-xs font-mono text-muted-foreground">#009B3A</p><p className="text-xs text-muted-foreground mt-1">CTAs, links, destaques, botoes principais</p></div>
           </div>
           <div className="space-y-3">
             <div className="w-full h-24 rounded-xl border shadow-md" style={{ backgroundColor: '#F8FAFC' }} />
@@ -72,16 +72,16 @@ export const BrandColors: Story = {
 export const PrimaryPalette: Story = {
   render: () => (
     <div className="space-y-6">
-      <h3 className="text-lg font-semibold text-foreground">Escala Primary (Vermelho Container)</h3>
+      <h3 className="text-lg font-semibold text-foreground">Escala Primary (Verde JR)</h3>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { name: 'Primary / 5%', bg: '#E842250D', hex: '#E84225/5%', usage: 'Hover backgrounds' },
-          { name: 'Primary / 10%', bg: '#E842251A', hex: '#E84225/10%', usage: 'Icone backgrounds' },
-          { name: 'Primary / 20%', bg: '#E8422533', hex: '#E84225/20%', usage: 'Canvas items' },
-          { name: 'Primary / 30%', bg: '#E842254D', hex: '#E84225/30%', usage: 'Borders dashed' },
-          { name: 'Primary', bg: '#E84225', hex: '#E84225', usage: 'Botoes, links' },
-          { name: 'Primary Hover', bg: '#C73820', hex: '#C73820', usage: 'Hover de CTAs' },
-          { name: 'Red Dark Text', bg: '#8B2E18', hex: '#8B2E18', usage: 'Texto sobre bg vermelho claro' },
+          { name: 'Primary / 5%', bg: '#009B3A0D', hex: '#009B3A/5%', usage: 'Hover backgrounds' },
+          { name: 'Primary / 10%', bg: '#009B3A1A', hex: '#009B3A/10%', usage: 'Icone backgrounds' },
+          { name: 'Primary / 20%', bg: '#009B3A33', hex: '#009B3A/20%', usage: 'Canvas items' },
+          { name: 'Primary / 30%', bg: '#009B3A4D', hex: '#009B3A/30%', usage: 'Borders dashed' },
+          { name: 'Primary', bg: '#009B3A', hex: '#009B3A', usage: 'Botoes, links' },
+          { name: 'Primary Hover', bg: '#007A2E', hex: '#007A2E', usage: 'Hover de CTAs' },
+          { name: 'Green Dark Text', bg: '#005C22', hex: '#005C22', usage: 'Texto sobre bg verde claro' },
           { name: 'Primary Foreground', bg: '#FFFFFF', hex: '#FFFFFF', usage: 'Texto sobre primary' },
         ].map((c) => (
           <div key={c.name} className="space-y-2">
@@ -107,7 +107,7 @@ export const SemanticTokens: Story = {
           <ColorSwatch name="Card" cssVar="--card" hex="#FFFFFF" desc="Fundo de cards e paineis" />
           <ColorSwatch name="Popover" cssVar="--popover" hex="#FFFFFF" desc="Fundo de dropdowns e tooltips" />
           <ColorSwatch name="Muted" cssVar="--muted" hex="#F5F5F5" desc="Fundo de areas secundarias" />
-          <ColorSwatch name="Accent" cssVar="--accent" hex="oklch(0.96 0.01 25)" desc="Hover sutil" />
+          <ColorSwatch name="Accent" cssVar="--accent" hex="oklch(0.96 0.02 152)" desc="Hover sutil verde" />
         </div>
       </div>
       <div className="space-y-3 mt-8">
@@ -134,7 +134,7 @@ export const CTAColors: Story = {
     <div className="space-y-6">
       <h3 className="text-lg font-semibold text-foreground">Cores de CTA & Interacao</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <ColorPair name="CTA Primary" bgVar="--primary" fgVar="--primary-foreground" bgHex="#E84225" fgHex="#FFFFFF" desc="Botao principal" />
+        <ColorPair name="CTA Primary" bgVar="--primary" fgVar="--primary-foreground" bgHex="#009B3A" fgHex="#FFFFFF" desc="Botao principal" />
         <ColorPair name="CTA Secondary" bgVar="--secondary" fgVar="--secondary-foreground" bgHex="#F5F5F5" fgHex="#333333" desc="Botao secundario" />
         <ColorPair name="CTA Destructive" bgVar="--destructive" fgVar="--primary-foreground" bgHex="#DC2626" fgHex="#FFFFFF" desc="Botao destrutivo" />
       </div>
@@ -161,7 +161,7 @@ export const FeedbackColors: Story = {
           { name: 'Sucesso', bg: '#22c55e', bgLight: '#22c55e1A', text: '#15803d', sample: 'Carga salva com sucesso' },
           { name: 'Alerta', bg: '#1A1A1A', bgLight: '#1A1A1A1A', text: '#1A1A1A', sample: 'Ocupacao acima de 80%' },
           { name: 'Erro', bg: '#DC2626', bgLight: '#DC26261A', text: '#991b1b', sample: 'Capacidade excedida' },
-          { name: 'Info', bg: '#E84225', bgLight: '#E842251A', text: '#8B2E18', sample: '3 cotacoes disponiveis' },
+          { name: 'Info', bg: '#009B3A', bgLight: '#009B3A1A', text: '#005C22', sample: '3 cotacoes disponiveis' },
         ].map((c) => (
           <div key={c.name} className="space-y-3">
             <div className="flex items-center gap-3">

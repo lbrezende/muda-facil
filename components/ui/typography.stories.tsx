@@ -111,7 +111,7 @@ export const TextColors: Story = {
       {[
         { className: 'text-foreground', label: 'foreground', desc: 'Texto principal' },
         { className: 'text-muted-foreground', label: 'muted-foreground', desc: 'Texto secundario / descricoes' },
-        { className: 'text-primary', label: 'primary (#E84225)', desc: 'Links, destaques, brand' },
+        { className: 'text-primary', label: 'primary (#009B3A)', desc: 'Links, destaques, brand' },
         { className: 'text-destructive', label: 'destructive', desc: 'Erros, alertas, remocao' },
         { className: 'text-accent-foreground', label: 'accent-foreground', desc: 'Texto sobre fundo accent' },
       ].map(({ className, label, desc }) => (

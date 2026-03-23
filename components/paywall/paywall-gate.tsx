@@ -30,7 +30,7 @@ export function PaywallGate({
     <Card className="border-dashed border-2 border-gray-300 bg-gray-50">
       <CardHeader className="text-center pb-2">
         <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-          <Lock className="h-6 w-6 text-[#E84225]" />
+          <Lock className="h-6 w-6 text-[#009B3A]" />
         </div>
         <CardTitle className="text-lg">Limite atingido</CardTitle>
       </CardHeader>
@@ -45,7 +45,7 @@ export function PaywallGate({
         </p>
         <Button
           onClick={() => router.push("/pricing")}
-          className="bg-[#E84225] hover:bg-[#C73820]"
+          className="bg-[#009B3A] hover:bg-[#007A2E]"
         >
           Fazer upgrade para Pro
         </Button>

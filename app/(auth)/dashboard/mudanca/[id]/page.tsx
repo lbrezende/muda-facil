@@ -199,7 +199,7 @@ function ItemPickerPopup({
                   onSelect(item);
                   onClose();
                 }}
-                className="flex flex-col items-center gap-1.5 rounded-lg border border-gray-200 p-3 text-center hover:border-[#E84225] hover:bg-[#E84225]/5 transition-colors"
+                className="flex flex-col items-center gap-1.5 rounded-lg border border-gray-200 p-3 text-center hover:border-[#009B3A] hover:bg-[#009B3A]/5 transition-colors"
               >
                 <Package className="h-5 w-5 text-gray-500" />
                 <span className="text-xs font-medium text-gray-800 leading-tight">
@@ -218,7 +218,7 @@ function ItemPickerPopup({
           <div className="border-t border-gray-100 px-4 py-2.5 shrink-0">
             <button
               onClick={() => setShowOthers(true)}
-              className="flex items-center gap-1.5 text-xs text-[#E84225] font-medium hover:underline w-full justify-center"
+              className="flex items-center gap-1.5 text-xs text-[#009B3A] font-medium hover:underline w-full justify-center"
             >
               <Plus className="h-3 w-3" />
               Ver outros móveis
@@ -265,7 +265,7 @@ function FurnitureSidebar({
                   e.dataTransfer.effectAllowed = "copy";
                   onDragStart(item);
                 }}
-                className="flex flex-col items-center gap-0.5 rounded-md border border-gray-100 p-1.5 cursor-grab hover:border-[#E84225]/40 hover:bg-[#E84225]/5 transition-colors active:cursor-grabbing"
+                className="flex flex-col items-center gap-0.5 rounded-md border border-gray-100 p-1.5 cursor-grab hover:border-[#009B3A]/40 hover:bg-[#009B3A]/5 transition-colors active:cursor-grabbing"
                 title={`${item.name}\n${item.volumeM3} m³ · ${item.pesoKg} kg`}
               >
                 <GripVertical className="h-2.5 w-2.5 text-gray-300" />
@@ -356,7 +356,7 @@ function DroppableRoomCard({
         className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors"
       >
         <div className="flex items-center gap-2">
-          {Icon && <Icon className="h-4 w-4 text-[#E84225]" />}
+          {Icon && <Icon className="h-4 w-4 text-[#009B3A]" />}
           <span className="text-sm font-medium text-gray-900">
             {block.label}
           </span>
@@ -410,7 +410,7 @@ function DroppableRoomCard({
 
           <button
             onClick={onAddItem}
-            className="flex items-center gap-1.5 mt-2 px-2 py-1.5 text-xs text-[#E84225] font-medium hover:bg-[#E84225]/5 rounded-md transition-colors w-full"
+            className="flex items-center gap-1.5 mt-2 px-2 py-1.5 text-xs text-[#009B3A] font-medium hover:bg-[#009B3A]/5 rounded-md transition-colors w-full"
           >
             <Plus className="h-3 w-3" />
             Adicionar item em {block.label}
@@ -488,7 +488,7 @@ export default function MudancaDetailPage() {
   if (authStatus === "loading" || isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-8 w-8 animate-spin text-[#E84225]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#009B3A]" />
       </div>
     );
   }
@@ -500,7 +500,7 @@ export default function MudancaDetailPage() {
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <Package className="h-12 w-12 text-gray-300 mb-4" />
         <h2 className="text-lg font-semibold text-gray-900">Mudança não encontrada</h2>
-        <Link href="/dashboard" className="mt-4 text-sm text-[#E84225] hover:underline">
+        <Link href="/dashboard" className="mt-4 text-sm text-[#009B3A] hover:underline">
           ← Voltar para mudanças
         </Link>
       </div>
@@ -530,14 +530,14 @@ export default function MudancaDetailPage() {
             </div>
             <div className="flex flex-wrap items-center gap-3 mt-1 text-xs text-gray-500">
               <span className="flex items-center gap-1">
-                <MapPin className="h-3 w-3 text-[#E84225]" />
+                <MapPin className="h-3 w-3 text-[#009B3A]" />
                 {mudanca.enderecoOrigem}
               </span>
               <ArrowRight className="h-3 w-3 hidden sm:block" />
               <span className="hidden sm:inline">{mudanca.enderecoDestino}</span>
               {distanciaKm && (
                 <span className="flex items-center gap-1 font-medium">
-                  <Navigation className="h-3 w-3 text-[#E84225]" />
+                  <Navigation className="h-3 w-3 text-[#009B3A]" />
                   {distanciaKm} km
                 </span>
               )}

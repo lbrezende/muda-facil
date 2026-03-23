@@ -38,7 +38,7 @@ export function TruckAnimation({
       {[0.1, 0.2, 0.35, 0.5].map((delay, i) => (
         <motion.div
           key={i}
-          className="absolute rounded-full bg-[#E84225]"
+          className="absolute rounded-full bg-[#009B3A]"
           style={{ width: 6 - i, height: 6 - i }}
           initial={{
             x: startPosition.x,
@@ -91,8 +91,8 @@ export function TruckAnimation({
       >
         <div className="relative">
           {/* Glow behind truck */}
-          <div className="absolute inset-0 blur-lg bg-[#E84225]/30 rounded-full scale-150" />
-          <Truck className="h-10 w-10 text-[#E84225] relative" />
+          <div className="absolute inset-0 blur-lg bg-[#009B3A]/30 rounded-full scale-150" />
+          <Truck className="h-10 w-10 text-[#009B3A] relative" />
         </div>
       </motion.div>
     </div>,

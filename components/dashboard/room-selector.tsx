@@ -72,7 +72,7 @@ export function RoomSelector({ rooms, onChange, variant = "grid" }: RoomSelector
                   }}
                   className={`flex flex-col items-center gap-1 pb-2 border-b-2 transition-colors ${
                     isActive
-                      ? "border-[#E84225] text-[#E84225]"
+                      ? "border-[#009B3A] text-[#009B3A]"
                       : "border-transparent text-gray-500 hover:text-gray-800 hover:border-gray-300"
                   }`}
                 >
@@ -87,17 +87,17 @@ export function RoomSelector({ rooms, onChange, variant = "grid" }: RoomSelector
                   <button
                     type="button"
                     onClick={() => setCount(room.key, -1)}
-                    className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition-colors hover:border-[#E84225] hover:text-[#E84225]"
+                    className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition-colors hover:border-[#009B3A] hover:text-[#009B3A]"
                   >
                     <Minus className="h-3 w-3" />
                   </button>
-                  <span className="w-4 text-center text-sm font-semibold text-[#E84225]">
+                  <span className="w-4 text-center text-sm font-semibold text-[#009B3A]">
                     {count}
                   </span>
                   <button
                     type="button"
                     onClick={() => setCount(room.key, 1)}
-                    className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition-colors hover:border-[#E84225] hover:text-[#E84225]"
+                    className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition-colors hover:border-[#009B3A] hover:text-[#009B3A]"
                   >
                     <Plus className="h-3 w-3" />
                   </button>
@@ -115,7 +115,7 @@ export function RoomSelector({ rooms, onChange, variant = "grid" }: RoomSelector
               <div className="flex items-center gap-2">
                 <div className="flex items-center -space-x-1">
                   {Array.from({ length: truckRec.quantity }, (_, i) => (
-                    <Truck key={i} className="h-4 w-4 text-[#E84225]" />
+                    <Truck key={i} className="h-4 w-4 text-[#009B3A]" />
                   ))}
                 </div>
                 <div className="flex flex-col gap-0.5">
@@ -124,7 +124,7 @@ export function RoomSelector({ rooms, onChange, variant = "grid" }: RoomSelector
                   </span>
                   <div className="w-16 h-1.5 bg-gray-200 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#E84225] rounded-full transition-all duration-500 ease-out"
+                      className="h-full bg-[#009B3A] rounded-full transition-all duration-500 ease-out"
                       style={{ width: `${Math.min(truckRec.occupancyPercent, 100)}%` }}
                     />
                   </div>
@@ -132,7 +132,7 @@ export function RoomSelector({ rooms, onChange, variant = "grid" }: RoomSelector
               </div>
             )}
             <div className="flex items-center gap-1">
-              <Package className="h-3.5 w-3.5 text-[#E84225]" />
+              <Package className="h-3.5 w-3.5 text-[#009B3A]" />
               <span>
                 ~<strong className="text-gray-800">{summary.estimatedItems}</strong> itens
               </span>
@@ -177,7 +177,7 @@ export function RoomSelector({ rooms, onChange, variant = "grid" }: RoomSelector
               key={room.key}
               className={`flex items-center gap-2 rounded-lg border px-3 py-2 transition-colors ${
                 isActive
-                  ? "border-[#E84225]/30 bg-[#FFF5F3]"
+                  ? "border-[#009B3A]/30 bg-[#FFF5F3]"
                   : "border-gray-200 bg-white hover:border-gray-300"
               }`}
             >
@@ -185,7 +185,7 @@ export function RoomSelector({ rooms, onChange, variant = "grid" }: RoomSelector
               <div className="flex flex-1 items-center gap-2 min-w-0">
                 <Icon
                   className={`h-4 w-4 shrink-0 ${
-                    isActive ? "text-[#E84225]" : "text-gray-400"
+                    isActive ? "text-[#009B3A]" : "text-gray-400"
                   }`}
                 />
                 <div className="min-w-0">
@@ -216,7 +216,7 @@ export function RoomSelector({ rooms, onChange, variant = "grid" }: RoomSelector
                 </button>
                 <span
                   className={`w-5 text-center text-sm font-semibold ${
-                    isActive ? "text-[#E84225]" : "text-gray-400"
+                    isActive ? "text-[#009B3A]" : "text-gray-400"
                   }`}
                 >
                   {count}
@@ -238,7 +238,7 @@ export function RoomSelector({ rooms, onChange, variant = "grid" }: RoomSelector
       {summary.numComodos > 0 && (
         <div className="flex items-center gap-4 rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-600">
           <div className="flex items-center gap-1">
-            <Package className="h-3.5 w-3.5 text-[#E84225]" />
+            <Package className="h-3.5 w-3.5 text-[#009B3A]" />
             <span>
               ~<strong className="text-gray-800">{summary.estimatedItems}</strong>{" "}
               itens

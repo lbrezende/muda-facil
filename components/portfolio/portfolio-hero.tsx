@@ -36,7 +36,7 @@ export function PortfolioHero() {
             <h1 className="flex flex-col text-center text-4xl font-semibold leading-[1.1] tracking-tight md:text-6xl md:leading-[1.05] lg:text-7xl lg:leading-[1.05]">
               <span>
                 Projetos que levavam sprints ou meses{" "}
-                <span className="text-[#E84225]">entregues em dias.</span>
+                <span className="text-[#009B3A]">entregues em dias.</span>
               </span>
             </h1>
             <div className="flex items-center mt-4 justify-center gap-1">
@@ -48,7 +48,7 @@ export function PortfolioHero() {
             </div>
           </div>
           <p className="mt-8 text-xl md:text-2xl text-foreground/80">
-            Sou <span className="text-[#E84225] font-bold">Leandro Rezende</span>,{" "}
+            Sou <span className="text-[#009B3A] font-bold">Leandro Rezende</span>,{" "}
             Design Engineer Senior.
           </p>
           <p className="text-muted-foreground py-4 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
@@ -57,7 +57,7 @@ export function PortfolioHero() {
           </p>
           <p className="text-base md:text-lg text-muted-foreground whitespace-nowrap">
             Especialista em{" "}
-            <span className="text-[#E84225] font-semibold">
+            <span className="text-[#009B3A] font-semibold">
               <TypeWriter strings={talkAbout} />
             </span>
           </p>
@@ -66,7 +66,7 @@ export function PortfolioHero() {
               <ShineBorder
                 borderWidth={2}
                 className="border cursor-pointer h-auto w-auto p-1.5 bg-white/5 backdrop-blur-md dark:bg-black/5"
-                color={["#E84225", "#FF6B4A", "#FF9A7B"]}
+                color={["#009B3A", "#FF6B4A", "#FF9A7B"]}
               >
                 <Button className="rounded-xl">Ver projetos</Button>
               </ShineBorder>

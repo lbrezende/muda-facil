@@ -101,7 +101,7 @@ export default function BillingPage() {
                 Plano atual
                 <Badge
                   variant={plan === "PRO" ? "default" : "secondary"}
-                  className={plan === "PRO" ? "bg-[#E84225]" : ""}
+                  className={plan === "PRO" ? "bg-[#009B3A]" : ""}
                 >
                   {getPlanDisplayName(plan)}
                 </Badge>
@@ -154,7 +154,7 @@ export default function BillingPage() {
                 Faça upgrade para o Pro e desbloqueie listas ilimitadas.
               </p>
               <Button
-                className="bg-[#E84225] hover:bg-[#C73820]"
+                className="bg-[#009B3A] hover:bg-[#007A2E]"
                 onClick={handleCheckout}
                 disabled={loading}
               >

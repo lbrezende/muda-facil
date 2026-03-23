@@ -17,7 +17,7 @@ function Header() {
       <div className="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between px-[110px]">
         {/* Logo */}
         <Link href="/v3" className="flex items-center gap-2">
-          <Truck className="h-7 w-7 text-[#E84225]" />
+          <Truck className="h-7 w-7 text-[#009B3A]" />
           <span className="text-xl font-bold tracking-tight">MudaFácil</span>
         </Link>
 
@@ -65,7 +65,7 @@ function Header() {
             <Link href="/login">
               <Button
                 size="sm"
-                className="rounded-full bg-[#E84225] hover:bg-[#C73820] text-white text-sm font-medium px-5"
+                className="rounded-full bg-[#009B3A] hover:bg-[#007A2E] text-white text-sm font-medium px-5"
               >
                 Comecar gratis
               </Button>
@@ -97,7 +97,7 @@ function Hero() {
           <div className="max-w-[567px]">
             {/* Badge */}
             <div className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-gray-700 backdrop-blur-sm">
-              <Zap className="h-3.5 w-3.5 text-[#E84225]" />
+              <Zap className="h-3.5 w-3.5 text-[#009B3A]" />
               14 dias gratis no Pro — sem cartao de credito
             </div>
 
@@ -118,7 +118,7 @@ function Hero() {
               <Link href="/login">
                 <Button
                   size="lg"
-                  className="rounded-full bg-[#E84225] hover:bg-[#C73820] text-white px-7 h-12 text-base font-semibold"
+                  className="rounded-full bg-[#009B3A] hover:bg-[#007A2E] text-white px-7 h-12 text-base font-semibold"
                 >
                   Planejar minha mudanca
                 </Button>
@@ -151,7 +151,7 @@ function Hero() {
                 </div>
               </div>
               <div className="mt-3 flex items-center gap-1.5 text-sm text-gray-600">
-                <div className="h-1.5 w-1.5 rounded-full bg-[#E84225]" />
+                <div className="h-1.5 w-1.5 rounded-full bg-[#009B3A]" />
                 Veja como funciona
               </div>
             </div>
@@ -169,7 +169,7 @@ function MiddleText() {
         <h2 className="text-[40px] font-bold leading-[1.2] tracking-tight text-[#1A1A1A]">
           Planeje sua mudanca com ferramentas visuais que eliminam incertezas e
           ajudam voce a chegar no novo lar{" "}
-          <span className="italic text-[#E84225]">sem surpresas</span>
+          <span className="italic text-[#009B3A]">sem surpresas</span>
         </h2>
       </div>
     </section>
@@ -217,7 +217,7 @@ function FeatureCards() {
                 </div>
                 {/* Icon badge */}
                 <div className="absolute left-5 top-5 flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm">
-                  <card.icon className="h-5 w-5 text-[#E84225]" />
+                  <card.icon className="h-5 w-5 text-[#009B3A]" />
                 </div>
               </div>
 
@@ -287,7 +287,7 @@ function Pricing() {
           </div>
 
           {/* Pro Plan */}
-          <div className="relative rounded-2xl border-2 border-[#E84225] bg-white p-8">
+          <div className="relative rounded-2xl border-2 border-[#009B3A] bg-white p-8">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#1A1A1A] px-3 py-0.5 text-xs font-semibold text-white">
               Popular
             </div>
@@ -310,13 +310,13 @@ function Pricing() {
                 "14 dias gratis para testar",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-3 text-sm">
-                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#E84225]" />
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#009B3A]" />
                   <span className="text-gray-600">{item}</span>
                 </li>
               ))}
             </ul>
             <Link href="/login" className="mt-8 block">
-              <Button className="w-full bg-[#E84225] hover:bg-[#C73820] text-white">
+              <Button className="w-full bg-[#009B3A] hover:bg-[#007A2E] text-white">
                 Testar 14 dias gratis
                 <ArrowRight className="ml-1 h-4 w-4" />
               </Button>
@@ -334,7 +334,7 @@ function Footer() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-2">
-            <Truck className="h-5 w-5 text-[#E84225]" />
+            <Truck className="h-5 w-5 text-[#009B3A]" />
             <span className="font-semibold">MudaFacil</span>
           </div>
           <p className="text-sm text-gray-500">

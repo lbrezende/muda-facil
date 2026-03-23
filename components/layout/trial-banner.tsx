@@ -22,7 +22,7 @@ export function TrialBanner() {
   if (daysLeft <= 0) return null;
 
   return (
-    <div className="flex items-center justify-center gap-2 bg-[#E84225] px-4 py-2 text-sm text-white">
+    <div className="flex items-center justify-center gap-2 bg-[#009B3A] px-4 py-2 text-sm text-white">
       <Clock className="h-4 w-4" />
       <span>
         {daysLeft} {daysLeft === 1 ? "dia restante" : "dias restantes"} no seu

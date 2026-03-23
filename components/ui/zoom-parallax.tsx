@@ -41,7 +41,8 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 							<div className="relative h-[25vh] w-[25vw] overflow-hidden">
 								{videoId ? (
 									<iframe
-										src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&showinfo=0&rel=0&modestbranding=1&playsinline=1&disablekb=1&fs=0&iv_load_policy=3`}
+										src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&showinfo=0&rel=0&modestbranding=1&playsinline=1&disablekb=1&fs=0&iv_load_policy=3&vq=hd1080`}
+										loading="eager"
 										className="absolute inset-[-10%] w-[120%] h-[120%]"
 										allow="autoplay; encrypted-media"
 										style={{ border: 'none', pointerEvents: 'none' }}

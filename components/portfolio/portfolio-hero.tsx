@@ -53,7 +53,10 @@ export function PortfolioHero() {
           </p>
           <p className="text-muted-foreground py-4 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
             Aplico IA em todas as etapas do processo de design para transformar
-            pesquisa em interfaces que movem metricas de negocio. Especialista em{" "}
+            pesquisa em interfaces que movem metricas de negocio.
+          </p>
+          <p className="text-base md:text-lg text-muted-foreground whitespace-nowrap">
+            Especialista em{" "}
             <span className="text-[#E84225] font-semibold">
               <TypeWriter strings={talkAbout} />
             </span>

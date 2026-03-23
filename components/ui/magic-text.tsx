@@ -26,7 +26,7 @@ export function MagicArticle({
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end end"],
+    offset: ["start end", "end start"],
   });
 
   return (
@@ -88,18 +88,19 @@ export const MagicText: React.FC<MagicTextProps> = ({ text, className }) => {
       const container = ctx.containerRef.current!;
       const el = localRef.current!;
 
-      const scrollableHeight = container.scrollHeight - window.innerHeight;
-      if (scrollableHeight <= 0) return;
+      // With offset ["start end", "end start"], total scroll distance is
+      // container height + viewport height
+      const totalDistance = container.scrollHeight + window.innerHeight;
+      if (totalDistance <= 0) return;
 
       const elTop = el.offsetTop - container.offsetTop;
-      const elHeight = el.offsetHeight;
 
-      // Start revealing when element is ~80% viewport below
-      const start = Math.max(0, (elTop - window.innerHeight * 0.8) / scrollableHeight);
-      // Finish when element's midpoint has scrolled past
-      const end = Math.min(1, (elTop + elHeight * 0.3) / scrollableHeight);
+      // Start revealing when element enters viewport from bottom
+      const start = Math.max(0, elTop / totalDistance);
+      // Finish revealing when element is in upper half of viewport
+      const end = Math.min(1, (elTop + window.innerHeight * 0.55) / totalDistance);
 
-      setRange([start, end]);
+      setRange([start, Math.max(start + 0.01, end)]);
     };
 
     // Wait for layout

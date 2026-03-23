@@ -20,11 +20,11 @@ export const mudancaStatusEnum = z.enum([
 export const mudancaSchema = z.object({
   enderecoOrigem: z
     .string()
-    .min(5, "Endereço de origem é obrigatório")
+    .min(2, "Endereço de origem é obrigatório")
     .max(300, "Endereço muito longo"),
   enderecoDestino: z
     .string()
-    .min(5, "Endereço de destino é obrigatório")
+    .min(2, "Endereço de destino é obrigatório")
     .max(300, "Endereço muito longo"),
   dataDesejada: z.string().datetime().optional(),
   caminhaoId: z.string().cuid().optional(),

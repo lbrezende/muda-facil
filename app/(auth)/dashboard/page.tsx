@@ -452,11 +452,14 @@ export default function DashboardPage() {
   );
 
   const handleTruckComplete = useCallback(() => {
-    // Optimistically prepend the new card to the list cache
+    // Optimistically prepend — but skip if refetch already added it
     if (newMudancaData) {
       queryClient.setQueryData<MudancaListItem[]>(
         mudancasKeys.lists(),
-        (old) => [newMudancaData, ...(old ?? [])]
+        (old) => {
+          if (old?.some((m) => m.id === newMudancaData.id)) return old;
+          return [newMudancaData, ...(old ?? [])];
+        }
       );
     }
     setAnimationPhase("card-appearing");

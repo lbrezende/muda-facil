@@ -113,10 +113,14 @@ export function RoomSelector({ rooms, onChange, variant = "grid" }: RoomSelector
             {/* Truck indicator */}
             {truckRec && (
               <div className="flex items-center gap-2">
-                <Truck className="h-4 w-4 text-[#E84225]" />
+                <div className="flex items-center -space-x-1">
+                  {Array.from({ length: truckRec.quantity }, (_, i) => (
+                    <Truck key={i} className="h-4 w-4 text-[#E84225]" />
+                  ))}
+                </div>
                 <div className="flex flex-col gap-0.5">
                   <span className="text-[10px] font-semibold text-gray-700 leading-none">
-                    {truckRec.quantity}x {truckRec.truck.nome}
+                    {truckRec.truck.nome}
                   </span>
                   <div className="w-16 h-1.5 bg-gray-200 rounded-full overflow-hidden">
                     <div

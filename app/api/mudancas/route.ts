@@ -61,8 +61,9 @@ export async function POST(request: Request) {
     const parsed = mudancaSchema.safeParse(body);
 
     if (!parsed.success) {
+      const firstError = parsed.error.issues[0]?.message || "Dados inválidos";
       return NextResponse.json(
-        { error: "Validation failed", details: parsed.error.flatten() },
+        { error: firstError, details: parsed.error.flatten() },
         { status: 422 }
       );
     }

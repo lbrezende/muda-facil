@@ -41,35 +41,35 @@ function useLenis() {
   }, []);
 }
 
-/* ── project gallery images (real MudaFácil screens) ── */
+/* ── project gallery images (MudaFácil device mocks + product screens) ── */
 const projectImages = [
   {
-    src: "/images/comparison/comparativo/Site-Landing-Hero-V2.png",
-    alt: "Landing page hero — MudaFácil V2",
+    src: "/images/mocks/desktop.webp",
+    alt: "MudaFácil — landing page no desktop",
+  },
+  {
+    src: "/images/mocks/tablet.webp",
+    alt: "MudaFácil — experiência no tablet",
+  },
+  {
+    src: "/images/mocks/phone.webp",
+    alt: "MudaFácil — portfólio no iPhone",
+  },
+  {
+    src: "/images/mocks/handphone.webp",
+    alt: "MudaFácil — app na mão do usuário",
   },
   {
     src: "/images/comparison/comparativo/Produto-Minhas-Mudancas-V2.png",
     alt: "Minhas Mudanças — dashboard do usuário",
   },
   {
-    src: "/images/comparison/comparativo/Produto-Catalogo-de-Itens-V2.png",
-    alt: "Catálogo de itens — seleção de móveis",
-  },
-  {
     src: "/images/comparison/comparativo/Produto-Detalhe-Mudanca-Cotacoes-V2.png",
     alt: "Cotações da mudança — comparação de preços",
   },
   {
-    src: "/images/comparison/comparativo/Produto-Nova-Mudanca-Variante-V2.png",
-    alt: "Nova mudança — formulário redesenhado",
-  },
-  {
-    src: "/images/comparison/comparativo/Site-Landing-Preview-App-V2.png",
-    alt: "Landing page — preview do app",
-  },
-  {
-    src: "/images/comparison/comparativo/Site-Landing-Recursos-V2.png",
-    alt: "Landing page — seção de recursos",
+    src: "/images/comparison/comparativo/Produto-Catalogo-de-Itens-V2.png",
+    alt: "Catálogo de itens — seleção de móveis",
   },
 ];
 

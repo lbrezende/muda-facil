@@ -44,9 +44,9 @@ function useLenis() {
 /* ── project gallery images (all MudaFácil device mocks) ── */
 const projectImages = [
   {
-    src: "/images/mocks/desktop.webp",
+    src: "/videos/demo.mp4",
     alt: "MudaFácil — demo do produto",
-    videoId: "_jZ55Ez0e6g",
+    videoId: "local",
   },
   {
     src: "/images/mocks/tablet.webp",

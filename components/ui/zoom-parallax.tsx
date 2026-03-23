@@ -40,15 +40,13 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
 						>
 							<div className={`relative ${videoId ? 'w-[25vw] aspect-video' : 'h-[25vh] w-[25vw]'}`}>
 								{videoId ? (
-									<iframe
-										src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&showinfo=0&rel=0&modestbranding=1&playsinline=1&disablekb=1&fs=0&iv_load_policy=3&vq=hd1080`}
-										loading="eager"
-										width={1920}
-										height={1080}
-										allow="accelerometer; autoplay; encrypted-media; gyroscope"
-										className="absolute inset-0 w-full h-full"
-										style={{ border: 'none', pointerEvents: 'none' }}
-										title={alt || 'Video'}
+									<video
+										src={src}
+										autoPlay
+										muted
+										loop
+										playsInline
+										className="absolute inset-0 w-full h-full object-cover"
 									/>
 								) : (
 									<img

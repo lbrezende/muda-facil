@@ -129,6 +129,14 @@ export interface TruckInfo {
   capacidadeKg: number;
 }
 
+/** Default truck types for quick estimation */
+export const DEFAULT_TRUCKS: TruckInfo[] = [
+  { id: "fiorino", nome: "Fiorino", tipo: "FIORINO", capacidadeM3: 2, capacidadeKg: 500 },
+  { id: "hr", nome: "HR", tipo: "HR", capacidadeM3: 6, capacidadeKg: 1500 },
+  { id: "34", nome: "3/4", tipo: "TRES_QUARTOS", capacidadeM3: 15, capacidadeKg: 3000 },
+  { id: "bau", nome: "Baú", tipo: "BAU", capacidadeM3: 25, capacidadeKg: 6000 },
+];
+
 export interface TruckRecommendation {
   truck: TruckInfo;
   quantity: number;

@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import Link from "next/link";
+import { motion, AnimatePresence } from "motion/react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Truck,
   Plus,
@@ -26,14 +28,18 @@ import {
   useMudancas,
   useCreateMudanca,
   useDeleteMudanca,
+  mudancasKeys,
   type MudancaListItem,
 } from "@/hooks/use-mudancas";
 import { RoomSelector } from "@/components/dashboard/room-selector";
 import { calculateRoomSummary } from "@/lib/room-estimation";
+import { TruckAnimation } from "@/components/dashboard/truck-animation";
 
 // ─── Types ────────────────────────────────────────────────
 
 type MudancaStatus = "RASCUNHO" | "COTANDO" | "CONFIRMADA" | "CONCLUIDA";
+
+type AnimationPhase = "idle" | "submitting" | "truck-moving" | "card-appearing" | "redirecting";
 
 type MudancaWithExtras = MudancaListItem & {
   distanciaKm?: number | null;
@@ -116,18 +122,20 @@ function DeleteConfirmModal({
   );
 }
 
-// ─── Inline "Nova Mudança" Form (no popup) ───────────────
+// ─── Inline "Nova Mudança" Form ──────────────────────────
 
 function InlineNewMudancaForm({
   onCreated,
   mudancaCount,
   freeLimit,
   isAtLimit,
+  disabled,
 }: {
-  onCreated: (id: string) => void;
+  onCreated: (result: MudancaListItem, buttonRect: DOMRect) => void;
   mudancaCount: number;
   freeLimit: number;
   isAtLimit: boolean;
+  disabled?: boolean;
 }) {
   const [origem, setOrigem] = useState("");
   const [destino, setDestino] = useState("");
@@ -135,13 +143,14 @@ function InlineNewMudancaForm({
   const [distancia, setDistancia] = useState("");
   const [rooms, setRooms] = useState<Record<string, number>>({});
   const dateRef = useRef<HTMLInputElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const createMudanca = useCreateMudanca();
 
   const summary = calculateRoomSummary(rooms);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!origem.trim() || !destino.trim()) return;
+    if (!origem.trim() || !destino.trim() || disabled) return;
 
     const distKm = distancia ? parseInt(distancia, 10) : undefined;
 
@@ -158,7 +167,10 @@ function InlineNewMudancaForm({
       setData("");
       setDistancia("");
       setRooms({});
-      if (result?.id) onCreated(result.id);
+      if (result?.id) {
+        const rect = buttonRef.current?.getBoundingClientRect();
+        onCreated(result, rect || new DOMRect(window.innerWidth / 2, 200, 0, 0));
+      }
     } catch {
       // handled by mutation state
     }
@@ -177,16 +189,21 @@ function InlineNewMudancaForm({
     );
   }
 
+  const isSubmitDisabled = disabled || createMudanca.isPending || !origem.trim() || !destino.trim();
+
   return (
     <div className="space-y-5">
       <form onSubmit={handleSubmit}>
         {/* Headline */}
-        <div className="mb-5">
+        <div className="mb-5 text-center">
           <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-            Para onde você quer se mudar?
+            Uma nova fase está chegando
           </h1>
+          <p className="text-base text-gray-700 mt-0.5">
+            Vamos cuidar de tudo pra você
+          </p>
           <p className="text-sm text-gray-500 mt-1">
-            Preencha os dados e receba estimativas de preço na hora
+            Preencha os dados e receba as estimativas para sua mudança com preço claro e sem surpresas
           </p>
         </div>
 
@@ -194,7 +211,7 @@ function InlineNewMudancaForm({
         <div className="relative flex flex-col sm:flex-row items-stretch rounded-full border border-gray-300 bg-white shadow-sm hover:shadow-md transition-shadow">
           {/* De onde */}
           <div className="flex-1 relative group">
-            <div className="px-5 py-3">
+            <div className="pl-9 pr-5 py-3">
               <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-800">
                 De onde
               </label>
@@ -205,6 +222,7 @@ function InlineNewMudancaForm({
                 placeholder="Endereço de origem"
                 className="w-full bg-transparent text-sm text-gray-600 placeholder-gray-400 outline-none"
                 required
+                disabled={disabled}
               />
             </div>
             <div className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 h-8 w-px bg-gray-200" />
@@ -223,6 +241,7 @@ function InlineNewMudancaForm({
                 placeholder="Endereço de destino"
                 className="w-full bg-transparent text-sm text-gray-600 placeholder-gray-400 outline-none"
                 required
+                disabled={disabled}
               />
             </div>
             <div className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 h-8 w-px bg-gray-200" />
@@ -242,6 +261,7 @@ function InlineNewMudancaForm({
                 onChange={(e) => setData(e.target.value)}
                 onClick={() => dateRef.current?.showPicker?.()}
                 className="w-full bg-transparent text-sm text-gray-600 placeholder-gray-400 outline-none cursor-pointer"
+                disabled={disabled}
               />
             </div>
             <div className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 h-8 w-px bg-gray-200" />
@@ -260,11 +280,13 @@ function InlineNewMudancaForm({
                 placeholder="km"
                 min={1}
                 className="w-full bg-transparent text-sm text-gray-600 placeholder-gray-400 outline-none"
+                disabled={disabled}
               />
             </div>
             <button
+              ref={buttonRef}
               type="submit"
-              disabled={createMudanca.isPending || !origem.trim() || !destino.trim()}
+              disabled={isSubmitDisabled}
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#E84225] text-white shadow-md transition-all hover:bg-[#C73820] hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
             >
               {createMudanca.isPending ? (
@@ -406,11 +428,51 @@ function MudancaCard({
 
 export default function DashboardPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { data: session, status: authStatus } = useSession();
   const { data: mudancas, isLoading, isError, error } = useMudancas();
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const deleteMudanca = useDeleteMudanca();
 
+  // ── Animation state machine ──
+  const [animationPhase, setAnimationPhase] = useState<AnimationPhase>("idle");
+  const [newMudancaId, setNewMudancaId] = useState<string | null>(null);
+  const [newMudancaData, setNewMudancaData] = useState<MudancaListItem | null>(null);
+  const [buttonRect, setButtonRect] = useState<DOMRect | null>(null);
+  const cardListRef = useRef<HTMLDivElement>(null);
+
+  const handleCreated = useCallback(
+    (result: MudancaListItem, rect: DOMRect) => {
+      setNewMudancaId(result.id);
+      setNewMudancaData(result);
+      setButtonRect(rect);
+      setAnimationPhase("truck-moving");
+    },
+    []
+  );
+
+  const handleTruckComplete = useCallback(() => {
+    // Optimistically prepend the new card to the list cache
+    if (newMudancaData) {
+      queryClient.setQueryData<MudancaListItem[]>(
+        mudancasKeys.lists(),
+        (old) => [newMudancaData, ...(old ?? [])]
+      );
+    }
+    setAnimationPhase("card-appearing");
+  }, [newMudancaData, queryClient]);
+
+  const handleCardAppeared = useCallback(() => {
+    setAnimationPhase("redirecting");
+    // Small delay so user sees the card before redirect
+    setTimeout(() => {
+      if (newMudancaId) {
+        router.push(`/dashboard/mudanca/${newMudancaId}`);
+      }
+    }, 500);
+  }, [newMudancaId, router]);
+
+  // ── Loading / Auth ──
   if (authStatus === "loading" || isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -432,15 +494,38 @@ export default function DashboardPage() {
     setDeleteTarget(null);
   };
 
+  // Compute truck target position
+  const getTargetPosition = () => {
+    if (cardListRef.current) {
+      const rect = cardListRef.current.getBoundingClientRect();
+      return { x: rect.left + 40, y: rect.top + 10 };
+    }
+    // Fallback: below the form area
+    return { x: window.innerWidth / 2, y: 400 };
+  };
+
   return (
     <div className="flex flex-col gap-6 px-4 py-4 md:px-8 md:py-6 max-w-4xl mx-auto w-full">
       {/* Inline form — always visible */}
       <InlineNewMudancaForm
-        onCreated={(id) => router.push(`/dashboard/mudanca/${id}`)}
+        onCreated={handleCreated}
         mudancaCount={mudancaCount}
         freeLimit={freeLimit}
         isAtLimit={isAtLimit}
+        disabled={animationPhase !== "idle"}
       />
+
+      {/* Truck animation overlay */}
+      {animationPhase === "truck-moving" && buttonRect && (
+        <TruckAnimation
+          startPosition={{
+            x: buttonRect.x + buttonRect.width / 2,
+            y: buttonRect.y + buttonRect.height / 2,
+          }}
+          targetPosition={getTargetPosition()}
+          onComplete={handleTruckComplete}
+        />
+      )}
 
       {/* Error */}
       {isError && (
@@ -451,26 +536,88 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Empty state */}
-      {!isError && mudancaCount === 0 && (
-        <div className="text-center py-8 text-gray-400">
-          <Truck className="h-10 w-10 mx-auto mb-2 text-gray-300" />
-          <p className="text-sm">
-            Nenhuma mudança criada ainda. Use o formulário acima para começar.
-          </p>
+      {/* Empty state — skeleton cards */}
+      {!isError && mudancaCount === 0 && animationPhase === "idle" && (
+        <div className="flex flex-col gap-3">
+          {/* Message */}
+          <div className="flex flex-col items-center gap-2 py-4">
+            <Truck className="h-8 w-8 text-gray-300" />
+            <p className="text-sm text-gray-400 text-center max-w-sm">
+              Suas mudanças aparecerão aqui, com os melhores preços e melhores profissionais do mercado
+            </p>
+          </div>
+
+          {/* Skeleton cards */}
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="border border-gray-100 bg-white shadow-sm overflow-hidden !py-0 !gap-0 opacity-60">
+              <div className="flex flex-col sm:flex-row">
+                <div className="flex-1 p-4 sm:p-5">
+                  {/* Status badge skeleton */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="h-5 w-16 rounded-full bg-gray-100 animate-pulse" />
+                    <div className="h-4 w-24 rounded bg-gray-100 animate-pulse" />
+                  </div>
+                  {/* Address lines skeleton */}
+                  <div className="flex items-start gap-3">
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <div className="h-5 w-5 rounded-full bg-gray-100 animate-pulse shrink-0" />
+                        <div className="h-4 rounded bg-gray-100 animate-pulse" style={{ width: `${60 + i * 10}%` }} />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="h-5 w-5 rounded-full bg-gray-100 animate-pulse shrink-0" />
+                        <div className="h-4 rounded bg-gray-100 animate-pulse" style={{ width: `${50 + i * 8}%` }} />
+                      </div>
+                    </div>
+                    {/* Distance skeleton */}
+                    {i <= 2 && (
+                      <div className="shrink-0 rounded-lg bg-gray-50 px-3 py-2 border border-gray-100">
+                        <div className="h-3.5 w-3.5 mx-auto rounded bg-gray-100 animate-pulse mb-1" />
+                        <div className="h-4 w-6 mx-auto rounded bg-gray-100 animate-pulse" />
+                        <div className="h-2 w-4 mx-auto rounded bg-gray-100 animate-pulse mt-0.5" />
+                      </div>
+                    )}
+                  </div>
+                  {/* Footer skeleton */}
+                  <div className="mt-3">
+                    <div className="h-3.5 w-20 rounded bg-gray-100 animate-pulse" />
+                  </div>
+                </div>
+              </div>
+            </Card>
+          ))}
         </div>
       )}
 
-      {/* Cards: 1 per line */}
+      {/* Cards: 1 per line with AnimatePresence */}
       {!isError && mudancaCount > 0 && (
-        <div className="flex flex-col gap-3">
-          {(mudancas as MudancaWithExtras[])!.map((mudanca) => (
-            <MudancaCard
-              key={mudanca.id}
-              mudanca={mudanca}
-              onDelete={(id) => setDeleteTarget(id)}
-            />
-          ))}
+        <div ref={cardListRef} className="flex flex-col gap-3">
+          <AnimatePresence mode="popLayout">
+            {(mudancas as MudancaWithExtras[])!.map((mudanca) => {
+              const isNewCard = mudanca.id === newMudancaId;
+              const shouldAnimate = isNewCard && (animationPhase === "card-appearing" || animationPhase === "redirecting");
+
+              return (
+                <motion.div
+                  key={mudanca.id}
+                  initial={shouldAnimate ? { scale: 0.8, opacity: 0, y: -20 } : false}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0.95, opacity: 0 }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  onAnimationComplete={() => {
+                    if (isNewCard && animationPhase === "card-appearing") {
+                      handleCardAppeared();
+                    }
+                  }}
+                >
+                  <MudancaCard
+                    mudanca={mudanca}
+                    onDelete={(id) => setDeleteTarget(id)}
+                  />
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
         </div>
       )}
 

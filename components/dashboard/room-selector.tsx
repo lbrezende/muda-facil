@@ -12,10 +12,13 @@ import {
   Package,
   Weight,
   Box,
+  Truck,
 } from "lucide-react";
 import {
   ROOM_TYPES,
+  DEFAULT_TRUCKS,
   calculateRoomSummary,
+  getBestTruck,
   type RoomType,
 } from "@/lib/room-estimation";
 
@@ -37,6 +40,7 @@ interface RoomSelectorProps {
 
 export function RoomSelector({ rooms, onChange, variant = "grid" }: RoomSelectorProps) {
   const summary = calculateRoomSummary(rooms);
+  const truckRec = summary.numComodos > 0 ? getBestTruck(summary.volumeM3, summary.pesoKg, DEFAULT_TRUCKS) : null;
 
   const setCount = (key: RoomType, delta: number) => {
     const current = rooms[key] || 0;
@@ -78,36 +82,51 @@ export function RoomSelector({ rooms, onChange, variant = "grid" }: RoomSelector
                   </span>
                 </button>
 
-                {/* Counter — shows only when active */}
-                {isActive && (
-                  <div className="flex items-center gap-1.5 mt-2">
-                    <button
-                      type="button"
-                      onClick={() => setCount(room.key, -1)}
-                      className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition-colors hover:border-[#E84225] hover:text-[#E84225]"
-                    >
-                      <Minus className="h-3 w-3" />
-                    </button>
-                    <span className="w-4 text-center text-sm font-semibold text-[#E84225]">
-                      {count}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setCount(room.key, 1)}
-                      className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition-colors hover:border-[#E84225] hover:text-[#E84225]"
-                    >
-                      <Plus className="h-3 w-3" />
-                    </button>
-                  </div>
-                )}
+                {/* Counter — always rendered for alignment, invisible when inactive */}
+                <div className={`flex items-center gap-1.5 mt-2 ${isActive ? '' : 'invisible'}`}>
+                  <button
+                    type="button"
+                    onClick={() => setCount(room.key, -1)}
+                    className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition-colors hover:border-[#E84225] hover:text-[#E84225]"
+                  >
+                    <Minus className="h-3 w-3" />
+                  </button>
+                  <span className="w-4 text-center text-sm font-semibold text-[#E84225]">
+                    {count}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setCount(room.key, 1)}
+                    className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 text-gray-500 transition-colors hover:border-[#E84225] hover:text-[#E84225]"
+                  >
+                    <Plus className="h-3 w-3" />
+                  </button>
+                </div>
               </div>
             );
           })}
         </div>
 
-        {/* Summary bar */}
+        {/* Summary bar with truck progress */}
         {summary.numComodos > 0 && (
           <div className="flex items-center justify-center gap-5 text-xs text-gray-500">
+            {/* Truck indicator */}
+            {truckRec && (
+              <div className="flex items-center gap-2">
+                <Truck className="h-4 w-4 text-[#E84225]" />
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-[10px] font-semibold text-gray-700 leading-none">
+                    {truckRec.quantity}x {truckRec.truck.nome}
+                  </span>
+                  <div className="w-16 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-[#E84225] rounded-full transition-all duration-500 ease-out"
+                      style={{ width: `${Math.min(truckRec.occupancyPercent, 100)}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="flex items-center gap-1">
               <Package className="h-3.5 w-3.5 text-[#E84225]" />
               <span>

@@ -12,6 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useSidebarCollapse } from "@/lib/sidebar-context";
 
 const NAV_ITEMS = [
   { label: "Minhas Mudanças", href: "/dashboard", icon: LayoutDashboard },
@@ -30,6 +31,9 @@ interface SidebarProps {
 export function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
   const { data: session } = useSession();
   const pathname = usePathname();
+  const { collapsed } = useSidebarCollapse();
+
+  const sidebarWidth = collapsed ? "w-[56px]" : "w-[240px]";
 
   return (
     <>
@@ -44,8 +48,8 @@ export function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
       {/* Sidebar */}
       <aside
         className={`
-          flex h-full w-[240px] shrink-0 flex-col border-r border-[#E5E9EB] bg-[#F6F8F9]
-          transition-transform duration-200 ease-in-out
+          flex h-full ${sidebarWidth} shrink-0 flex-col border-r border-[#E5E9EB] bg-[#F6F8F9]
+          transition-all duration-200 ease-in-out
           md:relative md:translate-x-0
           ${
             mobileOpen
@@ -55,31 +59,35 @@ export function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
         `}
       >
         {/* Project header */}
-        <div className="flex items-center justify-between px-4 pt-4 pb-4">
+        <div className={`flex items-center justify-between ${collapsed ? "px-2 justify-center" : "px-4"} pt-4 pb-4`}>
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-white">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-white shrink-0">
               <AtSign className="h-5 w-5" />
             </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold leading-6 tracking-[-0.084px] text-[#252C32]">
-                MudaFácil
-              </span>
-              <span className="text-xs leading-4 text-[#84919A]">
-                Organize sua mudança
-              </span>
-            </div>
+            {!collapsed && (
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold leading-6 tracking-[-0.084px] text-[#252C32]">
+                  MudaFácil
+                </span>
+                <span className="text-xs leading-4 text-[#84919A]">
+                  Organize sua mudança
+                </span>
+              </div>
+            )}
           </div>
           {/* Close button — mobile only */}
-          <button
-            onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-200 md:hidden"
-          >
-            <X className="h-5 w-5" />
-          </button>
+          {!collapsed && (
+            <button
+              onClick={onClose}
+              className="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-200 md:hidden"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          )}
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-1 flex-col gap-0 px-4">
+        <nav className={`flex flex-1 flex-col gap-0 ${collapsed ? "px-1.5" : "px-4"}`}>
           <div className="flex flex-col gap-2">
             {NAV_ITEMS.map((item) => {
               const isExactDashboard = item.href === "/dashboard";
@@ -93,14 +101,15 @@ export function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
                   key={item.label}
                   href={item.href}
                   onClick={onClose}
-                  className={`flex items-center gap-2 rounded-md px-2 py-1 text-sm tracking-[-0.084px] transition-colors ${
+                  title={collapsed ? item.label : undefined}
+                  className={`flex items-center ${collapsed ? "justify-center" : ""} gap-2 rounded-md ${collapsed ? "p-2" : "px-2 py-1"} text-sm tracking-[-0.084px] transition-colors ${
                     isActive
                       ? "bg-primary/10 font-semibold text-primary"
                       : "font-normal text-[#252C32] hover:bg-[#E5E9EB]"
                   }`}
                 >
                   <Icon className="h-6 w-6 shrink-0" />
-                  <span className="leading-6">{item.label}</span>
+                  {!collapsed && <span className="leading-6">{item.label}</span>}
                 </Link>
               );
             })}
@@ -117,14 +126,15 @@ export function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
                 key={item.label}
                 href={item.href}
                 onClick={onClose}
-                className={`flex items-center gap-2 rounded-md px-2 py-1 text-sm tracking-[-0.084px] transition-colors ${
+                title={collapsed ? item.label : undefined}
+                className={`flex items-center ${collapsed ? "justify-center" : ""} gap-2 rounded-md ${collapsed ? "p-2" : "px-2 py-1"} text-sm tracking-[-0.084px] transition-colors ${
                   isActive
                     ? "bg-primary/10 font-semibold text-primary"
                     : "font-normal text-[#252C32] hover:bg-[#E5E9EB]"
                 }`}
               >
                 <Icon className="h-6 w-6 shrink-0" />
-                <span className="leading-6">{item.label}</span>
+                {!collapsed && <span className="leading-6">{item.label}</span>}
               </Link>
             );
           })}
@@ -132,9 +142,9 @@ export function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
 
         {/* User footer */}
         {session?.user && (
-          <div className="border-t border-[#E5E9EB] px-4 py-3">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-8 w-8">
+          <div className={`border-t border-[#E5E9EB] ${collapsed ? "px-1.5" : "px-4"} py-3`}>
+            <div className={`flex items-center ${collapsed ? "justify-center" : "gap-2"}`}>
+              <Avatar className="h-8 w-8 shrink-0">
                 <AvatarImage
                   src={session.user.image || ""}
                   alt={session.user.name || ""}
@@ -148,20 +158,24 @@ export function Sidebar({ mobileOpen = false, onClose }: SidebarProps) {
                     .slice(0, 2) || "U"}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex flex-1 flex-col overflow-hidden">
-                <span className="truncate text-sm font-medium text-[#252C32]">
-                  {session.user.name}
-                </span>
-                <span className="truncate text-xs text-[#84919A]">
-                  {session.user.email}
-                </span>
-              </div>
-              <button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                className="shrink-0 rounded-md p-1 text-[#84919A] hover:bg-[#E5E9EB] hover:text-[#252C32]"
-              >
-                <LogOut className="h-4 w-4" />
-              </button>
+              {!collapsed && (
+                <>
+                  <div className="flex flex-1 flex-col overflow-hidden">
+                    <span className="truncate text-sm font-medium text-[#252C32]">
+                      {session.user.name}
+                    </span>
+                    <span className="truncate text-xs text-[#84919A]">
+                      {session.user.email}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="shrink-0 rounded-md p-1 text-[#84919A] hover:bg-[#E5E9EB] hover:text-[#252C32]"
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </button>
+                </>
+              )}
             </div>
           </div>
         )}

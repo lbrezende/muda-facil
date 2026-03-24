@@ -2,7 +2,8 @@
 
 import { useSession } from "next-auth/react";
 import { redirect, useParams } from "next/navigation";
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useSidebarCollapse } from "@/lib/sidebar-context";
 import dynamic from "next/dynamic";
 import {
   Truck,
@@ -544,6 +545,13 @@ export default function MudancaDetailPage() {
   const [roomBlocks, setRoomBlocks] = useState<RoomBlock[] | null>(null);
   const [pickerRoom, setPickerRoom] = useState<{ key: string; label: string } | null>(null);
   const [activeTab, setActiveTab] = useState("comodos");
+  const { setCollapsed } = useSidebarCollapse();
+
+  // Collapse sidebar when in 3D mode, expand when leaving
+  useEffect(() => {
+    setCollapsed(activeTab === "canvas3d");
+    return () => setCollapsed(false);
+  }, [activeTab, setCollapsed]);
 
   // Initialize room blocks from mudança data
   if (mudanca && roomBlocks === null) {
@@ -728,8 +736,8 @@ export default function MudancaDetailPage() {
         </div>
       </div>
 
-      {/* Tab bar */}
-      <div className="border-b border-gray-200 bg-white px-4 md:px-6 pt-3 pb-0">
+      {/* Tab bar — sticky */}
+      <div className="border-b border-gray-200 bg-white px-4 md:px-6 pt-3 pb-0 sticky top-0 z-20">
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList className="bg-transparent p-0 h-auto gap-0 border-b-0">
             <TabsTrigger
@@ -865,7 +873,7 @@ export default function MudancaDetailPage() {
 
           {/* ── Tab: Carga 3D ── */}
           <TabsContent value="canvas3d" className="mt-0">
-            <div className="flex flex-col" style={{ minHeight: "calc(100vh - 200px)" }}>
+            <div className="flex flex-col" style={{ height: "calc(100vh - 160px)" }}>
               {/* Instruction + truck estimate banner */}
               <div className="px-4 md:px-6 py-2.5 bg-blue-50 border-b border-blue-100 flex items-center justify-between gap-4 flex-wrap">
                 <div className="flex items-center gap-3 flex-wrap">
@@ -886,8 +894,8 @@ export default function MudancaDetailPage() {
                 </div>
               </div>
 
-              {/* 3D canvas — takes remaining height */}
-              <div className="flex-1 min-h-[600px]">
+              {/* 3D canvas — fills remaining height */}
+              <div className="flex-1 overflow-hidden">
                 <TruckCanvas3D
                   key={autoPlaceKey}
                   larguraCm={recommendedTruck.larguraCm}

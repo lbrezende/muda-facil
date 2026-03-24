@@ -12,6 +12,12 @@ import {
   removeFromGrid,
   snapToGrid,
 } from '@/lib/cargo3d/grid-system';
+import {
+  autoPlaceItems,
+  type CatalogItemForPlacement,
+  type TruckConfigForPlacement,
+  type TruckLoad,
+} from '@/lib/cargo3d/auto-placement';
 
 // --- State ---
 interface Cargo3DState {
@@ -22,6 +28,9 @@ interface Cargo3DState {
   truckGrid: TruckGridDims;
   truckCapacidadeM3: number;
   truckCapacidadeKg: number;
+  // Multi-truck auto-placement result
+  autoPlacedLoads: TruckLoad[];
+  activeTruckIndex: number;
 }
 
 // --- Actions ---
@@ -32,7 +41,18 @@ type Cargo3DAction =
   | { type: 'SET_DRAG_PREVIEW'; preview: DragPreview | null }
   | { type: 'CLEAR_ALL' }
   | { type: 'LOAD_ITEMS'; items: PlacedItem3D[] }
-  | { type: 'SET_TRUCK'; larguraCm: number; alturaCm: number; comprimentoCm: number; capacidadeM3: number; capacidadeKg: number };
+  | { type: 'SET_TRUCK'; larguraCm: number; alturaCm: number; comprimentoCm: number; capacidadeM3: number; capacidadeKg: number }
+  | { type: 'SET_AUTO_PLACED_LOADS'; loads: TruckLoad[] }
+  | { type: 'SET_ACTIVE_TRUCK'; index: number };
+
+function loadsToFirstTruck(loads: TruckLoad[], grid: Set<string>): { placedItems: PlacedItem3D[]; occupancyGrid: Set<string> } {
+  if (loads.length === 0) return { placedItems: [], occupancyGrid: grid };
+  const first = loads[0];
+  return {
+    placedItems: first.items,
+    occupancyGrid: buildOccupancyGrid(first.items),
+  };
+}
 
 function reducer(state: Cargo3DState, action: Cargo3DAction): Cargo3DState {
   switch (action.type) {
@@ -75,6 +95,8 @@ function reducer(state: Cargo3DState, action: Cargo3DAction): Cargo3DState {
         occupancyGrid: new Set(),
         selectedItemId: null,
         dragPreview: null,
+        autoPlacedLoads: [],
+        activeTruckIndex: 0,
       };
     case 'LOAD_ITEMS': {
       return {
@@ -91,7 +113,33 @@ function reducer(state: Cargo3DState, action: Cargo3DAction): Cargo3DState {
         truckCapacidadeKg: action.capacidadeKg,
         placedItems: [],
         occupancyGrid: new Set(),
+        autoPlacedLoads: [],
+        activeTruckIndex: 0,
       };
+    case 'SET_AUTO_PLACED_LOADS': {
+      const { placedItems, occupancyGrid } = loadsToFirstTruck(action.loads, new Set());
+      return {
+        ...state,
+        autoPlacedLoads: action.loads,
+        activeTruckIndex: 0,
+        placedItems,
+        occupancyGrid,
+        selectedItemId: null,
+        dragPreview: null,
+      };
+    }
+    case 'SET_ACTIVE_TRUCK': {
+      const load = state.autoPlacedLoads[action.index];
+      if (!load) return { ...state, activeTruckIndex: action.index };
+      return {
+        ...state,
+        activeTruckIndex: action.index,
+        placedItems: load.items,
+        occupancyGrid: buildOccupancyGrid(load.items),
+        selectedItemId: null,
+        dragPreview: null,
+      };
+    }
     default:
       return state;
   }
@@ -104,6 +152,9 @@ interface UseCargo3DOptions {
   comprimentoCm: number;
   capacidadeM3: number;
   capacidadeKg: number;
+  /** Truck id/name, used to identify the truck configuration for autoPlace */
+  truckId?: string;
+  truckNome?: string;
 }
 
 export function useCargo3D(options: UseCargo3DOptions) {
@@ -115,6 +166,8 @@ export function useCargo3D(options: UseCargo3DOptions) {
     truckGrid: createTruckGrid(options.larguraCm, options.alturaCm, options.comprimentoCm),
     truckCapacidadeM3: options.capacidadeM3,
     truckCapacidadeKg: options.capacidadeKg,
+    autoPlacedLoads: [],
+    activeTruckIndex: 0,
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -204,6 +257,24 @@ export function useCargo3D(options: UseCargo3DOptions) {
     dispatch({ type: 'LOAD_ITEMS', items });
   }, []);
 
+  /**
+   * Run the auto-placement algorithm and populate all trucks.
+   * The first truck becomes the active view immediately.
+   */
+  const autoPlace = useCallback((
+    items: CatalogItemForPlacement[],
+    truck: TruckConfigForPlacement,
+  ) => {
+    const loads = autoPlaceItems(items, truck);
+    dispatch({ type: 'SET_AUTO_PLACED_LOADS', loads });
+    return loads;
+  }, []);
+
+  /** Switch the 3D view to a different truck in the auto-placed result */
+  const setActiveTruck = useCallback((index: number) => {
+    dispatch({ type: 'SET_ACTIVE_TRUCK', index });
+  }, []);
+
   // Computed stats
   const stats: Cargo3DStats = useMemo(() => {
     const totalVolumeM3 = state.placedItems.reduce((sum, i) => sum + i.volumeM3, 0);
@@ -227,6 +298,12 @@ export function useCargo3D(options: UseCargo3DOptions) {
     dragPreview: state.dragPreview,
     truckGrid: state.truckGrid,
     stats,
+    // Multi-truck
+    autoPlacedLoads: state.autoPlacedLoads,
+    activeTruckIndex: state.activeTruckIndex,
+    autoPlace,
+    setActiveTruck,
+    // Single-truck interactions
     placeItem,
     removeItem,
     selectItem,

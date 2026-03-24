@@ -43,6 +43,10 @@ import {
   type FurnitureItem,
 } from "@/lib/furniture-catalog";
 import { ItemIcon } from "@/components/icons/item-icons";
+import {
+  estimateItemsFromRooms,
+  type CatalogItemForPlacement,
+} from "@/lib/cargo3d/auto-placement";
 
 // ─── Dynamic import for Three.js canvas (no SSR) ──────────────────────────
 
@@ -574,6 +578,55 @@ export default function MudancaDetailPage() {
     return best;
   }, [totals]);
 
+  // Build the CatalogItemForPlacement list that mirrors catalog3DItems but with
+  // the type expected by auto-placement (same shape, just the explicit interface)
+  const catalogForAutoPlace = useMemo<CatalogItemForPlacement[]>(
+    () => catalog3DItems.map((item) => ({
+      id: item.id,
+      nome: item.nome,
+      categoria: item.categoria,
+      larguraCm: item.larguraCm,
+      alturaCm: item.alturaCm,
+      profundidadeCm: item.profundidadeCm,
+      pesoKg: item.pesoKg,
+      volumeM3: item.volumeM3,
+    })),
+    [catalog3DItems]
+  );
+
+  // Auto-placement items derived from current room blocks.
+  // We build a rooms map from the current roomBlocks state, then pass it to
+  // estimateItemsFromRooms so the result matches what the user has configured.
+  const autoPlaceItems = useMemo<CatalogItemForPlacement[]>(() => {
+    if (!roomBlocks || roomBlocks.length === 0) return [];
+    const roomCounts: Record<string, number> = {};
+    for (const block of roomBlocks) {
+      roomCounts[block.key] = block.count;
+    }
+    return estimateItemsFromRooms(roomCounts, catalogForAutoPlace);
+  }, [roomBlocks, catalogForAutoPlace]);
+
+  // Track whether the user has ever switched to the 3D tab so we auto-place
+  // only on first visit (not on every re-render after room edits).
+  const hasVisited3DTab = useRef(false);
+  const [autoPlaceKey, setAutoPlaceKey] = useState(0);
+
+  const handleTabChange = useCallback((tab: string) => {
+    setActiveTab(tab);
+    if (tab === "canvas3d" && !hasVisited3DTab.current) {
+      hasVisited3DTab.current = true;
+      // Bump key to remount TruckCanvas3D so autoPlaceOnMount fires fresh
+      setAutoPlaceKey((k) => k + 1);
+    }
+  }, []);
+
+  // Calculate truck count needed for the estimated volume (for the banner)
+  const estimatedTruckCount = useMemo(() => {
+    if (!recommendedTruck || totals.volumeM3 === 0) return 1;
+    const count = Math.ceil(totals.volumeM3 / recommendedTruck.capacidadeM3);
+    return Math.max(1, count);
+  }, [totals.volumeM3, recommendedTruck]);
+
   const removeItem = useCallback((roomKey: string, itemId: string) => {
     setRoomBlocks((prev) =>
       prev?.map((b) =>
@@ -677,7 +730,7 @@ export default function MudancaDetailPage() {
 
       {/* Tab bar */}
       <div className="border-b border-gray-200 bg-white px-4 md:px-6 pt-3 pb-0">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList className="bg-transparent p-0 h-auto gap-0 border-b-0">
             <TabsTrigger
               value="comodos"
@@ -813,11 +866,19 @@ export default function MudancaDetailPage() {
           {/* ── Tab: Carga 3D ── */}
           <TabsContent value="canvas3d" className="mt-0">
             <div className="flex flex-col" style={{ minHeight: "calc(100vh - 200px)" }}>
-              {/* Instruction banner */}
-              <div className="px-4 md:px-6 py-2.5 bg-blue-50 border-b border-blue-100 flex items-center justify-between gap-4">
-                <p className="text-xs text-blue-700">
-                  Selecione um item e clique no caminhão para posicionar. Use <kbd className="px-1 py-0.5 rounded bg-blue-100 font-mono text-[10px]">R</kbd> para rotacionar.
-                </p>
+              {/* Instruction + truck estimate banner */}
+              <div className="px-4 md:px-6 py-2.5 bg-blue-50 border-b border-blue-100 flex items-center justify-between gap-4 flex-wrap">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <p className="text-xs text-blue-700">
+                    Posicionamento automático ativo. Selecione um item no painel para adicionar manualmente.
+                  </p>
+                  {estimatedTruckCount > 1 && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-700 text-[11px] font-semibold px-2.5 py-0.5 border border-amber-200">
+                      <Truck className="h-3 w-3" />
+                      Estimativa: {estimatedTruckCount} caminhões necessários
+                    </span>
+                  )}
+                </div>
                 <div className="flex items-center gap-1.5 text-xs text-blue-600 shrink-0">
                   <Truck className="h-3.5 w-3.5" />
                   <span className="font-medium">{recommendedTruck.nome}</span>
@@ -828,6 +889,7 @@ export default function MudancaDetailPage() {
               {/* 3D canvas — takes remaining height */}
               <div className="flex-1 min-h-[600px]">
                 <TruckCanvas3D
+                  key={autoPlaceKey}
                   larguraCm={recommendedTruck.larguraCm}
                   alturaCm={recommendedTruck.alturaCm}
                   comprimentoCm={recommendedTruck.comprimentoCm}
@@ -835,6 +897,9 @@ export default function MudancaDetailPage() {
                   capacidadeKg={recommendedTruck.capacidadeKg}
                   mudancaId={id}
                   items={catalog3DItems}
+                  autoPlaceOnMount={autoPlaceItems.length > 0 ? autoPlaceItems : undefined}
+                  truckId={recommendedTruck.id}
+                  truckNome={recommendedTruck.nome}
                 />
               </div>
             </div>

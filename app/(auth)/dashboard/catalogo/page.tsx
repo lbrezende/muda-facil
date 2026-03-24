@@ -39,6 +39,23 @@ const CATEGORIA_BADGE_COLORS: Record<string, string> = {
   CAIXAS: "bg-orange-100 text-orange-700",
 };
 
+// Icon container + accent color per category (matches badge tones)
+const CATEGORIA_ICON_COLORS: Record<string, { bg: string; text: string; accent: string; border: string; button: string }> = {
+  QUARTO: { bg: "bg-purple-50", text: "text-purple-600", accent: "text-purple-600", border: "border-purple-200", button: "bg-purple-600 hover:bg-purple-700" },
+  COZINHA: { bg: "bg-amber-50", text: "text-amber-600", accent: "text-amber-600", border: "border-amber-200", button: "bg-amber-600 hover:bg-amber-700" },
+  SALA: { bg: "bg-blue-50", text: "text-blue-600", accent: "text-blue-600", border: "border-blue-200", button: "bg-blue-600 hover:bg-blue-700" },
+  ESCRITORIO: { bg: "bg-emerald-50", text: "text-emerald-600", accent: "text-emerald-600", border: "border-emerald-200", button: "bg-emerald-600 hover:bg-emerald-700" },
+  BANHEIRO: { bg: "bg-cyan-50", text: "text-cyan-600", accent: "text-cyan-600", border: "border-cyan-200", button: "bg-cyan-600 hover:bg-cyan-700" },
+  AREA_SERVICO: { bg: "bg-indigo-50", text: "text-indigo-600", accent: "text-indigo-600", border: "border-indigo-200", button: "bg-indigo-600 hover:bg-indigo-700" },
+  CAIXAS: { bg: "bg-orange-50", text: "text-orange-600", accent: "text-orange-600", border: "border-orange-200", button: "bg-orange-600 hover:bg-orange-700" },
+};
+
+const DEFAULT_ICON_COLORS = { bg: "bg-gray-50", text: "text-gray-600", accent: "text-gray-600", border: "border-gray-200", button: "bg-gray-600 hover:bg-gray-700" };
+
+function categoriaIconColors(cat: string) {
+  return CATEGORIA_ICON_COLORS[cat] || DEFAULT_ICON_COLORS;
+}
+
 const CATEGORIAS = ["Todos", "Quarto", "Cozinha", "Sala", "Escritório", "Banheiro", "Área de Serviço", "Caixas"];
 
 function categoriaPretty(cat: string): string {
@@ -58,11 +75,13 @@ function ItemCard({
   item: ItemCatalogo;
   onAdd: (item: ItemCatalogo) => void;
 }) {
+  const colors = categoriaIconColors(item.categoria);
+
   return (
-    <Card className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
+    <Card className={`border ${colors.border} bg-white shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5`}>
       <CardContent className="p-4 flex flex-col items-center text-center gap-3">
-        {/* Icon */}
-        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary mt-1">
+        {/* Icon — color matches category */}
+        <div className={`flex h-14 w-14 items-center justify-center rounded-xl ${colors.bg} ${colors.text} mt-1`}>
           <ItemIcon nome={item.nome} className="h-8 w-8" />
         </div>
 
@@ -88,8 +107,8 @@ function ItemCard({
           </div>
           <div className="flex items-center justify-between text-xs text-gray-500">
             <span className="flex items-center gap-1">
-              <Box className="h-3 w-3 shrink-0 text-gray-400" />
-              <span className="font-medium text-primary">{item.volumeM3} m³</span>
+              <Box className={`h-3 w-3 shrink-0 ${colors.text}`} />
+              <span className={`font-medium ${colors.accent}`}>{item.volumeM3} m³</span>
             </span>
             <span className="flex items-center gap-1">
               <Weight className="h-3 w-3 shrink-0 text-gray-400" />
@@ -98,10 +117,10 @@ function ItemCard({
           </div>
         </div>
 
-        {/* Action */}
+        {/* Action — color matches category */}
         <Button
           size="sm"
-          className="w-full h-8 text-xs gap-1.5"
+          className={`w-full h-8 text-xs gap-1.5 text-white ${colors.button}`}
           onClick={() => onAdd(item)}
         >
           <Plus className="h-3.5 w-3.5" />

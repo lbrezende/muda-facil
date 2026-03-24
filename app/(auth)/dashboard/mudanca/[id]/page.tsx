@@ -697,6 +697,11 @@ export default function MudancaDetailPage() {
     id: string; precoCentavos: number; transportadora: { nome: string; notaMedia: number };
   }> | undefined;
 
+  // Google Maps URLs
+  const mapsRouteUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(mudanca.enderecoOrigem)}&destination=${encodeURIComponent(mudanca.enderecoDestino)}`;
+  const mapsStaticPreview = `https://maps.googleapis.com/maps/api/staticmap?center=${encodeURIComponent(mudanca.enderecoDestino)}&zoom=11&size=120x80&scale=2&markers=color:red%7C${encodeURIComponent(mudanca.enderecoDestino)}&style=feature:all|saturation:-100&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY || ""}`;
+  const mapsFallbackUrl = `https://www.google.com/maps/embed/v1/directions?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY || ""}&origin=${encodeURIComponent(mudanca.enderecoOrigem)}&destination=${encodeURIComponent(mudanca.enderecoDestino)}&mode=driving`;
+
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
@@ -705,7 +710,35 @@ export default function MudancaDetailPage() {
           <Link href="/dashboard" className="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100">
             <ChevronLeft className="h-5 w-5" />
           </Link>
-          <div>
+
+          {/* Mini map preview */}
+          <a
+            href={mapsRouteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:flex h-16 w-24 rounded-lg overflow-hidden border border-gray-200 shrink-0 bg-gray-100 items-center justify-center hover:border-primary/40 hover:shadow-sm transition-all group relative"
+            title="Ver trajeto no Google Maps"
+          >
+            {process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY ? (
+              <img
+                src={mapsStaticPreview}
+                alt="Mapa do destino"
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center text-gray-400 group-hover:text-primary transition-colors">
+                <Navigation className="h-5 w-5 mb-0.5" />
+                <span className="text-[9px] font-medium">Ver rota</span>
+              </div>
+            )}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors rounded-lg flex items-center justify-center">
+              <span className="text-[10px] font-semibold text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-md">
+                Abrir rota
+              </span>
+            </div>
+          </a>
+
+          <div className="flex-1">
             <div className="flex items-center gap-2">
               <h1 className="text-lg font-semibold text-gray-900">Detalhes da mudança</h1>
               <Badge variant="outline" className={`text-[11px] ${statusStyle.className}`}>
@@ -718,7 +751,10 @@ export default function MudancaDetailPage() {
                 {mudanca.enderecoOrigem}
               </span>
               <ArrowRight className="h-3 w-3 hidden sm:block" />
-              <span className="hidden sm:inline">{mudanca.enderecoDestino}</span>
+              <span className="flex items-center gap-1 hidden sm:inline-flex">
+                <MapPin className="h-3 w-3 text-primary" />
+                {mudanca.enderecoDestino}
+              </span>
               {distanciaKm && (
                 <span className="flex items-center gap-1 font-medium">
                   <Navigation className="h-3 w-3 text-primary" />

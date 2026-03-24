@@ -232,7 +232,7 @@ export function TruckCanvas3D({
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row w-full flex-1 min-h-[500px]">
+      <div className="flex flex-col md:flex-row w-full flex-1 h-[calc(100vh-220px)] max-h-[700px] min-h-[400px]">
         {/* Mobile: sidebar at top as horizontal strip */}
         <div className="block md:hidden">
           <DragPanel
@@ -247,7 +247,7 @@ export function TruckCanvas3D({
         </div>
 
         {/* 3D Canvas */}
-        <div className="flex-1 relative min-h-[400px] md:min-h-0 bg-gradient-to-br from-slate-100 to-slate-200">
+        <div className="flex-1 relative bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
           {/* Occupancy stats overlay */}
           <OccupancyStats stats={cargo.stats} />
 
@@ -260,13 +260,14 @@ export function TruckCanvas3D({
           )}
 
           <Canvas
-            className="w-full h-full min-h-[500px]"
+            className="!absolute inset-0 w-full h-full"
             camera={{
               position: cameraPosition,
-              fov: 45,
+              fov: 50,
               near: 0.1,
               far: 500,
             }}
+            resize={{ scroll: false, debounce: { scroll: 50, resize: 50 } }}
             shadows
             onPointerMissed={handleCanvasBackgroundClick}
           >
@@ -288,6 +289,9 @@ export function TruckCanvas3D({
               truckCenterX={truckCenterX}
               truckCenterY={truckCenterY}
               truckCenterZ={truckCenterZ}
+              truckWidth={truck.gw}
+              truckHeight={truck.gh}
+              truckDepth={truck.gd}
             />
 
             {/* Truck container (walls + floor) */}

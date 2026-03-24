@@ -201,6 +201,7 @@ model CargaItem {
   itemId        String
   x             Float  @default(0)
   y             Float  @default(0)
+  z             Float  @default(0)
   rotacao       Int    @default(0)
 
   cargaLayout CargaLayout @relation(fields: [cargaLayoutId], references: [id], onDelete: Cascade)

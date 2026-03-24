@@ -16,6 +16,7 @@ export type CargaItemPositioned = {
   itemId: string;
   x: number;
   y: number;
+  z: number;
   rotacao: number;
   item: Item;
 };
@@ -38,6 +39,7 @@ export type SaveCargaInput = {
     itemId: string;
     x: number;
     y: number;
+    z: number;
     rotacao: number;
   }[];
 };

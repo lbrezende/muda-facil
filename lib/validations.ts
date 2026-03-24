@@ -50,6 +50,7 @@ export const cargaItemSchema = z.object({
   itemId: z.string().cuid(),
   x: z.number().min(0),
   y: z.number().min(0),
+  z: z.number().min(0),
   rotacao: z.number().int().min(0).max(360),
 });
 

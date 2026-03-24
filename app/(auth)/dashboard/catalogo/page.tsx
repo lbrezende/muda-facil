@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Search, Truck, MapPin, ArrowRight, PackageOpen, Loader2 } from "lucide-react";
+import { Search, Truck, MapPin, ArrowRight, PackageOpen, Loader2, Ruler, Weight, Box, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ import {
 import { toast } from "sonner";
 import { useMudancas } from "@/hooks/use-mudancas";
 import { useItens, type ItemCatalogo } from "@/hooks/use-itens";
+import { ItemIcon } from "@/components/icons/item-icons";
 
 // ─── Categories ──────────────────────────────────────────
 
@@ -28,10 +29,24 @@ const CATEGORIA_MAP: Record<string, string> = {
   CAIXAS: "Caixas",
 };
 
+const CATEGORIA_BADGE_COLORS: Record<string, string> = {
+  QUARTO: "bg-purple-100 text-purple-700",
+  COZINHA: "bg-amber-100 text-amber-700",
+  SALA: "bg-blue-100 text-blue-700",
+  ESCRITORIO: "bg-emerald-100 text-emerald-700",
+  BANHEIRO: "bg-cyan-100 text-cyan-700",
+  AREA_SERVICO: "bg-indigo-100 text-indigo-700",
+  CAIXAS: "bg-orange-100 text-orange-700",
+};
+
 const CATEGORIAS = ["Todos", "Quarto", "Cozinha", "Sala", "Escritório", "Banheiro", "Área de Serviço", "Caixas"];
 
 function categoriaPretty(cat: string): string {
   return CATEGORIA_MAP[cat] || cat;
+}
+
+function categoriaBadgeColor(cat: string): string {
+  return CATEGORIA_BADGE_COLORS[cat] || "bg-gray-100 text-gray-600";
 }
 
 // ─── ItemCard ──────────────────────────────────────────────
@@ -44,39 +59,53 @@ function ItemCard({
   onAdd: (item: ItemCatalogo) => void;
 }) {
   return (
-    <Card className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
-      <CardContent className="p-4 flex flex-col gap-3">
-        <div>
-          <div className="text-sm font-semibold text-gray-900 leading-tight">
-            {item.nome}
-          </div>
-          <div className="text-xs text-gray-400 mt-0.5">{categoriaPretty(item.categoria)}</div>
+    <Card className="border border-gray-200 bg-white shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
+      <CardContent className="p-4 flex flex-col items-center text-center gap-3">
+        {/* Icon */}
+        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary mt-1">
+          <ItemIcon nome={item.nome} className="h-8 w-8" />
         </div>
 
-        <div className="space-y-1 border-t border-gray-100 pt-3">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-500">Dimensões</span>
+        {/* Name + badge */}
+        <div className="space-y-1.5 w-full">
+          <p className="text-sm font-semibold text-gray-900 leading-tight">
+            {item.nome}
+          </p>
+          <span
+            className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${categoriaBadgeColor(item.categoria)}`}
+          >
+            {categoriaPretty(item.categoria)}
+          </span>
+        </div>
+
+        {/* Specs */}
+        <div className="w-full space-y-1 border-t border-gray-100 pt-2.5">
+          <div className="flex items-center gap-1.5 text-xs text-gray-500">
+            <Ruler className="h-3 w-3 shrink-0 text-gray-400" />
             <span className="font-medium text-gray-700">
-              {item.larguraCm} × {item.alturaCm} × {item.profundidadeCm} cm
+              {item.larguraCm} × {item.profundidadeCm} × {item.alturaCm} cm
             </span>
           </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-500">Peso</span>
-            <span className="font-medium text-gray-700">{item.pesoKg} kg</span>
-          </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-500">Volume</span>
-            <span className="font-medium text-primary">{item.volumeM3} m³</span>
+          <div className="flex items-center justify-between text-xs text-gray-500">
+            <span className="flex items-center gap-1">
+              <Box className="h-3 w-3 shrink-0 text-gray-400" />
+              <span className="font-medium text-primary">{item.volumeM3} m³</span>
+            </span>
+            <span className="flex items-center gap-1">
+              <Weight className="h-3 w-3 shrink-0 text-gray-400" />
+              <span className="font-medium text-gray-700">{item.pesoKg} kg</span>
+            </span>
           </div>
         </div>
 
+        {/* Action */}
         <Button
-          variant="outline"
           size="sm"
-          className="w-full h-7 text-xs border-gray-200 text-gray-600 hover:border-primary hover:text-primary mt-1"
+          className="w-full h-8 text-xs gap-1.5"
           onClick={() => onAdd(item)}
         >
-          Adicionar à mudança
+          <Plus className="h-3.5 w-3.5" />
+          Adicionar
         </Button>
       </CardContent>
     </Card>

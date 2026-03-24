@@ -160,7 +160,7 @@ function MetricCard({
   value,
   label,
 }: {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   value: string;
   label: string;
 }) {
@@ -181,7 +181,7 @@ function ProcessStep({
   children,
 }: {
   number: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   children: React.ReactNode;
 }) {

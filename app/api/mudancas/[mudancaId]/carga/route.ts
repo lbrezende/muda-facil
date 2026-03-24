@@ -9,6 +9,7 @@ const cargaItemPositionSchema = z.object({
   itemId: z.string().cuid(),
   x: z.number().min(0),
   y: z.number().min(0),
+  z: z.number().min(0),
   rotacao: z.number().int().min(0).max(360),
 });
 
@@ -117,11 +118,12 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
       if (itens.length > 0) {
         await tx.cargaItem.createMany({
-          data: itens.map(({ itemId, x, y, rotacao }) => ({
+          data: itens.map(({ itemId, x, y, z, rotacao }) => ({
             cargaLayoutId: layout.id,
             itemId,
             x,
             y,
+            z,
             rotacao,
           })),
         });
